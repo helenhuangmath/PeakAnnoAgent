@@ -1,0 +1,11 @@
+Chr	Start	End	annotation	SYMBOL
+chr1	3671498	3671800	Promoter (<=1kb)	Sox2
+chr1	4496552	4496920	Intron (NM_001)	Pax6
+chr1	4785450	4785900	Distal Intergenic	Notch1
+chr2	30510244	30510720	Promoter (<=1kb)	Il6
+chr2	72918200	72918740	Exon (NM_002)	Tnf
+chr3	108146500	108146980	Intron (NM_003)	Stat1
+chr4	134780220	134780640	Distal Intergenic	Mbp
+chr5	31550200	31550800	Promoter (<=1kb)	Plp1
+chr7	45120200	45120740	Downstream	Mog
+chr11	68612100	68612690	Intron (NM_004)	Olig2

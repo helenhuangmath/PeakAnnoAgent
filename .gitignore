@@ -1,0 +1,23 @@
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+__pycache__/
+
+# Analysis outputs
+results/
+*.pdf
+*.png
+*.rds
+*.Rds
+
+# Large genomics inputs
+*.bam
+*.bai
+*.bw
+*.bigWig
+*.fastq
+*.fastq.gz
+*.fq.gz
+*.bed.gz

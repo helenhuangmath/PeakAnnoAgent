@@ -1,0 +1,37 @@
+Package: PeakAnnotationAgent
+Title: Peak Annotation and Pathway Analysis Runner
+Version: 0.1.0
+Authors@R: person("Hua", "Huang", role = c("aut", "cre"))
+Description: Reusable command-line framework for genomic peak annotation,
+    pathway enrichment, and publication-ready figures using ChIPseeker,
+    rGREAT, HOMER, clusterProfiler, Enrichr, DAVID, and Metascape-friendly
+    exports.
+License: MIT
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1)
+Imports:
+    data.table,
+    ggplot2
+Suggests:
+    AnnotationDbi,
+    annotatr,
+    ChIPseeker,
+    ChIPpeakAnno,
+    clusterProfiler,
+    enrichplot,
+    enrichR,
+    gprofiler2,
+    GenomicRanges,
+    GenomicFeatures,
+    IRanges,
+    msigdbr,
+    ReactomePA,
+    rGREAT,
+    RDAVIDWebService,
+    WebGestaltR,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    TxDb.Hsapiens.UCSC.hg38.knownGene,
+    TxDb.Mmusculus.UCSC.mm10.knownGene
