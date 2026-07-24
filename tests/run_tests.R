@@ -9,16 +9,32 @@ if (!requireNamespace("testthat", quietly = TRUE)) {
   stop("Install 'testthat' to run the test suite: install.packages('testthat')", call. = FALSE)
 }
 
-this_file <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
-repo_root <- normalizePath(file.path(dirname(this_file), ".."), mustWork = TRUE)
+file_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
+if (length(file_arg)) {
+  this_file <- sub("^--file=", "", file_arg[1])
+  repo_root <- normalizePath(file.path(dirname(this_file), ".."), mustWork = TRUE)
+} else if (dir.exists(file.path(getwd(), "R"))) {
+  repo_root <- normalizePath(getwd(), mustWork = TRUE)
+} else {
+  repo_root <- normalizePath(file.path(getwd(), ".."), mustWork = TRUE)
+}
 
-for (f in c("utils.R", "figures.R", "annotation.R", "enrichment.R")) {
-  source(file.path(repo_root, "R", f))
+if (dir.exists(file.path(repo_root, "R"))) {
+  for (f in c("utils.R", "figures.R", "annotation.R", "enrichment.R")) {
+    source(file.path(repo_root, "R", f))
+  }
+} else {
+  library(PeakAnnoAgent)
+}
+
+test_dir <- file.path(repo_root, "tests", "testthat")
+if (!dir.exists(test_dir)) {
+  test_dir <- file.path(getwd(), "tests", "testthat")
 }
 
 reporter <- testthat::SummaryReporter$new()
 results <- testthat::test_dir(
-  file.path(repo_root, "tests", "testthat"),
+  test_dir,
   reporter = reporter,
   stop_on_failure = TRUE
 )

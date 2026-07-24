@@ -1,0 +1,12 @@
+^\\.git$
+^\\.gitignore$
+^\\.Rbuildignore$
+^\\.\\.Rcheck$
+^\\.github$
+^\\.Rproj\\.user$
+^results$
+^docs$
+^scripts/install_dependencies\\.R$
+^README\\.Rmd$
+^.*\\.Rproj$
+^\\.DS_Store$

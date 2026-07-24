@@ -34,7 +34,7 @@ plot_enrichment_dotplot <- function(enrichment_table, out_file, padj_cutoff = 0.
     dt[, nGene := 1]
   }
   dt[, negLogPadj := pmin(-log10(get(padj_col)), 50)]
-  top <- dt[order(get(group_col), get(padj_col)), head(.SD, top_show), by = group_col]
+  top <- dt[order(get(group_col), get(padj_col)), utils::head(.SD, top_show), by = group_col]
   dt <- dt[get(term_col) %in% unique(top[[term_col]])]
   dt[, TermPlot := factor(get(term_col), levels = rev(unique(top[[term_col]])))]
 
@@ -94,7 +94,7 @@ plot_annotation_summary_base <- function(tab, out_dir, prefix) {
     y_mid <- graphics::barplot(widths, horiz = TRUE, beside = FALSE, col = colors, border = NA,
       xlim = c(0, 100), axes = FALSE, names.arg = "", xlab = "")
     graphics::axis(1, at = seq(0, 100, 25))
-    x_left <- c(0, head(cumsum(tab$Pct), -1))
+    x_left <- c(0, utils::head(cumsum(tab$Pct), -1))
     x_mid <- x_left + tab$Pct / 2
     labels <- ifelse(tab$Pct %% 1 == 0, sprintf("%.0f%%", tab$Pct), sprintf("%.1f%%", tab$Pct))
     inside <- tab$Pct >= 8

@@ -1,19 +1,23 @@
-Package: PeakAnnotationAgent
-Title: Peak Annotation and Pathway Analysis Runner
+Package: PeakAnnoAgent
+Title: Peak Annotation and Pathway Analysis Agent
 Version: 0.1.0
-Authors@R: person("Hua", "Huang", role = c("aut", "cre"))
-Description: Reusable command-line framework for genomic peak annotation,
-    pathway enrichment, and publication-ready figures using ChIPseeker,
-    rGREAT, HOMER, clusterProfiler, Enrichr, DAVID, and Metascape-friendly
+Authors@R: person("Hua", "Huang", role = c("aut", "cre"),
+    email = "your_email@example.com")
+Author: Hua Huang [aut, cre]
+Maintainer: Hua Huang <your_email@example.com>
+Description: Reusable R package and command-line agent for genomic peak
+    annotation, pathway enrichment, and publication-ready figures using
+    ChIPseeker, rGREAT, HOMER, clusterProfiler, Enrichr, DAVID,
+    g:Profiler, WebGestaltR, ReactomePA, MSigDB, and Metascape-friendly
     exports.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1)
 Imports:
-    data.table,
-    ggplot2
+    data.table
 Suggests:
     AnnotationDbi,
     annotatr,
@@ -21,6 +25,7 @@ Suggests:
     ChIPpeakAnno,
     clusterProfiler,
     enrichplot,
+    ggplot2,
     enrichR,
     gprofiler2,
     GenomicRanges,
@@ -30,8 +35,15 @@ Suggests:
     ReactomePA,
     rGREAT,
     RDAVIDWebService,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
     WebGestaltR,
     org.Hs.eg.db,
     org.Mm.eg.db,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
     TxDb.Mmusculus.UCSC.mm10.knownGene
+URL: https://github.com/helenhuangmath/PeakAnnoAgent
+BugReports: https://github.com/helenhuangmath/PeakAnnoAgent/issues
+Config/testthat/edition: 3
+VignetteBuilder: knitr

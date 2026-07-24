@@ -1,6 +1,6 @@
-# Peak Annotation Agent
+# PeakAnnoAgent
 
-A clean R command-line framework for genomic peak annotation, gene/pathway enrichment, and manuscript-ready figures.
+A clean R package and command-line agent for genomic peak annotation, gene/pathway enrichment, and manuscript-ready figures.
 
 The goal is to keep each method easy to swap:
 
@@ -16,22 +16,15 @@ Use an R package plus command-line agent as the foundation. This is the most rep
 
 Add a Shiny web interface later for easy file upload and method selection. Build a REST API only if another app needs to submit jobs programmatically. See [docs/agent_design.md](docs/agent_design.md) for the suggested layered design.
 
-## Package Naming
+## Package Name
 
-Recommended package names:
-
-- `PeakPathAgent`: clear, short, and covers peak annotation plus pathway analysis.
-- `PeakAnnoPath`: descriptive and publication-friendly.
-- `Peak2Path`: concise and memorable, focused on the workflow from regions to pathways.
-- `RegAnnoR`: emphasizes regulatory region annotation in R.
-- `AnnoPathR`: broad enough for peak and gene-list annotation/pathway workflows.
-
-Current working package name: `PeakAnnotationAgent`.
+Package name: `PeakAnnoAgent`.
 
 ## Repository Layout
 
 ```text
 R/
+  PeakAnnoAgent-package.R
   annotation.R      # ChIPseeker, rGREAT, HOMER wrappers
   enrichment.R      # clusterProfiler, Enrichr, DAVID, Metascape export
   figures.R         # reusable publication figure builders
@@ -46,12 +39,25 @@ examples/data/
 docs/
   methods.md
   agent_design.md
+  publication_package_checklist.md
+inst/
+  CITATION
 tests/
   run_tests.R
+  testthat.R
   testthat/
+vignettes/
+  peak-annotation-workflow.Rmd
 ```
 
 ## Install R Packages
+
+Install this package locally during development:
+
+```r
+install.packages("remotes")
+remotes::install_local(".")
+```
 
 Minimum packages:
 
@@ -63,6 +69,15 @@ Or use the repository installer:
 
 ```bash
 Rscript scripts/install_dependencies.R
+```
+
+Package development checks:
+
+```r
+install.packages(c("devtools", "roxygen2", "testthat", "rmarkdown", "knitr"))
+roxygen2::roxygenise()
+devtools::test()
+devtools::check()
 ```
 
 Bioconductor methods:

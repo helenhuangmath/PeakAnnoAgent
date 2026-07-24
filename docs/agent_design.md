@@ -9,7 +9,7 @@ The best presentation for this project is a layered agent:
 
 ## Recommendation
 
-Start with the R package plus CLI agent. This is the best fit for peak annotation and pathway analysis because the work often runs on HPC, depends on Bioconductor/HOMER installations, and needs exact input/output provenance for publication.
+Start with the `PeakAnnoAgent` R package plus CLI agent. This is the best fit for peak annotation and pathway analysis because the work often runs on HPC, depends on Bioconductor/HOMER installations, and needs exact input/output provenance for publication.
 
 Use a web/Shiny layer as the interface, not as the core engine. Shiny can collect inputs, species, methods, cutoffs, and figure options, then call `scripts/peak_agent.R` behind the scenes.
 
@@ -60,4 +60,4 @@ REST API:
 - `GET /jobs/{id}`: check status
 - `GET /jobs/{id}/results`: download archive
 
-The API should call the same R functions as the CLI, not reimplement analysis logic.
+The API should call the same `PeakAnnoAgent` R functions as the CLI, not reimplement analysis logic.
