@@ -8,13 +8,25 @@ The goal is to keep each method easy to swap:
 - pathway analysis: `clusterProfiler` GO/KEGG, `ReactomePA`, MSigDB, `Enrichr`, g:Profiler, WebGestaltR, DAVID, Metascape-ready exports
 - figures: annotation bar plots, pie charts, TSS distance plots, and enrichment dot plots
 
-The reusable code lives in `R/`, and the main runner is `scripts/peak_agent.R`. Project-specific one-off scripts have been replaced by configurable method wrappers.
+The reusable code lives in `R/`, and the main runner is `scripts/peak_agent.R`.
 
 ## Best Way to Present This as an Agent
 
 Use an R package plus command-line agent as the foundation. This is the most reproducible form for HPC/server runs and manuscript methods because it preserves exact inputs, methods, package versions, tables, and PDFs.
 
 Add a Shiny web interface later for easy file upload and method selection. Build a REST API only if another app needs to submit jobs programmatically. See [docs/agent_design.md](docs/agent_design.md) for the suggested layered design.
+
+## Package Naming
+
+Recommended package names:
+
+- `PeakPathAgent`: clear, short, and covers peak annotation plus pathway analysis.
+- `PeakAnnoPath`: descriptive and publication-friendly.
+- `Peak2Path`: concise and memorable, focused on the workflow from regions to pathways.
+- `RegAnnoR`: emphasizes regulatory region annotation in R.
+- `AnnoPathR`: broad enough for peak and gene-list annotation/pathway workflows.
+
+Current working package name: `PeakAnnotationAgent`.
 
 ## Repository Layout
 
