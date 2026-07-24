@@ -1,0 +1,7 @@
+Cluster	Library	Term	Adjusted.P.value	Genes
+Cluster1	GO_Biological_Process_2021	neural precursor cell proliferation	0.0008	SOX2;PAX6;NOTCH1
+Cluster1	GO_Biological_Process_2021	Notch signaling pathway	0.004	HES1;NOTCH1
+Cluster2	GO_Biological_Process_2021	cytokine-mediated signaling pathway	0.0002	IL6;TNF;CCL2;STAT1
+Cluster2	GO_Biological_Process_2021	response to interferon-gamma	0.006	CXCL10;STAT1;NFKB1
+Cluster3	GO_Biological_Process_2021	myelination	0.0005	MBP;PLP1;MOG;MAG
+Cluster3	GO_Biological_Process_2021	oligodendrocyte differentiation	0.003	SOX10;OLIG2;MOG
