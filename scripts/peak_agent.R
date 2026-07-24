@@ -15,7 +15,7 @@ source(file.path(repo_root, "R", "enrichment.R"))
 
 usage <- function() {
   cat("
-Peak Annotation Agent
+PeakAnnoAgent
 
 Usage:
   Rscript scripts/peak_agent.R <command> [options]

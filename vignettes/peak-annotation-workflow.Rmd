@@ -1,0 +1,59 @@
+---
+title: "PeakAnnoAgent Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PeakAnnoAgent Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval = FALSE}
+library(PeakAnnoAgent)
+```
+
+## Command-Line Workflow
+
+Export web-tool-ready peak and gene-list inputs:
+
+```{bash, eval = FALSE}
+Rscript scripts/peak_agent.R annotate \
+  --peaks examples/data/example_peaks.bed \
+  --out results/example_annotation \
+  --methods webexport \
+  --species mm10 \
+  --prefix example
+
+Rscript scripts/peak_agent.R enrich \
+  --genes examples/data/example_cluster_genes.tsv \
+  --out results/example_pathways \
+  --methods metascape,export \
+  --cluster-col Cluster \
+  --gene-col SYMBOL \
+  --prefix example
+```
+
+Create example manuscript-style figures:
+
+```{bash, eval = FALSE}
+Rscript scripts/peak_agent.R figures \
+  --annotation examples/data/example_annotation.tsv \
+  --enrichment examples/data/example_enrichment.tsv \
+  --out results/example_figures \
+  --prefix example
+```
+
+## Full Analysis
+
+For a full analysis, select local and API-backed methods explicitly:
+
+```{bash, eval = FALSE}
+Rscript scripts/peak_agent.R enrich \
+  --genes clusters.tsv \
+  --universe universe.tsv \
+  --out results/pathway \
+  --methods clusterprofiler,kegg,reactome,msigdb,enrichr,gprofiler,metascape \
+  --species mm10 \
+  --cluster-col Cluster \
+  --gene-col SYMBOL \
+  --prefix experiment1
+```

@@ -11,6 +11,8 @@ results/
 *.png
 *.rds
 *.Rds
+*.tar.gz
+*.Rcheck/
 
 # Large genomics inputs
 *.bam
