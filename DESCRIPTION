@@ -43,7 +43,7 @@ Suggests:
     org.Mm.eg.db,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
     TxDb.Mmusculus.UCSC.mm10.knownGene
-URL: https://github.com/helenhuangmath/Peak_Annotation
-BugReports: https://github.com/helenhuangmath/Peak_Annotation/issues
+URL: https://github.com/helenhuangmath/PeakAnnoAgent
+BugReports: https://github.com/helenhuangmath/PeakAnnoAgent/issues
 Config/testthat/edition: 3
 VignetteBuilder: knitr
