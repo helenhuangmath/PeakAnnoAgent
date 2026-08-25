@@ -38,8 +38,13 @@ run_chipseeker_annotation <- function(peaks, out_dir, prefix, species = "mm10",
   dist_tab <- dist_tab[order(-dist_tab$Freq), ]
   write_tsv(dist_tab, file.path(out_dir, paste0(prefix, "_chipseeker_annotation_distribution.tsv")))
 
-  grDevices::pdf(file.path(out_dir, paste0(prefix, "_chipseeker_pie.pdf")), height = 4.5, width = 7)
-  ChIPseeker::plotAnnoPie(anno, main = prefix)
+  grDevices::pdf(file.path(out_dir, paste0(prefix, "_chipseeker_pie.pdf")), height = 4.8, width = 7)
+  # ChIPseeker::plotAnnoPie() sets par(mai = c(0, 0, 0, 0)), so a title passed as
+  # main= has no margin to draw into and gets clipped. Reserve an outer margin
+  # and write the title there instead.
+  graphics::par(oma = c(0, 0, 2, 0))
+  ChIPseeker::plotAnnoPie(anno)
+  graphics::mtext(prefix, side = 3, outer = TRUE, line = 0.2, font = 2, cex = 1.1)
   grDevices::dev.off()
 
   p_bar <- ChIPseeker::plotAnnoBar(anno, title = prefix) + ggplot2::theme_classic()

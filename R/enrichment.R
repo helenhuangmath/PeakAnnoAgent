@@ -140,7 +140,7 @@ run_msigdb_enrichment <- function(gene_lists, out_dir, prefix, species = "mm10",
   term2gene <- unique(msig[, c("gs_name", "gene_symbol")])
   cc <- clusterProfiler::compareCluster(
     geneClusters = gene_lists,
-    fun = "enricher",
+    fun = clusterProfiler::enricher,
     TERM2GENE = term2gene,
     universe = universe,
     pAdjustMethod = "BH",

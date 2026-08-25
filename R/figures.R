@@ -99,12 +99,14 @@ plot_annotation_summary_base <- function(tab, out_dir, prefix) {
     labels <- ifelse(tab$Pct %% 1 == 0, sprintf("%.0f%%", tab$Pct), sprintf("%.1f%%", tab$Pct))
     inside <- tab$Pct >= 8
     graphics::text(x_mid[inside], y_mid, labels[inside], cex = 0.8, col = "black")
-    if (any(!inside)) {
-      graphics::text(x_mid[!inside], y_mid + 0.55, labels[!inside], cex = 0.7, col = "black")
-    }
     graphics::par(mar = c(1, 0, 1, 1))
     graphics::plot.new()
-    graphics::legend("topleft", legend = as.character(tab$Annotation),
+    # Slices too thin to label inside the bar carry their percentage in the
+    # legend instead. Drawing them above the bar clipped them off the top of the
+    # page and made them collide with each other on real peak sets.
+    legend_labels <- ifelse(inside, as.character(tab$Annotation),
+      sprintf("%s (%s)", tab$Annotation, labels))
+    graphics::legend("topleft", legend = legend_labels,
       fill = colors, title = "Feature", bty = "n", cex = 0.82)
   }
   grDevices::pdf(bar_pdf, width = 9, height = 3.2, bg = "white"); draw_bar(); grDevices::dev.off()

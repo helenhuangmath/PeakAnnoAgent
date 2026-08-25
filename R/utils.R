@@ -94,7 +94,7 @@ read_gene_table <- function(path, gene_col = "SYMBOL", cluster_col = NULL) {
   }
   dt <- dt[!is.na(get(gene_col)) & get(gene_col) != ""]
   if (!is.null(cluster_col) && cluster_col != "" && cluster_col %in% names(dt)) {
-    groups <- split(unique(dt[[gene_col]]), dt[[cluster_col]])
+    groups <- split(dt[[gene_col]], dt[[cluster_col]])
   } else {
     groups <- list(All = unique(dt[[gene_col]]))
   }
