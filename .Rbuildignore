@@ -10,3 +10,5 @@
 ^README\\.Rmd$
 ^.*\\.Rproj$
 ^\\.DS_Store$
+^agent$
+^examples/scripts$

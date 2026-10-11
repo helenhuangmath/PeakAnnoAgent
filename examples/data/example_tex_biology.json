@@ -1,0 +1,9 @@
+{
+  "description": "Synthetic example. Peaks from chronically stimulated (exhausted-like) CD8 T cells. Exhaustion is driven by TOX and NR4A family factors downstream of persistent TCR/NFAT signalling, while TCF1 (Tcf7) marks the progenitor-exhausted subset. We want to know which pathways and transcription factors these peaks point to.",
+  "assay": "ATAC-seq",
+  "target": "",
+  "cell_type": "CD8 T cells",
+  "condition": "chronic LCMV clone 13 infection, day 30",
+  "expected_genes": ["Tox", "Pdcd1", "Havcr2", "Entpd1", "Tcf7", "Cd160"],
+  "expected_tfs": ["Nfatc1", "Nr4a1", "Batf", "Tcf7"]
+}

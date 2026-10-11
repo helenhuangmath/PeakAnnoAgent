@@ -42,6 +42,9 @@ test_that("infer_species_defaults maps shortcuts and rejects unknown species", {
   expect_equal(hg$gprofiler, "hsapiens")
   expect_equal(infer_species_defaults("human")$msigdb, "Homo sapiens")
 
+  expect_equal(infer_species_defaults("mm39")$txdb, "TxDb.Mmusculus.UCSC.mm39.knownGene")
+  expect_equal(infer_species_defaults("hg19")$bsgenome, "BSgenome.Hsapiens.UCSC.hg19")
+  expect_equal(infer_species_defaults("mm10")$bsgenome, "BSgenome.Mmusculus.UCSC.mm10")
   expect_error(infer_species_defaults("dog"), "Supported species")
 })
 
@@ -52,4 +55,14 @@ test_that("validate_methods accepts known methods and rejects typos", {
 
   expect_error(validate_methods("clusterprofilr", "enrich"), "Unknown enrich method")
   expect_error(validate_methods(c("chipseeker", "bogus"), "annotate"), "bogus")
+})
+
+test_that("save_figure keeps only the PDF in the results folder", {
+  out <- tempfile("fig")
+  paths <- save_figure(function() graphics::plot(1:3), out, "demo")
+  expect_true(file.exists(paths[["pdf"]]))
+  expect_equal(dirname(paths[["pdf"]]), out)
+  expect_true(file.exists(paths[["png"]]))
+  expect_equal(basename(dirname(paths[["png"]])), ".preview")
+  expect_equal(list.files(out, pattern = "\\.png$"), character())
 })

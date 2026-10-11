@@ -38,10 +38,11 @@ run_clusterprofiler_go <- function(gene_lists, out_dir, prefix, species = "mm10"
 
   if (nrow(res) > 0) {
     p <- enrichplot::dotplot(cc, showCategory = as.integer(top_show), label_format = 55) +
-      ggplot2::theme_bw(base_size = 12) +
+      scale_color_padj_publication() +
+      theme_publication() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-    ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_clusterprofiler_GO_", ont, "_dotplot.pdf")),
-      p, width = max(9, length(gene_lists) * 0.9), height = 7, limitsize = FALSE)
+    ggsave_publication(file.path(out_dir, paste0(prefix, "_clusterprofiler_GO_", ont, "_dotplot.pdf")),
+      p, width = max(10, length(gene_lists) * 1.1), height = 8.5)
   }
   invisible(res)
 }
@@ -65,10 +66,11 @@ run_clusterprofiler_kegg <- function(gene_lists, out_dir, prefix, species = "mm1
   write_tsv(res, file.path(out_dir, paste0(prefix, "_clusterprofiler_KEGG.tsv")))
   if (nrow(res) > 0) {
     p <- enrichplot::dotplot(cc, showCategory = as.integer(top_show), label_format = 55) +
-      ggplot2::theme_bw(base_size = 12) +
+      scale_color_padj_publication() +
+      theme_publication() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-    ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_clusterprofiler_KEGG_dotplot.pdf")),
-      p, width = max(9, length(gene_lists) * 0.9), height = 7, limitsize = FALSE, bg = "white")
+    ggsave_publication(file.path(out_dir, paste0(prefix, "_clusterprofiler_KEGG_dotplot.pdf")),
+      p, width = max(10, length(gene_lists) * 1.1), height = 8.5)
   }
   invisible(res)
 }
@@ -93,10 +95,11 @@ run_reactomepa <- function(gene_lists, out_dir, prefix, species = "mm10",
   write_tsv(res, file.path(out_dir, paste0(prefix, "_reactomepa.tsv")))
   if (nrow(res) > 0) {
     p <- enrichplot::dotplot(cc, showCategory = as.integer(top_show), label_format = 55) +
-      ggplot2::theme_bw(base_size = 12) +
+      scale_color_padj_publication() +
+      theme_publication() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-    ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_reactomepa_dotplot.pdf")),
-      p, width = max(9, length(gene_lists) * 0.9), height = 7, limitsize = FALSE, bg = "white")
+    ggsave_publication(file.path(out_dir, paste0(prefix, "_reactomepa_dotplot.pdf")),
+      p, width = max(10, length(gene_lists) * 1.1), height = 8.5)
   }
   invisible(res)
 }
@@ -150,10 +153,11 @@ run_msigdb_enrichment <- function(gene_lists, out_dir, prefix, species = "mm10",
   write_tsv(res, file.path(out_dir, paste0(prefix, "_msigdb_", collection, ".tsv")))
   if (nrow(res) > 0) {
     p <- enrichplot::dotplot(cc, showCategory = as.integer(top_show), label_format = 55) +
-      ggplot2::theme_bw(base_size = 12) +
+      scale_color_padj_publication() +
+      theme_publication() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-    ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_msigdb_", collection, "_dotplot.pdf")),
-      p, width = max(9, length(gene_lists) * 0.9), height = 7, limitsize = FALSE, bg = "white")
+    ggsave_publication(file.path(out_dir, paste0(prefix, "_msigdb_", collection, "_dotplot.pdf")),
+      p, width = max(10, length(gene_lists) * 1.1), height = 8.5)
   }
   invisible(res)
 }

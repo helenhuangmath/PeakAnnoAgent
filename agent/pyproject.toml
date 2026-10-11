@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peakannoagent"
+version = "0.2.0"
+description = "LLM agent for genomic peak annotation, pathway, motif and regulator analysis with an HTML report"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Hua Huang"}]
+dependencies = []
+
+[project.optional-dependencies]
+agent = ["anthropic>=0.80"]
+mcp = ["mcp>=2.0"]
+
+[project.scripts]
+peakanno-agent = "peakannoagent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["peakannoagent*"]

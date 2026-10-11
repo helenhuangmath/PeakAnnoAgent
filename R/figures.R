@@ -1,3 +1,94 @@
+# Nature-style figures: Helvetica/Arial sans serif, black text, thin L-shaped axes with outward
+# ticks, no gridlines or chart junk, and vector PDFs with editable text. Colours are dark (Penn)
+# red with Penn Blue as the secondary and the Nature Publishing Group (NPG) palette for
+# categories. Every figure in the package takes its colours, fonts and PDF device from here.
+publication_colors <- function() {
+  list(
+    primary = "#990000",   # dark red (Penn Red)
+    accent = "#011F5B",    # Penn Blue, for reference lines and contrast
+    mid = "#C24A4A",
+    light = "#F2CFCF",
+    grey = "#7F7F7F",
+    bar = "#404040",       # dark grey for bar plots and histograms
+    npg = c("#3C5488", "#E64B35", "#00A087", "#4DBBD5", "#F39B7F", "#8491B4", "#91D1C2",
+      "#DC0000", "#7E6148", "#B09C85")
+  )
+}
+
+# Whole-number legend breaks for gene counts (no "17.5 genes").
+count_breaks <- function(limits) {
+  b <- unique(round(pretty(limits, n = 4)))
+  b[b >= max(1, floor(limits[1])) & b <= ceiling(limits[2])]
+}
+
+# Default ggplot2 base font size (pt) for package figures.
+publication_base_size <- 18
+
+# Light-to-dark-red ramp for significance (darker = more significant).
+publication_gradient <- function(n = 100) {
+  pc <- publication_colors()
+  grDevices::colorRampPalette(c(pc$light, pc$mid, pc$primary))(n)
+}
+
+# PDF device used for every figure: Helvetica (Arial-metric) text that stays editable in
+# Illustrator, and real circles instead of Dingbats glyphs, as Nature's artwork guide asks.
+publication_pdf <- function(filename, width = 7, height = 4.5, bg = "white", ...) {
+  grDevices::pdf(file = filename, width = width, height = height, family = "Helvetica", useDingbats = FALSE,
+    bg = bg, ...)
+}
+
+# ggsave() to a Nature-style PDF.
+ggsave_publication <- function(file, plot, width, height, ...) {
+  ggplot2::ggsave(file, plot, width = width, height = height, device = publication_pdf, limitsize = FALSE, ...)
+}
+
+# Base-graphics defaults applied to every figure written by save_figure().
+publication_par <- function() {
+  graphics::par(family = "sans", las = 1, tcl = -0.3, mgp = c(3.4, 0.8, 0), cex.axis = 1.5,
+    cex.lab = 1.8, cex.main = 1.7, font.main = 2, bty = "l", lwd = 0.8, col.main = "black",
+    col.lab = "black", col.axis = "black", col = "black", fg = "black")
+}
+
+theme_publication <- function(base_size = publication_base_size) {
+  ggplot2::theme_classic(base_size = base_size, base_family = "sans") +
+    ggplot2::theme(
+      text = ggplot2::element_text(colour = "black"),
+      axis.text = ggplot2::element_text(colour = "black", size = base_size),
+      axis.title = ggplot2::element_text(colour = "black", size = base_size + 2),
+      axis.line = ggplot2::element_line(colour = "black", linewidth = 0.4),
+      axis.ticks = ggplot2::element_line(colour = "black", linewidth = 0.4),
+      legend.text = ggplot2::element_text(colour = "black", size = base_size - 1),
+      legend.title = ggplot2::element_text(colour = "black", size = base_size),
+      legend.background = ggplot2::element_blank(),
+      legend.key = ggplot2::element_blank(),
+      legend.key.size = ggplot2::unit(0.5, "cm"),
+      plot.title = ggplot2::element_text(face = "bold", colour = "black", size = base_size + 2),
+      strip.background = ggplot2::element_blank(),
+      strip.text = ggplot2::element_text(face = "bold", colour = "black", size = base_size),
+      panel.grid = ggplot2::element_blank()
+    )
+}
+
+# Network figures: Nature-style text on a blank canvas.
+theme_network_publication <- function(base_size = publication_base_size) {
+  ggplot2::theme_void(base_size = base_size, base_family = "sans") +
+    ggplot2::theme(
+      text = ggplot2::element_text(colour = "black"),
+      plot.title = ggplot2::element_text(face = "bold", colour = "black", size = base_size + 3),
+      plot.caption = ggplot2::element_text(colour = "black", hjust = 0, size = base_size, lineheight = 1.15),
+      plot.caption.position = "plot",
+      legend.text = ggplot2::element_text(colour = "black", size = base_size - 1),
+      legend.title = ggplot2::element_text(colour = "black", size = base_size),
+      plot.margin = ggplot2::margin(10, 10, 10, 10)
+    )
+}
+
+# enrichplot dot plots colour by p.adjust (smaller = more significant = darker).
+scale_color_padj_publication <- function() {
+  pc <- publication_colors()
+  ggplot2::scale_color_gradient(low = pc$primary, high = pc$light, name = "p.adjust")
+}
+
 plot_annotation_summary <- function(annotation_table, out_dir, prefix) {
   require_pkg("data.table")
   dt <- data.table::fread(annotation_table)
@@ -12,7 +103,8 @@ plot_annotation_summary <- function(annotation_table, out_dir, prefix) {
   invisible(tab)
 }
 
-plot_enrichment_dotplot <- function(enrichment_table, out_file, padj_cutoff = 0.05, top_show = 10) {
+plot_enrichment_dotplot <- function(enrichment_table, out_file, padj_cutoff = 0.05, top_show = 10,
+                                    title = "Pathway enrichment") {
   require_pkg("data.table")
   dt <- if (is.character(enrichment_table)) data.table::fread(enrichment_table) else data.table::as.data.table(enrichment_table)
   if (!nrow(dt)) return(invisible(NULL))
@@ -36,7 +128,9 @@ plot_enrichment_dotplot <- function(enrichment_table, out_file, padj_cutoff = 0.
   dt[, negLogPadj := pmin(-log10(get(padj_col)), 50)]
   top <- dt[order(get(group_col), get(padj_col)), utils::head(.SD, top_show), by = group_col]
   dt <- dt[get(term_col) %in% unique(top[[term_col]])]
-  dt[, TermPlot := factor(get(term_col), levels = rev(unique(top[[term_col]])))]
+  # Readable, wrapped labels: MSigDB names such as GSE7218_UNSTIM_VS_... would otherwise push the
+  # plot panel off the page.
+  dt[, TermPlot := factor(wrap_label(get(term_col), 42), levels = rev(unique(wrap_label(top[[term_col]], 42))))]
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     plot_enrichment_dotplot_base(dt, out_file, group_col = group_col, term_col = term_col)
@@ -45,13 +139,19 @@ plot_enrichment_dotplot <- function(enrichment_table, out_file, padj_cutoff = 0.
 
   p <- ggplot2::ggplot(dt, ggplot2::aes(x = get(group_col), y = TermPlot, size = nGene, color = negLogPadj)) +
     ggplot2::geom_point(alpha = 0.9) +
-    ggplot2::scale_color_gradient(low = "#fdae61", high = "#7f0000", name = "-log10 padj") +
-    ggplot2::scale_size_continuous(name = "# genes") +
-    ggplot2::theme_bw(base_size = 11) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
-    ggplot2::labs(x = NULL, y = NULL, title = "Pathway enrichment")
-  ggplot2::ggsave(out_file, p, width = 10, height = max(4, length(unique(dt[[term_col]])) * 0.28 + 2),
-    limitsize = FALSE, bg = "white")
+    ggplot2::scale_color_gradient(low = publication_colors()$light, high = publication_colors()$primary,
+      name = "-log10 padj") +
+    ggplot2::scale_size_continuous(name = "# genes", breaks = count_breaks, range = c(3, 10)) +
+    theme_publication() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+      panel.grid.major.y = ggplot2::element_line(colour = "grey92", linewidth = 0.3)) +
+    ggplot2::labs(x = NULL, y = NULL, title = title)
+  height <- max(5.5, sum(lengths(strsplit(levels(dt$TermPlot), "\n"))) * 0.32 + 3)
+  if (grepl("\\.pdf$", out_file)) {
+    ggsave_publication(out_file, p, width = 13, height = height)
+  } else {
+    ggplot2::ggsave(out_file, p, width = 13, height = height, limitsize = FALSE, bg = "white")
+  }
   invisible(p)
 }
 
@@ -59,23 +159,25 @@ plot_annotation_summary_base <- function(tab, out_dir, prefix) {
   feature_levels <- c("Promoter", "5' UTR", "3' UTR", "1st Exon", "Other Exon",
     "1st Intron", "Other Intron", "Downstream", "Downstream (<=300)", "Distal Intergenic",
     "Intron", "Exon")
+  npg <- publication_colors()$npg
   feature_colors <- c(
-    "Promoter" = "#a6cee3",
-    "5' UTR" = "#1f78b4",
-    "3' UTR" = "#b2df8a",
-    "1st Exon" = "#33a02c",
-    "Other Exon" = "#fb9a99",
-    "1st Intron" = "#e31a1c",
-    "Other Intron" = "#fdbf6f",
-    "Downstream" = "#ff7f00",
-    "Downstream (<=300)" = "#ff7f00",
-    "Distal Intergenic" = "#cab2d6",
-    "Intron" = "#e31a1c",
-    "Exon" = "#fb9a99"
+    "Promoter" = publication_colors()$primary,
+    "5' UTR" = npg[4],
+    "3' UTR" = npg[3],
+    "1st Exon" = npg[7],
+    "Other Exon" = npg[6],
+    "1st Intron" = npg[2],
+    "Other Intron" = npg[5],
+    "Downstream" = npg[9],
+    "Downstream (<=300)" = npg[9],
+    "Distal Intergenic" = npg[10],
+    "Intron" = npg[2],
+    "Exon" = npg[6]
   )
   extras <- setdiff(tab$Annotation, names(feature_colors))
   if (length(extras)) {
-    extra_cols <- grDevices::hcl.colors(length(extras), "Set 2")
+    extra_cols <- rep(c(publication_colors()$accent, npg[c(1, 8)], publication_colors()$grey),
+      length.out = length(extras))
     names(extra_cols) <- extras
     feature_colors <- c(feature_colors, extra_cols)
   }
@@ -89,7 +191,8 @@ plot_annotation_summary_base <- function(tab, out_dir, prefix) {
     old <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(old), add = TRUE)
     graphics::layout(matrix(c(1, 2), nrow = 1), widths = c(4.2, 1.3))
-    graphics::par(mar = c(4, 2, 1, 1), xpd = FALSE)
+    publication_par()
+    graphics::par(mar = c(5, 2, 1, 1), xpd = FALSE)
     widths <- matrix(tab$Pct, nrow = nrow(tab))
     y_mid <- graphics::barplot(widths, horiz = TRUE, beside = FALSE, col = colors, border = NA,
       xlim = c(0, 100), axes = FALSE, names.arg = "", xlab = "")
@@ -98,29 +201,30 @@ plot_annotation_summary_base <- function(tab, out_dir, prefix) {
     x_mid <- x_left + tab$Pct / 2
     labels <- ifelse(tab$Pct %% 1 == 0, sprintf("%.0f%%", tab$Pct), sprintf("%.1f%%", tab$Pct))
     inside <- tab$Pct >= 8
-    graphics::text(x_mid[inside], y_mid, labels[inside], cex = 0.8, col = "black")
+    graphics::text(x_mid[inside], y_mid, labels[inside], cex = 1.4, col = "black")
     if (any(!inside)) {
-      graphics::text(x_mid[!inside], y_mid + 0.55, labels[!inside], cex = 0.7, col = "black")
+      graphics::text(x_mid[!inside], y_mid + 0.55, labels[!inside], cex = 1.2, col = "black")
     }
     graphics::par(mar = c(1, 0, 1, 1))
     graphics::plot.new()
     graphics::legend("topleft", legend = as.character(tab$Annotation),
-      fill = colors, title = "Feature", bty = "n", cex = 0.82)
+      fill = colors, title = "Feature", bty = "n", cex = 1.4)
   }
-  grDevices::pdf(bar_pdf, width = 9, height = 3.2, bg = "white"); draw_bar(); grDevices::dev.off()
+  publication_pdf(bar_pdf, width = 11, height = 4.2); draw_bar(); grDevices::dev.off()
 
   draw_pie <- function() {
     old <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(old), add = TRUE)
     graphics::layout(matrix(c(1, 2), nrow = 1), widths = c(3.2, 1.2))
+    publication_par()
     graphics::par(mar = c(2, 2, 2, 1), xpd = FALSE)
     graphics::pie(tab$N, labels = rep("", nrow(tab)), col = colors, border = "black", main = "")
     graphics::par(mar = c(1, 0, 1, 1))
     graphics::plot.new()
     graphics::legend("left", legend = as.character(tab$Annotation),
-      fill = colors, title = "Feature", bty = "n", cex = 0.82)
+      fill = colors, title = "Feature", bty = "n", cex = 1.4)
   }
-  grDevices::pdf(pie_pdf, width = 7, height = 4.5, bg = "white"); draw_pie(); grDevices::dev.off()
+  publication_pdf(pie_pdf, width = 9, height = 5.5); draw_pie(); grDevices::dev.off()
 }
 
 plot_enrichment_dotplot_base <- function(dt, out_file, group_col, term_col) {
@@ -131,14 +235,15 @@ plot_enrichment_dotplot_base <- function(dt, out_file, group_col, term_col) {
   dt[, x := match(get(group_col), groups)]
   dt[, y := match(as.character(TermPlot), terms)]
   size <- 1.3 + 4 * sqrt(dt$nGene / max(dt$nGene))
-  pal <- grDevices::colorRampPalette(c("#fdae61", "#d95f0e", "#7f0000"))(100)
+  pal <- publication_gradient(100)
   color_idx <- pmax(1, pmin(100, round(1 + 99 * dt$negLogPadj / max(dt$negLogPadj))))
 
   draw_dot <- function() {
     old <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(old), add = TRUE)
+    publication_par()
     graphics::layout(matrix(c(1, 2), nrow = 1), widths = c(4.5, 1))
-    graphics::par(mar = c(7, 18, 4, 1))
+    graphics::par(mar = c(8, 26, 4, 1))
     graphics::plot(
       dt$x, dt$y,
       pch = 16,
@@ -153,7 +258,7 @@ plot_enrichment_dotplot_base <- function(dt, out_file, group_col, term_col) {
       main = "Pathway enrichment"
     )
     graphics::axis(1, at = seq_along(groups), labels = groups, las = 2)
-    graphics::axis(2, at = seq_along(terms), labels = term_labels, las = 1, cex.axis = 0.85)
+    graphics::axis(2, at = seq_along(terms), labels = term_labels, las = 1, cex.axis = 1.3)
     graphics::grid(nx = length(groups), ny = length(terms), col = "grey90")
     graphics::box()
 
@@ -169,7 +274,7 @@ plot_enrichment_dotplot_base <- function(dt, out_file, group_col, term_col) {
       pt.cex = 1.3 + 4 * sqrt(size_values / max(dt$nGene)),
       col = "black",
       bty = "n",
-      cex = 0.85
+      cex = 1.4
     )
     graphics::legend("left",
       legend = c("2", "4", "6"),
@@ -178,8 +283,8 @@ plot_enrichment_dotplot_base <- function(dt, out_file, group_col, term_col) {
       pt.cex = 1.3,
       col = pal[round(seq(15, 90, length.out = 3))],
       bty = "n",
-      cex = 0.85
+      cex = 1.4
     )
   }
-  grDevices::pdf(pdf_file, width = 10, height = max(4.5, length(terms) * 0.35 + 2), bg = "white"); draw_dot(); grDevices::dev.off()
+  publication_pdf(pdf_file, width = 13, height = max(6, length(terms) * 0.5 + 3)); draw_dot(); grDevices::dev.off()
 }
