@@ -1,13 +1,6 @@
-PeakAnnoAgent
-From a peak file to an evidence-linked biological report: annotation, pathways, motifs, regulators and literature in one run.
+# PeakAnnoAgent
 
-<p align="left">
-  <a href="LICENSE.md"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="R >= 4.1" src="https://img.shields.io/badge/R-%E2%89%A5%204.1-276DC3.svg">
-  <img alt="Python >= 3.10" src="https://img.shields.io/badge/python-%E2%89%A5%203.10-3776AB.svg">
-  <img alt="Bioconductor engine" src="https://img.shields.io/badge/engine-Bioconductor-1A81C2.svg">
-  <img alt="Lifecycle: experimental" src="https://img.shields.io/badge/lifecycle-experimental-orange.svg">
-</p>
+From a peak file to an evidence-linked biological report: annotation, pathways, motifs, regulators and literature in one run.
 
 **PeakAnnoAgent** annotates and interprets genomic peak sets from ChIP-seq, ATAC-seq, CUT&RUN or
 CUT&Tag. You give it three things:
