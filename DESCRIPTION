@@ -1,15 +1,16 @@
 Package: PeakAnnoAgent
 Title: Peak Annotation and Pathway Analysis Agent
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Hua", "Huang", role = c("aut", "cre"),
     email = "your_email@example.com")
 Author: Hua Huang [aut, cre]
 Maintainer: Hua Huang <your_email@example.com>
-Description: Reusable R package and command-line agent for genomic peak
-    annotation, pathway enrichment, and publication-ready figures using
-    ChIPseeker, rGREAT, HOMER, clusterProfiler, Enrichr, DAVID,
-    g:Profiler, WebGestaltR, ReactomePA, MSigDB, and Metascape-friendly
-    exports.
+Description: Analysis engine for the PeakAnnoAgent LLM agent: genomic peak
+    QC, ChIPpeakAnno annotation, pathway enrichment, known-motif enrichment,
+    and publication-ready figures using ChIPpeakAnno, ChIPseeker, rGREAT,
+    HOMER, monaLisa, clusterProfiler, Enrichr, DAVID, g:Profiler,
+    WebGestaltR, ReactomePA, MSigDB, and Metascape-friendly exports. A JSON
+    tool bridge lets the companion Python agent drive every analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,17 +21,29 @@ Imports:
     data.table
 Suggests:
     AnnotationDbi,
+    BiocParallel,
+    Biostrings,
+    BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Mmusculus.UCSC.mm10,
     annotatr,
     ChIPseeker,
     ChIPpeakAnno,
     clusterProfiler,
     enrichplot,
     ggplot2,
+    ggrepel,
     enrichR,
     gprofiler2,
     GenomicRanges,
     GenomicFeatures,
+    igraph,
     IRanges,
+    JASPAR2024,
+    jsonlite,
+    monaLisa,
+    RSQLite,
+    SummarizedExperiment,
+    TFBSTools,
     msigdbr,
     ReactomePA,
     rGREAT,

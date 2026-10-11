@@ -28,3 +28,15 @@ This repository separates analysis methods into interchangeable backends.
 ## Recommended reporting standard
 
 For manuscripts, run at least one local method with an explicit universe, such as `clusterprofiler`, and use API methods as complementary evidence. Save the exact input gene sets, background gene universe, package versions, and generated enrichment tables with every figure.
+
+Figures follow Nature's artwork guidelines (`R/figures.R`). Every figure is written as a vector PDF with Helvetica text that stays editable, and with no Dingbats glyphs. Text is black, axes are thin and L-shaped, and there are no gridlines. ggplot figures use an 18 pt base font, and gene symbols are set in italics. Bar plots are dark grey. Significance colours run from light to dark red (#990000), with Penn Blue (#011F5B) for reference lines. A PNG copy of each figure is embedded in the HTML report, which links each one to its PDF.
+
+## Agent analyses (agent/ + R engine)
+
+- `peak_qc`: standard chromosomes, duplicates, width summary, optional blacklist removal; writes a cleaned BED.
+- `annotate_peaks`: ChIPpeakAnno `annotatePeakInBatch` (nearest gene by TSS, plus all genes whose TSS window overlaps the peak), `assignChromosomeRegion`, `binOverFeature`; builds promoter / distal / all gene sets and a genome background.
+- `enrich_pathways`: clusterProfiler ORA (GO, KEGG, ReactomePA, any MSigDB collection) against the genome background; user GMT signatures use a hypergeometric test against the same full background.
+- `find_motifs`: HOMER `findMotifsGenome.pl` (known motifs) when installed, otherwise monaLisa with JASPAR CORE vertebrate PWMs vs a GC-matched random genomic background.
+- `chipatlas_*`: ChIP-Atlas Enrichment Analysis (overlap with all public ChIP/ATAC experiments vs permuted background) and ChIP-Atlas target-gene tables.
+- `integrate_rnaseq`, `check_expectations`: hypergeometric tests of DE genes vs peak-linked genes; positive-control recovery of expected genes and TFs.
+- `search_literature`, `search_geo`: Europe PMC and NCBI GEO searches; retrieved PMIDs/accessions are the only citations the report accepts.

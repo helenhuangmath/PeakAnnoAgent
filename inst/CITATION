@@ -5,7 +5,7 @@ citEntry(
   title = "PeakAnnoAgent: Peak Annotation and Pathway Analysis Agent",
   author = personList(person("Hua", "Huang")),
   year = "2026",
-  note = "R package version 0.1.0",
+  note = "R package version 0.2.0",
   url = "https://github.com/helenhuangmath/PeakAnnoAgent",
-  textVersion = "Huang H. (2026). PeakAnnoAgent: Peak Annotation and Pathway Analysis Agent. R package version 0.1.0. https://github.com/helenhuangmath/PeakAnnoAgent"
+  textVersion = "Huang H. (2026). PeakAnnoAgent: Peak Annotation and Pathway Analysis Agent. R package version 0.2.0. https://github.com/helenhuangmath/PeakAnnoAgent"
 )

@@ -1,10 +1,12 @@
 peaks_to_granges <- function(peaks) {
   require_pkg("GenomicRanges")
   require_pkg("IRanges")
-  GenomicRanges::GRanges(
+  gr <- GenomicRanges::GRanges(
     seqnames = peaks$Chr,
     ranges = IRanges::IRanges(start = peaks$Start, end = peaks$End)
   )
+  if ("PeakID" %in% names(peaks)) names(gr) <- peaks$PeakID
+  gr
 }
 
 run_chipseeker_annotation <- function(peaks, out_dir, prefix, species = "mm10",
@@ -38,15 +40,16 @@ run_chipseeker_annotation <- function(peaks, out_dir, prefix, species = "mm10",
   dist_tab <- dist_tab[order(-dist_tab$Freq), ]
   write_tsv(dist_tab, file.path(out_dir, paste0(prefix, "_chipseeker_annotation_distribution.tsv")))
 
-  grDevices::pdf(file.path(out_dir, paste0(prefix, "_chipseeker_pie.pdf")), height = 4.5, width = 7)
-  ChIPseeker::plotAnnoPie(anno, main = prefix)
+  publication_pdf(file.path(out_dir, paste0(prefix, "_chipseeker_pie.pdf")), height = 5, width = 8)
+  publication_par()
+  ChIPseeker::plotAnnoPie(anno, main = prefix, cex = 1.4)
   grDevices::dev.off()
 
-  p_bar <- ChIPseeker::plotAnnoBar(anno, title = prefix) + ggplot2::theme_classic()
-  ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_chipseeker_bar.pdf")), p_bar, height = 3.2, width = 9)
+  p_bar <- ChIPseeker::plotAnnoBar(anno, title = prefix) + theme_publication()
+  ggsave_publication(file.path(out_dir, paste0(prefix, "_chipseeker_bar.pdf")), p_bar, height = 3.8, width = 10)
 
-  p_tss <- ChIPseeker::plotDistToTSS(anno, title = paste(prefix, "distance to TSS")) + ggplot2::theme_classic()
-  ggplot2::ggsave(file.path(out_dir, paste0(prefix, "_chipseeker_tss_distance.pdf")), p_tss, height = 3.2, width = 9)
+  p_tss <- ChIPseeker::plotDistToTSS(anno, title = paste(prefix, "distance to TSS")) + theme_publication()
+  ggsave_publication(file.path(out_dir, paste0(prefix, "_chipseeker_tss_distance.pdf")), p_tss, height = 3.8, width = 10)
 
   invisible(list(annotation = out_table, object = anno))
 }

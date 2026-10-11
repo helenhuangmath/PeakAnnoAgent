@@ -20,7 +20,8 @@ if (length(file_arg)) {
 }
 
 if (dir.exists(file.path(repo_root, "R"))) {
-  for (f in c("utils.R", "figures.R", "annotation.R", "enrichment.R")) {
+  for (f in c("utils.R", "figures.R", "annotation.R", "enrichment.R", "qc.R", "chippeakanno.R",
+    "motifs.R", "networks.R", "agent_tools.R")) {
     source(file.path(repo_root, "R", f))
   }
 } else {

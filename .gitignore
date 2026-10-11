@@ -4,11 +4,15 @@
 .Rproj.user/
 renv/library/
 __pycache__/
+*.egg-info/
+.venv/
+venv/
 
 # Analysis outputs
 results/
 *.pdf
 *.png
+!docs/figures/*.png
 *.rds
 *.Rds
 *.tar.gz

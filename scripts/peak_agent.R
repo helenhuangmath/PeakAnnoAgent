@@ -8,10 +8,9 @@ script_path <- if (length(file_arg)) sub("^--file=", "", file_arg[[1]]) else "sc
 repo_root <- normalizePath(file.path(dirname(script_path), ".."), mustWork = FALSE)
 if (!dir.exists(file.path(repo_root, "R"))) repo_root <- normalizePath(getwd(), mustWork = TRUE)
 
-source(file.path(repo_root, "R", "utils.R"))
-source(file.path(repo_root, "R", "figures.R"))
-source(file.path(repo_root, "R", "annotation.R"))
-source(file.path(repo_root, "R", "enrichment.R"))
+for (f in c("utils.R", "figures.R", "annotation.R", "enrichment.R", "qc.R", "chippeakanno.R", "motifs.R", "networks.R")) {
+  source(file.path(repo_root, "R", f))
+}
 
 usage <- function() {
   cat("
@@ -21,9 +20,14 @@ Usage:
   Rscript scripts/peak_agent.R <command> [options]
 
 Commands:
+  qc         Peak-set QC and cleaning (widths, contigs, duplicates, blacklist).
   annotate   Annotate genomic peaks with gene/feature context.
   enrich     Run gene-set / pathway enrichment on clustered gene lists.
+  motifs     Known-motif enrichment (HOMER if installed, else monaLisa + JASPAR).
   figures    Build figures from existing annotation or enrichment tables.
+
+For the full agent (pathways + motifs + public data + literature + HTML report)
+use the Python CLI: peakanno-agent run --help
 
 Common options (all commands):
   --out DIR              Output directory                       (default: results)
@@ -40,6 +44,8 @@ annotate options:
   --orgdb PKG            Override OrgDb package name.
   --tss-upstream N       Promoter window upstream of TSS        (default: 1000)
   --tss-downstream N     Promoter window downstream of TSS      (default: 1000)
+  --promoter-upstream N  ChIPpeakAnno promoter window upstream   (default: 2000)
+  --promoter-downstream N  ChIPpeakAnno promoter window downstream (default: 500)
   --annotatr-annotations LIST  Override annotatr annotation codes.
   --great-rule RULE      rGREAT rule, e.g. oneClosest           (default: oneClosest)
   --great-distance N     rGREAT single-gene distance            (default: 2000)
@@ -61,6 +67,16 @@ enrich options:
   --libraries LIST       Override Enrichr libraries.
   --webgestalt-database DB  WebGestaltR database name.
   --david-email ADDR     DAVID account email (or set DAVID_EMAIL).
+
+qc options:
+  --peaks FILE           Peak BED                               (required)
+  --blacklist FILE       Blacklist BED to remove.
+
+motifs options:
+  --peaks FILE           Peak BED                               (required)
+  --backend NAME         auto | homer | monalisa                (default: auto)
+  --size N               Window around peak centre, bp          (default: 200)
+  --max-peaks N          Strongest peaks scanned                (default: 5000)
 
 figures options:
   --annotation FILE      Annotation table -> bar/pie summary figures.
@@ -134,13 +150,16 @@ if (command == "annotate") {
     )
   }
   if ("chipeakanno" %in% methods || "chippeakanno" %in% methods) {
-    msg("Running ChIPpeakAnno annotation on %d peaks.", nrow(peaks))
-    run_chipeakanno_annotation(
+    msg("Running the ChIPpeakAnno workflow on %d peaks.", nrow(peaks))
+    run_chippeakanno_pipeline(
       peaks = peaks,
       out_dir = out_dir,
       prefix = prefix,
       species = species,
-      txdb_pkg = arg_value(args, "txdb", NULL)
+      txdb_pkg = arg_value(args, "txdb", NULL),
+      orgdb_pkg = arg_value(args, "orgdb", NULL),
+      promoter_upstream = arg_value(args, "promoter-upstream", 2000),
+      promoter_downstream = arg_value(args, "promoter-downstream", 500)
     )
   }
   if ("annotatr" %in% methods) {
@@ -268,6 +287,20 @@ if (command == "annotate") {
     msg("Running DAVID enrichment.")
     run_david_enrichment(gene_lists, out_dir, prefix, species = species, email = arg_value(args, "david-email", Sys.getenv("DAVID_EMAIL")))
   }
+} else if (command == "qc") {
+  peaks_path <- arg_value(args, "peaks")
+  if (is.null(peaks_path)) stop("--peaks is required.", call. = FALSE)
+  res <- run_peak_qc(read_peak_file(peaks_path), out_dir, prefix, blacklist = arg_value(args, "blacklist", NULL))
+  msg("%d peaks, %d after cleaning.", res$n_peaks, res$n_clean_peaks)
+  for (w in res$warnings) msg("Warning: %s", w)
+} else if (command == "motifs") {
+  peaks_path <- arg_value(args, "peaks")
+  if (is.null(peaks_path)) stop("--peaks is required.", call. = FALSE)
+  res <- run_motif_enrichment(read_peak_file(peaks_path), out_dir, prefix, species = species,
+    backend = arg_value(args, "backend", "auto"), size = as.integer(arg_value(args, "size", 200)),
+    max_peaks = as.integer(arg_value(args, "max-peaks", 5000)),
+    padj_cutoff = as.numeric(arg_value(args, "padj", 0.05)))
+  msg("%s: %d significant motifs.", res$backend, res$n_significant)
 } else if (command == "figures") {
   annotation <- arg_value(args, "annotation", NULL)
   enrichment <- arg_value(args, "enrichment", NULL)

@@ -24,6 +24,18 @@ test_that("read_gene_table splits genes by cluster and dedupes", {
   expect_true(all(vapply(groups, function(g) !any(duplicated(g)), logical(1))))
 })
 
+test_that("read_gene_table keeps genes shared between clusters in every cluster", {
+  tmp <- tempfile(fileext = ".tsv")
+  data.table::fwrite(data.table::data.table(
+    Cluster = c("a", "a", "b", "b", "b", "c"),
+    SYMBOL = c("Tox", "Pdcd1", "Tox", "Pdcd1", "Tcf7", "Tox")
+  ), tmp, sep = "\t")
+  groups <- read_gene_table(tmp, gene_col = "SYMBOL", cluster_col = "Cluster")
+  expect_equal(groups$a, c("Tox", "Pdcd1"))
+  expect_equal(groups$b, c("Tox", "Pdcd1", "Tcf7"))
+  expect_equal(groups$c, "Tox")
+})
+
 test_that("read_gene_table collapses to a single 'All' group without a cluster column", {
   groups <- read_gene_table(file.path(example_dir, "example_cluster_genes.tsv"),
     gene_col = "SYMBOL", cluster_col = NULL)
