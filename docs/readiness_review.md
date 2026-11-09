@@ -74,9 +74,11 @@ web/demo files are currently untracked.
 ## Claude file cleanup
 
 No `CLAUDE.md`, `CLAUDE.local.md`, `.claude` directory or other Claude-named files were
-found in this checkout. Added ignore rules for these local instruction/settings files
-and verified the rules with `git check-ignore`. Claude/Anthropic references in source
-and documentation implement the existing application integration and were retained.
+found in this checkout. The initial review added and verified ignore rules for these
+local instruction/settings files. At the user's subsequent request, this PR removes
+the tracked `.gitignore` file entirely, superseding those ignore-rule additions.
+Claude/Anthropic references in source and documentation implement the existing
+application integration and were retained.
 Existing user changes were preserved; no files were deleted during the review.
 
 ## PARCC execution requirement
