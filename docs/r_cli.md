@@ -137,5 +137,5 @@ Rscript scripts/peak_agent.R figures \
 
 - `--species` accepts `mm10`, `mm39`, `hg38`, `hg19`, `mouse` and `human`.
 - Override the annotation databases with `--txdb` and `--orgdb`.
-- Keep large raw data outside the repository. `.gitignore` excludes BAM, bigWig, FASTQ, compressed BED
+- Keep large raw data outside the repository, including BAM, bigWig, FASTQ and compressed BED
   and result files.

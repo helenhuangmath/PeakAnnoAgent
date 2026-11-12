@@ -80,5 +80,4 @@ sphinx-build -b html docs/site docs/site/_build/html
 open docs/site/_build/html/index.html
 ```
 
-The site is configured for [Read the Docs](https://readthedocs.org) through `.readthedocs.yaml` in the
-repository root.
+The commands above build the documentation locally. Hosted documentation configuration is managed separately.
