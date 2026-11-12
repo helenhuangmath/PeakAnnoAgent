@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2 — update-network-plots
+## 1.0.2
 
 Released 2026-11-12. See `docs/release_1.0.2.md` for validation and external checks.
 

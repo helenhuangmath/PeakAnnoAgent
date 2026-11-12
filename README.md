@@ -43,6 +43,8 @@ ready for Illustrator.
 
 ## Installation
 
+Built R and Python packages are available in the [v1.0.2 release](https://github.com/helenhuangmath/PeakAnnoAgent/releases/tag/v1.0.2). See [package installation and publishing](docs/package_distribution.md) for direct installation, local builds, PyPI and CRAN instructions.
+
 PeakAnnoAgent has two parts:
 
 - an **R engine**, which does all the statistics and draws the figures;
@@ -289,7 +291,7 @@ database by setting `--txdb` and `--orgdb` in the R command line.
 - [Tutorial website](docs/site/): installation, tool usage, outputs and five step-by-step tutorials
   (Sphinx, Read the Docs theme). Build it with
   `pip install -r docs/site/requirements.txt && sphinx-build -b html docs/site docs/site/_build/html`;
-  `.readthedocs.yaml` publishes it on Read the Docs once the repository is imported there
+  Build it locally with the instructions in the documentation installation guide
 - [Agent guide](agent/README.md): modes, outputs, guardrails, MCP setup
 - [Methods](docs/methods.md): statistical methods and the reporting standard
 - [Agent design](docs/agent_design.md): architecture and tool contracts
@@ -315,7 +317,7 @@ PeakAnnoAgent is released under the [MIT License](LICENSE.md), © 2026 Hua Huang
 **Author and maintainer:** Hua Huang, University of Pennsylvania.
 Contact: [helenhuang.math@gmail.com](mailto:helenhuang.math@gmail.com). Bug reports and feature
 requests: [GitHub issues](https://github.com/helenhuangmath/PeakAnnoAgent/issues).
-Current release: **1.0.2 — update-network-plots** (see [CHANGELOG.md](CHANGELOG.md) and the [release validation guide](docs/release_1.0.2.md)).
+Current release: **v1.0.2** (see [CHANGELOG.md](CHANGELOG.md) and the [release validation guide](docs/release_1.0.2.md)).
 
 PeakAnnoAgent depends on many open-source Bioconductor and CRAN packages, and on public resources
 (ChIP-Atlas, Europe PMC, NCBI GEO, JASPAR, MSigDB). Each has its own license and terms of use. MSigDB

@@ -1,6 +1,6 @@
-# PeakAnnoAgent 1.0.2 — update-network-plots
+# PeakAnnoAgent v1.0.2
 
-Version: **1.0.2**. Tag: **v1.0.2**. Release title: **update-network-plots**.
+Version: **1.0.2**. Tag: **v1.0.2**. Release title: **v1.0.2**.
 
 Released November 12, 2026.
 
