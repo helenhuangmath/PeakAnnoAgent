@@ -5,4 +5,4 @@ monaLisa/HOMER); this Python package runs it as tools, adds public-data and
 literature search, lets Claude plan and interpret, and writes the HTML report.
 """
 
-__version__ = "0.2.0"
+__version__ = "1.0.2"

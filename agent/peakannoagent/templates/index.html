@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PeakAnnoAgent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body class="home">
+<header class="top">
+  <a class="brand" href="/"><span class="logo">◆</span> PeakAnnoAgent</a>
+  <nav class="topnav">
+    <a href="#examples">Examples</a>
+    <a href="#new">New run</a>
+    <a href="#runs">Runs</a>
+    <a href="https://github.com/helenhuangmath/PeakAnnoAgent" target="_blank" rel="noopener">Docs</a>
+  </nav>
+</header>
+
+<main class="wrap narrow">
+  <section class="hero">
+    <h1>Annotate and interpret a peak set</h1>
+    <p>Give the agent your peaks, the genome, and what you already know. It runs the whole analysis
+      (annotation, pathways, motifs, regulators, literature) and writes an interpretation where every claim
+      links to the result it came from.</p>
+  </section>
+
+  {% if examples %}
+  <section class="examples" id="examples">
+    <div class="examples-head">
+      <h2>New here? Start from an example</h2>
+      <p class="muted">Real ENCODE peak sets and one synthetic demo. <b>Run</b> starts the analysis as is;
+        <b>Edit</b> fills the form below so you can change the biology first.</p>
+    </div>
+    <div class="example-grid">
+      {% for key, ex in examples %}
+      <article class="example {% if form and form.example == key %}selected{% endif %}">
+        <div class="example-tags"><span class="tag genome">{{ ex.genome }}</span><span class="tag">{{ ex.n_peaks }} peaks</span><span class="tag kind">{{ ex.kind }}</span></div>
+        <h3>{{ ex.title }}</h3>
+        <p>{{ ex.blurb }}</p>
+        <p class="src">{{ ex.source }}</p>
+        <div class="example-actions">
+          <form method="post" action="/runs" class="inline-form">
+            <input type="hidden" name="use_example" value="{{ key }}">
+            <input type="hidden" name="mode" value="{{ 'agent' if env.anthropic_sdk and env.api_key else 'deterministic' }}">
+            <button type="submit" class="btn primary">Run</button>
+          </form>
+          <a class="btn" href="/?example={{ key }}#new">Edit first</a>
+          <a class="dl" href="/examples/{{ ex.files.peaks }}" title="Download the BED file">BED ↓</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if error %}<p class="flag">{{ error }}</p>{% endif %}
+
+  <form method="post" action="/runs" enctype="multipart/form-data" id="new" class="steps-form">
+    {% if form and form.example %}<input type="hidden" name="example" value="{{ form.example }}">{% endif %}
+
+    <section class="step">
+      <header><span class="num">1</span><div><h2>Your peaks</h2><p>A BED file, or any TSV with Chr, Start and End columns.</p></div></header>
+      <div class="body">
+        {% if form and form.example %}
+        <p class="note">Example attached: <b>{{ form.example_title }}</b>. Its peaks{% if form.has_gmt %}, gene signatures{% endif %}{% if form.has_rnaseq %} and RNA-seq table{% endif %} are used unless you upload your own.</p>
+        {% endif %}
+        <div class="grid2">
+          <label class="file">
+            <span>Peak file</span>
+            <input type="file" name="peaks" accept=".bed,.tsv,.txt,.narrowPeak,.broadPeak">
+          </label>
+          <label>
+            <span>Genome</span>
+            <select name="genome">{% for g in genomes %}<option value="{{ g }}" {% if form and form.genome == g %}selected{% endif %}>{{ g }}{% if g == 'mm10' %} (mouse){% elif g == 'hg38' %} (human){% endif %}</option>{% endfor %}</select>
+          </label>
+        </div>
+        <details><summary>Paste peaks instead</summary>
+          <textarea name="peaks_text" rows="4" placeholder="chr1&#9;51937897&#9;51938247&#9;peak_1"></textarea>
+        </details>
+        <details><summary>Blacklist and naming</summary>
+          <div class="grid2">
+            <label class="file"><span>Blacklist BED (regions to remove)</span><input type="file" name="blacklist" accept=".bed"></label>
+            <label><span>Run name</span><input name="name" placeholder="e.g. Tox ChIP day 30" value="{{ form.name if form else '' }}"></label>
+          </div>
+          <label><span>File prefix</span><input name="prefix" value="{{ form.prefix if form else 'run' }}"></label>
+        </details>
+      </div>
+    </section>
+
+    <section class="step">
+      <header><span class="num">2</span><div><h2>What you know</h2><p>This changes the analysis, not only the text: promoter window, motif strategy, gene-set collections, positive controls and literature queries.</p></div></header>
+      <div class="body">
+        <div class="grid2">
+          <label><span>Assay</span><input name="assay" list="assays" placeholder="ATAC-seq, TF ChIP-seq, H3K27ac CUT&amp;Tag" value="{{ form.assay if form else '' }}"></label>
+          <datalist id="assays"><option>TF ChIP-seq</option><option>ATAC-seq</option><option>CUT&amp;RUN</option><option>CUT&amp;Tag</option><option>H3K27ac ChIP-seq</option><option>H3K4me3 ChIP-seq</option><option>H3K27me3 ChIP-seq</option></datalist>
+          <label><span>Target (TF or histone mark)</span><input name="target" placeholder="Tox, CTCF, H3K27ac" value="{{ form.target if form else '' }}"></label>
+          <label><span>Cell type</span><input name="cell_type" placeholder="CD8 T cells" value="{{ form.cell_type if form else '' }}"></label>
+          <label><span>Condition or comparison</span><input name="condition" placeholder="chronic LCMV day 30 vs acute" value="{{ form.condition if form else '' }}"></label>
+          <label><span>Expected genes <small>positive controls</small></span><input name="expected_genes" placeholder="Tox, Pdcd1, Havcr2" value="{{ form.expected_genes if form else '' }}"></label>
+          <label><span>Expected TFs</span><input name="expected_tfs" placeholder="Nfatc1, Batf" value="{{ form.expected_tfs if form else '' }}"></label>
+        </div>
+        <label><span>Notes <small>free text: the biology, your question, anything the agent should know</small></span>
+          <textarea name="description" rows="4" placeholder="Exhaustion is driven by TOX/NR4A downstream of persistent TCR signalling. Which TFs drive these peaks?">{{ form.description if form else '' }}</textarea>
+        </label>
+        <details><summary>Add gene signatures or RNA-seq</summary>
+          <div class="grid2">
+            <label class="file"><span>Gene signatures (GMT)</span><input type="file" name="gmt" accept=".gmt"></label>
+            <label class="file"><span>RNA-seq differential expression (gene, log2FC, padj)</span><input type="file" name="rnaseq" accept=".tsv,.csv,.txt"></label>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="step">
+      <header><span class="num">3</span><div><h2>How to run</h2><p>The agent decides the steps and writes the interpretation. The fixed plan needs no API key.</p></div></header>
+      <div class="body">
+        <div class="choices">
+          <label class="choice {% if not env.anthropic_sdk %}off{% endif %}">
+            <input type="radio" name="mode" value="agent" {% if env.anthropic_sdk %}checked{% else %}disabled{% endif %}>
+            <b>Agent</b><span>Claude plans, runs the tools, interprets, proposes experiments</span>
+            {% if not env.anthropic_sdk %}<em>needs the Anthropic SDK</em>{% elif not env.api_key %}<em>no API credentials found</em>{% endif %}
+          </label>
+          <label class="choice">
+            <input type="radio" name="mode" value="deterministic" {% if not env.anthropic_sdk %}checked{% endif %}>
+            <b>Fixed plan</b><span>Same statistics, default settings, factual summary</span>
+          </label>
+        </div>
+        <details><summary>Advanced</summary>
+          <div class="grid3">
+            <label><span>Model</span><input name="model" value="{{ model }}"></label>
+            <label><span>Effort</span><select name="effort"><option>low</option><option>medium</option><option selected>high</option><option>xhigh</option><option>max</option></select></label>
+            <label><span>ChIP-Atlas wait (min)</span><input name="chipatlas_wait" type="number" value="25" min="0" step="1"></label>
+          </div>
+          <label class="check"><input type="checkbox" name="offline" value="1"> Offline: skip ChIP-Atlas, Europe PMC and GEO</label>
+        </details>
+        <div class="actions">
+          <button type="submit" class="btn primary big">Run the analysis</button>
+          <span class="muted">Takes 3–30 minutes depending on ChIP-Atlas.</span>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <section id="runs" class="runs-section">
+    <h2>Runs</h2>
+    {% if jobs %}
+    <ul class="runlist">
+      {% for j in jobs %}
+      <li>
+        <a href="/runs/{{ j.id }}">
+          <span class="dot {{ j.status }}"></span>
+          <b>{{ j.name }}</b>
+          {% if j.summary %}<span class="meta">{{ j.summary.genome }} · {{ j.summary.mode }}{% if j.summary.n_peaks %} · {{ j.summary.n_peaks }} peaks{% endif %}</span>{% endif %}
+          {% if j.summary and j.summary.title and j.summary.title != 'Peak annotation report' %}<span class="title">{{ j.summary.title }}</span>{% endif %}
+          <span class="when">{{ j.status }}{% if j.started %} · {{ j.started[:16].replace('T', ' ') }}{% endif %}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No runs yet.</p>{% endif %}
+
+    <details class="more">
+      <summary>Open an existing result folder</summary>
+      <form method="post" action="/runs/open" class="inline-form">
+        <input name="path" placeholder="/path/to/results/tex  (contains <prefix>_evidence.json)" required>
+        <button type="submit" class="btn">Open</button>
+      </form>
+    </details>
+    {% if test_data %}
+    <details class="more">
+      <summary>Test data files</summary>
+      <table class="plain">
+        {% for key, name, desc, size in test_data %}
+        <tr><td><a href="/examples/{{ name }}">{{ name }}</a></td><td>{{ desc }}</td><td class="muted">{{ (size / 1024) | round(1) }} kB</td></tr>
+        {% endfor %}
+      </table>
+    </details>
+    {% endif %}
+    <details class="more">
+      <summary>Environment</summary>
+      <ul class="plainlist">
+        <li>R engine: {% if env.r_found %}found{% else %}<b>not found</b> ({{ env.rscript }}); set PEAKANNOAGENT_RSCRIPT{% endif %}</li>
+        <li>Anthropic SDK: {% if env.anthropic_sdk %}{{ env.anthropic_sdk }}{% else %}<b>not installed</b>: pip install 'peakannoagent[agent]'{% endif %}</li>
+        <li>API credentials: {% if env.api_key %}set{% else %}not set (ANTHROPIC_API_KEY, or ant auth login){% endif %}</li>
+        <li>HOMER: {% if env.homer %}found{% else %}not found, monaLisa is used{% endif %}</li>
+        <li>SimpNetworkViz (pathway networks): {% if env.snv %}found{% else %}not found, step skipped{% endif %}</li>
+        <li>PathwayAgent (consensus pathways): {% if env.pathwayagent %}found{% else %}not found, step skipped{% endif %}</li>
+      </ul>
+    </details>
+  </section>
+</main>
+<footer class="foot">
+  <span>PeakAnnoAgent v{{ version }}</span>
+  <span>Hua Huang · <a href="mailto:helenhuang.math@gmail.com">helenhuang.math@gmail.com</a></span>
+  <span><a href="https://github.com/helenhuangmath/PeakAnnoAgent/blob/main/LICENSE.md" target="_blank" rel="noopener">MIT licence</a> · © 2026</span>
+</footer>
+</body>
+</html>

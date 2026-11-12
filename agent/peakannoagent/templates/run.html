@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ job.name }} · PeakAnnoAgent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body class="runpage" data-job="{{ job.id }}" data-status="{{ job.status }}">
+<header class="top">
+  <a class="brand" href="/"><span class="logo">◆</span> PeakAnnoAgent</a>
+  <span class="crumb">/ {{ job.name }}</span>
+  <span id="status" class="pill {{ job.status }}">{{ job.status }}</span>
+  <span class="toplinks">
+    {% if report %}<a class="toplink" href="{{ url_for('run_file', job_id=job.id, filename=report) }}" target="_blank" rel="noopener">Full HTML report ↗</a>{% endif %}
+    {% if report %}<a class="toplink" href="{{ url_for('run_zip', job_id=job.id) }}" title="report, evidence, all tables and figures">Download all ↓</a>{% endif %}
+  </span>
+</header>
+
+<div class="layout">
+  <aside class="side">
+    {% if summary %}
+    <div class="side-meta">
+      <div class="t">{{ title or 'Peak annotation' }}</div>
+      <div class="m">{{ summary.peaks }} · {{ summary.genome }}{% if summary.biology.assay %} · {{ summary.biology.assay }}{% endif %}</div>
+      <div class="m">{{ summary.mode }}{% if summary.model %} · {{ summary.model }}{% endif %}</div>
+    </div>
+    {% endif %}
+    <nav class="parts">
+      {% for p in parts %}
+      <a href="#{{ p.id }}" data-part="{{ p.id }}" class="{% if loop.first %}active{% endif %}{% if p.empty %} dim{% endif %}">{{ p.label }}{% if p.count %}<span class="n">{{ p.count }}</span>{% endif %}</a>
+      {% if p.id == 'literature' %}
+      <div class="sep">Explore</div>
+      <a href="#search" data-part="search">Search results</a>
+      <a href="#chat" data-part="chat">Ask Claude</a>
+      <div class="sep">Record</div>
+      {% endif %}
+      {% endfor %}
+      {% if not parts %}
+      <a href="#progress" data-part="progress" class="active">Progress</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <main class="content">
+    {% if job.error and parts %}<p class="flag" role="status">{{ job.status | capitalize }}: {{ job.error }}</p>{% endif %}
+    {% if job.status in ('running', 'queued') or not parts %}
+    <section class="part" id="part-progress">
+      <h1>{{ 'Analysing…' if job.status in ('running', 'queued') else job.status | capitalize }}</h1>
+      <p class="muted">The agent runs QC, annotation, pathways, motifs, public co-binding and literature. Each step appears below as it completes; the page updates itself.</p>
+      {% if job.error %}<p class="flag">{{ job.error }}</p>{% endif %}
+      <pre id="log" class="log">{{ '\n'.join(job_log) if job_log else '' }}</pre>
+    </section>
+    {% endif %}
+
+    {% for p in parts %}
+    <section class="part" id="part-{{ p.id }}" {% if not loop.first %}hidden{% endif %}>
+      <h1>{{ p.label }}</h1>
+      {{ p.html | safe }}
+    </section>
+    {% endfor %}
+
+    {% if parts %}
+    <section class="part" id="part-search" hidden>
+      <h1>Search results</h1>
+      <p class="muted">Genes, peak ids, pathways, motifs, regulators, papers, datasets, hypotheses. Every hit links to its evidence card.</p>
+      <form id="searchform" class="inline-form">
+        <input id="q" placeholder="Tox · tex_peak_0082 · lymphocyte differentiation · NFAT · PMID" autocomplete="off">
+        <button type="submit" class="btn">Search</button>
+      </form>
+      <div class="chips" id="kinds">
+        {% for k in kinds %}<label class="chip"><input type="checkbox" name="kind" value="{{ k }}"> {{ k }}</label>{% endfor %}
+      </div>
+      <p class="muted" id="search-counts"></p>
+      <div id="search-results"></div>
+    </section>
+
+    <section class="part" id="part-chat" hidden>
+      <h1>Ask Claude about this run</h1>
+      <div class="chat">
+        <div id="messages" class="messages">
+          <div class="intro">
+            <p>Ask anything about the results. Claude reads the run, checks the tables, and cites evidence ids that open the matching card.</p>
+            <div class="suggest">
+              <button type="button">Which peaks are near Tox, and are they promoter or enhancer?</button>
+              <button type="button">Which TFs are supported by both motifs and ChIP-Atlas co-binding?</button>
+              <button type="button">Summarise the strongest hypothesis and the best experiment to test it.</button>
+              <button type="button">Are the expected genes bound? Which ones are not?</button>
+            </div>
+            {% if not env.anthropic_sdk %}<p class="flag">The Anthropic SDK is not installed, so the chat is disabled: <code>pip install 'peakannoagent[agent]'</code></p>
+            {% elif not env.api_key %}<p class="flag">No API credentials found: set <code>ANTHROPIC_API_KEY</code> or run <code>ant auth login</code>.</p>{% endif %}
+          </div>
+        </div>
+        <form id="chatform" class="chatform">
+          <textarea id="chat-input" rows="2" placeholder="Ask about the results… (Enter to send, Shift+Enter for a new line)"></textarea>
+          <div class="row">
+            <span class="muted small">{{ chat_model }} · tools: search run, gene lookup, inspect table, Europe PMC, GEO</span>
+            <span><button type="button" class="btn ghost small" id="chat-clear">Clear</button> <button type="submit" class="btn primary">Send</button></span>
+          </div>
+        </form>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+</div>
+<script src="{{ url_for('static', filename='explore.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

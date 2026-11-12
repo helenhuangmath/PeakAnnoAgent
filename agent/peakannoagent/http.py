@@ -9,7 +9,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-USER_AGENT = "PeakAnnoAgent/0.2 (+https://github.com/helenhuangmath/PeakAnnoAgent)"
+from . import __version__
+
+USER_AGENT = f"PeakAnnoAgent/{__version__} (+https://github.com/helenhuangmath/PeakAnnoAgent)"
 
 
 class HttpError(RuntimeError):

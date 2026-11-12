@@ -1,10 +1,10 @@
 Package: PeakAnnoAgent
 Title: Peak Annotation and Pathway Analysis Agent
-Version: 0.2.0
+Version: 1.0.2
 Authors@R: person("Hua", "Huang", role = c("aut", "cre"),
-    email = "your_email@example.com")
+    email = "helenhuang.math@gmail.com")
 Author: Hua Huang [aut, cre]
-Maintainer: Hua Huang <your_email@example.com>
+Maintainer: Hua Huang <helenhuang.math@gmail.com>
 Description: Analysis engine for the PeakAnnoAgent LLM agent: genomic peak
     QC, ChIPpeakAnno annotation, pathway enrichment, known-motif enrichment,
     and publication-ready figures using ChIPpeakAnno, ChIPseeker, rGREAT,
@@ -31,7 +31,6 @@ Suggests:
     clusterProfiler,
     enrichplot,
     ggplot2,
-    ggrepel,
     enrichR,
     gprofiler2,
     GenomicRanges,

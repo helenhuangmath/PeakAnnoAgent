@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Optional
 
 from .config import RunConfig
+from .artifacts import write_json
 from .evidence import EvidenceStore
 from .public_data import CHIPATLAS_GENOMES
 from .report import build_report
@@ -28,6 +29,9 @@ keep working, and collect it later. Use a cell_class matching the biology when o
 'All cell types'.
 - Choose gene-set collections that fit the system (e.g. msigdb_C7:IMMUNESIGDB for immune cells, \
 msigdb_C3:TFT:GTRD for TF targets, the user's custom signatures when given). Compare promoter vs distal groups.
+- After enrichment, draw the pathway network (network_viz) for the most informative collection and run \
+pathway_consensus so the pathway story rests on more than one engine; interpret themes and key genes, not \
+long lists of overlapping terms. Both are skipped cleanly if the companion tools are not installed.
 - Identify candidate regulators from converging evidence: enriched motifs, co-binding in public ChIP-seq, \
 known-target overlap (chipatlas_target_genes), and RNA-seq when provided.
 - Run check_expectations when the user named expected genes/TFs or the assay targets a TF. If a positive \
@@ -183,16 +187,25 @@ def run_pipeline(ctx: RunContext) -> None:
     online = not cfg.offline
     enhancer_like = any(k in f"{bio.assay} {bio.target}".lower() for k in ("atac", "h3k27ac", "h3k4me1", "dnase"))
 
-    run_tool(ctx, "peak_qc", {"rationale": "Baseline QC and cleaning before annotation."})
+    qc = run_tool(ctx, "peak_qc", {"rationale": "Baseline QC and cleaning before annotation."})
+    if qc.status != "ok":
+        return
     ann = run_tool(ctx, "annotate_peaks", {"rationale": "Default ChIPpeakAnno workflow (-2000/+500 bp promoter window)."})
+    if ann.status != "ok":
+        return
     if online and cfg.genome in CHIPATLAS_GENOMES:
         run_tool(ctx, "chipatlas_submit", {"antigen_class": "TFs and others",
                                            "rationale": "Find public TF ChIP-seq that overlaps these peaks."})
     if ann.status == "ok":
-        methods = ["go_bp", "kegg", "msigdb_H"] + (["custom"] if bio.custom_gmt else [])
+        methods = (["go_bp", "kegg", "msigdb_H"] if online else ["go_bp"]) + (["custom"] if bio.custom_gmt else [])
         run_tool(ctx, "enrich_pathways", {"methods": methods, "groups": ["promoter", "distal", "all"],
                                           "rationale": "Standard GO/KEGG/Hallmark ORA on peak-linked genes."})
-    run_tool(ctx, "great_enrichment", {"gene_sets": "GO:BP", "rationale": "Region-based enrichment for distal peaks."})
+        run_tool(ctx, "network_viz", {"rationale": "EnrichmentMap-style view of the GO result: themes instead of "
+                                                   "redundant terms."})
+        run_tool(ctx, "pathway_consensus", {"rationale": "Independent engines on the same gene lists; consensus "
+                                                         "themes and key genes."})
+    if online:
+        run_tool(ctx, "great_enrichment", {"gene_sets": "GO:BP", "rationale": "Region-based enrichment for distal peaks."})
     if not bio.is_broad_mark:
         run_tool(ctx, "find_motifs", {"regions": "all", "rationale": "Known-motif enrichment at peak centres."})
         if enhancer_like and ann.status == "ok":
@@ -239,14 +252,16 @@ def execute(config: RunConfig, client=None, log=None) -> dict:
 
     ctx = RunContext(config=config, log=log or default_log)
     ctx.log(f"PeakAnnoAgent: {Path(config.peaks).name} on {config.genome} -> {config.out_dir}")
-    narrative, agent = None, None
+    narrative, agent, agent_error = None, None, None
     if config.use_llm:
-        agent = Agent(ctx, client=client)
         try:
+            agent = Agent(ctx, client=client)
             narrative = agent.run()
         except Exception as err:  # keep the analysis even if the model call fails
+            agent_error = f"{type(err).__name__}: {err}"
             ctx.log(f"  agent error: {type(err).__name__}: {err}")
         if narrative is None:
+            agent_error = agent_error or "Requested LLM interpretation was not produced."
             ctx.log("  no narrative from the agent; the report will use the automated summary")
             if ctx.evidence.latest("annotate_peaks", ok_only=False) is None:
                 ctx.log("  the agent stopped before annotating; running the deterministic plan")
@@ -254,17 +269,35 @@ def execute(config: RunConfig, client=None, log=None) -> dict:
     else:
         run_pipeline(ctx)
 
+    return finish_run(ctx, narrative, agent.usage if agent else None, agent_error)
+
+
+def finish_run(ctx: RunContext, narrative=None, usage=None, agent_error=None) -> dict:
+    """Persist the same completion contract for CLI, web and MCP sessions."""
+    config = ctx.config
+    from . import __version__
+    from .outcome import assess_run
+    from .provenance import input_provenance, runtime_versions
+    completion = assess_run(ctx.evidence, config, agent_error)
+    ctx.state["completion"] = completion
     report_path = str(Path(config.out_dir) / f"{config.prefix}_report.html")
     rep = build_report(ctx.evidence, config, narrative, report_path, state=ctx.state)
     ctx.evidence.save(str(Path(config.out_dir) / f"{config.prefix}_evidence.json"))
     manifest = {
+        "schema_version": 1,
+        "coordinate_system": "0-based-half-open",
+        "version": __version__,
+        **completion,
+        "inputs": input_provenance(config),
+        "runtime": runtime_versions(ctx.evidence),
         "config": config.to_dict(),
         "finished_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "report": rep["path"],
         "unverified_citations": rep["unverified_citations"],
-        "llm_usage": agent.usage if agent else None,
+        "narrative": narrative,
+        "llm_usage": usage,
         "steps": ctx.evidence.trace,
     }
-    Path(config.out_dir, f"{config.prefix}_manifest.json").write_text(json.dumps(manifest, indent=2, default=str))
+    write_json(Path(config.out_dir, f"{config.prefix}_manifest.json"), manifest)
     ctx.log(f"Report: {rep['path']}")
     return manifest

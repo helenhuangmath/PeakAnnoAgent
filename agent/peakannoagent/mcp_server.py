@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import threading
 from pathlib import Path
 
 import mcp_types as types
@@ -17,7 +18,7 @@ from mcp.server.lowlevel import Server
 from mcp.server.stdio import stdio_server
 
 from .config import RunConfig, build_biology
-from .report import build_report
+from .agent import finish_run
 from .tools import TOOLS, WRITE_REPORT_SCHEMA, RunContext, run_tool
 
 START_RUN = {
@@ -41,6 +42,7 @@ START_RUN = {
 }
 
 _session: dict = {}
+_session_lock = threading.Lock()
 
 
 def _schemas():
@@ -62,10 +64,9 @@ def _call(name: str, args: dict) -> dict:
     if ctx is None:
         return {"status": "error", "error": "Call start_run first."}
     if name == "write_report":
-        path = str(Path(ctx.config.out_dir) / f"{ctx.config.prefix}_report.html")
-        rep = build_report(ctx.evidence, ctx.config, args, path, state=ctx.state)
-        ctx.evidence.save(str(Path(ctx.config.out_dir) / f"{ctx.config.prefix}_evidence.json"))
-        return {"status": "ok", "report": rep["path"], "unverified_citations": rep["unverified_citations"]}
+        manifest = finish_run(ctx, args)
+        return {"status": manifest["status"], "report": manifest["report"],
+                "reasons": manifest["reasons"], "unverified_citations": manifest["unverified_citations"]}
     ev = run_tool(ctx, name, args)
     return json.loads(ctx.evidence.compact(ev))
 
@@ -77,8 +78,11 @@ async def _list_tools(ctx, params) -> types.ListToolsResult:
 
 async def _call_tool(ctx, params) -> types.CallToolResult:
     try:
-        result = await asyncio.to_thread(_call, params.name, dict(params.arguments or {}))
-        is_error = result.get("status") == "error"
+        def call_serialized():
+            with _session_lock:
+                return _call(params.name, dict(params.arguments or {}))
+        result = await asyncio.to_thread(call_serialized)
+        is_error = result.get("status") in ("error", "failed", "partial")
     except (KeyError, ValueError, FileNotFoundError) as err:
         result, is_error = {"status": "error", "error": str(err)}, True
     return types.CallToolResult(content=[types.TextContent(type="text", text=json.dumps(result, default=str))],

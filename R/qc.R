@@ -11,7 +11,14 @@ blacklist_overlaps <- function(peaks, blacklist_path) {
   bl <- data.table::fread(blacklist_path, header = FALSE, select = 1:3,
     col.names = c("Chr", "Start", "End"))
   bl[, `:=`(Chr = as.character(Chr), Start = as.integer(Start), End = as.integer(End))]
+  if (anyNA(bl$Start) || anyNA(bl$End) || any(bl$Start < 0 | bl$End <= bl$Start)) {
+    stop("Blacklist BED must contain valid zero-based, half-open intervals.", call. = FALSE)
+  }
   q <- data.table::copy(peaks[, .(PeakID, Chr, Start, End)])
+  q <- q[!is.na(Start) & !is.na(End) & Start >= 0 & End > Start]
+  # foverlaps uses closed intervals; convert local copies of both BED tables.
+  bl[, Start := Start + 1L]
+  q[, Start := Start + 1L]
   data.table::setkey(bl, Chr, Start, End)
   hits <- data.table::foverlaps(q, bl, by.x = c("Chr", "Start", "End"), nomatch = NULL)
   unique(hits$PeakID)
@@ -26,8 +33,8 @@ run_peak_qc <- function(peaks, out_dir, prefix, blacklist = NULL) {
   warnings <- character()
   n <- nrow(peaks)
   if (n == 0) stop("The peak file contains no peaks.", call. = FALSE)
-  bad_coords <- peaks[is.na(Start) | is.na(End) | End <= Start, .N]
-  if (bad_coords > 0) warnings <- c(warnings, sprintf("%d peaks have End <= Start or missing coordinates.", bad_coords))
+  bad_coords <- peaks[is.na(Start) | is.na(End) | Start < 0 | End <= Start, .N]
+  if (bad_coords > 0) warnings <- c(warnings, sprintf("%d peaks have invalid BED coordinates (require 0 <= Start < End).", bad_coords))
   dups <- sum(duplicated(peaks[, .(Chr, Start, End)]))
   if (dups > 0) warnings <- c(warnings, sprintf("%d duplicated peak intervals.", dups))
   nonstd <- peaks[!standard_chromosomes(Chr), .N]
@@ -56,8 +63,9 @@ run_peak_qc <- function(peaks, out_dir, prefix, blacklist = NULL) {
   chrom[, Pct := round(100 * N / n, 2)]
   write_tsv(chrom, file.path(out_dir, paste0(prefix, "_qc_chromosomes.tsv")))
 
-  clean <- peaks[standard_chromosomes(Chr) & !is.na(Start) & End > Start & !PeakID %in% blacklisted]
+  clean <- peaks[standard_chromosomes(Chr) & !is.na(Start) & Start >= 0 & End > Start & !PeakID %in% blacklisted]
   clean <- unique(clean, by = c("Chr", "Start", "End"))
+  if (!nrow(clean)) stop("No valid peaks remain after QC and blacklist filtering.", call. = FALSE)
   clean_path <- file.path(out_dir, paste0(prefix, "_qc_clean_peaks.bed"))
   data.table::fwrite(clean[, .(Chr, Start, End, PeakID)], clean_path, sep = "\t",
     col.names = FALSE, quote = FALSE)

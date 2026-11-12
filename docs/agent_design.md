@@ -15,10 +15,18 @@ User: peaks + genome + known biology (+ GMT signatures, RNA-seq DE table)
         │     peak_qc · annotate_peaks (ChIPpeakAnno) · enrich_pathways (clusterProfiler/MSigDB/custom)
         │     great_enrichment (rGREAT) · find_motifs (HOMER or monaLisa+JASPAR)
         ├── Python: integrate_rnaseq · check_expectations · inspect_table
+        ├── Companion programs (subprocess, optional): network_viz (SimpNetworkViz) · pathway_consensus (PathwayAgent)
         └── Network: chipatlas_submit/collect · chipatlas_target_genes · search_literature (Europe PMC)
                      · search_geo (NCBI)
         │
    report.py → <prefix>_report.html (citations verified against the evidence store)
+        │
+   ┌────▼──────────────────────────────────────────────┐
+   │ Web app (web.py, Flask)                           │
+   │ form → background run → live log → report         │
+   │ search.py: RunIndex over every table and summary  │
+   │ chat.py: Claude + read-only tools over the run    │
+   └───────────────────────────────────────────────────┘
 ```
 
 ## Why this split
@@ -56,10 +64,26 @@ To add a tool:
 The handler must return `_record(...)`, so the result gets an evidence id. The agent, the MCP server, and
 the report then pick up the new tool automatically.
 
+## Web layer
+
+`peakanno-agent web` wraps the same `execute()` call. Each submitted run gets a directory under
+`--runs-dir`; `execute` runs in a thread and its log callback feeds `status.json`, which the run page
+polls. After the run, two things are built from the saved `<prefix>_evidence.json` and manifest, so
+they also work for runs made on the command line or on another machine (table paths are resolved
+by file name under the run's `results/`):
+
+- `search.RunIndex` flattens the run into records (gene, peak, pathway, module, motif, regulator,
+  expression, control, paper, dataset, hypothesis, section, result). Every record carries the evidence
+  id it came from, so a hit opens its card in the report.
+- `chat.ChatSession` holds a conversation with Claude whose system prompt is the run context
+  (config, biology, narrative, compact summary of every result) and whose tools are read-only:
+  `search_run`, `gene_lookup`, `inspect_table`, `search_literature`, `search_geo`. Answers go through
+  the same citation check as the report. The transcript is saved as `<prefix>_chat.json`.
+
 ## Ideas not built yet
 
 - Peak-to-gene linking beyond nearest gene: ABC / ENCODE-rE2G, Hi-C/TADs, eQTLs
 - Differential binding (DiffBind/csaw) for multi-condition designs
 - Variant layers (GWAS Catalog overlap, motifbreakR, AlphaGenome) for human peaks
 - Footprinting (TOBIAS) for ATAC-seq when BAMs are available
-- Shiny front end that calls the same CLI
+- Streaming chat answers and a per-run multi-user queue in the web app

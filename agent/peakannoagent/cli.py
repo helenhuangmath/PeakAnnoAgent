@@ -1,4 +1,4 @@
-"""Command line: `peakanno-agent run|check|tools`."""
+"""Command line: `peakanno-agent run|check|tools|web`."""
 
 from __future__ import annotations
 
@@ -15,6 +15,8 @@ from .tools import TOOLS
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="peakanno-agent", description=__doc__)
+    from . import __version__
+    p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="Annotate peaks, find pathways/motifs/regulators, write an HTML report.")
@@ -47,8 +49,18 @@ def build_parser() -> argparse.ArgumentParser:
     chk = sub.add_parser("check", help="Check R packages, HOMER, API credentials and network access.")
     chk.add_argument("--genome", default="mm10")
     chk.add_argument("--rscript", default=os.environ.get("PEAKANNOAGENT_RSCRIPT", "Rscript"))
+    chk.add_argument("--offline", action="store_true", help="Check local dependencies without contacting public services.")
 
     sub.add_parser("tools", help="List the agent's tools.")
+
+    web = sub.add_parser("web", help="Start the web app: submit runs, watch progress, search results, chat.")
+    web.add_argument("--runs-dir", default="runs", help="Where runs are written (default ./runs)")
+    web.add_argument("--host", default="127.0.0.1")
+    web.add_argument("--port", type=int, default=8765)
+    web.add_argument("--model", default=DEFAULT_MODEL, help="Default model for agent runs and the chat")
+    web.add_argument("--rscript", default=os.environ.get("PEAKANNOAGENT_RSCRIPT", "Rscript"))
+    web.add_argument("--open", action="store_true", help="Open the browser")
+    web.add_argument("--debug", action="store_true")
     return p
 
 
@@ -72,24 +84,36 @@ def cmd_run(args) -> int:
     from .agent import execute
     manifest = execute(config)
     print(manifest["report"])
-    return 0
+    print(f"Analysis status: {manifest['status']}", file=sys.stderr)
+    return {"success": 0, "partial": 3, "failed": 1}[manifest["status"]]
 
 
 def cmd_check(args) -> int:
     bridge = RBridge(args.rscript)
+    ready = False
     print(f"Rscript: {args.rscript} ({'found' if bridge.available() else 'NOT FOUND'})")
     if bridge.available():
         info = bridge.run("session_info", {"genome": args.genome})
         if info.get("status") == "ok":
             r = info["result"]
+            required_missing = r.get("required_missing") or []
+            if isinstance(required_missing, str):
+                required_missing = [required_missing]
+            ready = not required_missing
             print(f"  {r['r_version']}")
             for pkg, ver in sorted(r["packages"].items()):
                 print(f"  ok       {pkg} {ver}")
-            for pkg in r["missing"]:
+            missing = r.get("missing") or []
+            for pkg in ([missing] if isinstance(missing, str) else missing):
                 print(f"  missing  {pkg}")
+            if required_missing:
+                print("  Required dependencies missing: " + ", ".join(required_missing))
             print(f"  HOMER findMotifsGenome.pl: {'yes' if r['homer'] else 'no (monaLisa will be used)'}")
         else:
             print(f"  R error: {info.get('error')}")
+    from .external import available
+    for name, cmd in available().items():
+        print(f"{ {'snv': 'SimpNetworkViz', 'pathwayagent': 'PathwayAgent'}[name]}: {cmd or 'not found (optional)'}")
     try:
         import anthropic
         print(f"anthropic SDK: {anthropic.__version__}")
@@ -97,6 +121,8 @@ def cmd_check(args) -> int:
         print("anthropic SDK: not installed (needed for agent mode; --no-llm works without it)")
     print(f"ant CLI: {'found' if shutil.which('ant') else 'not found'}; "
           f"ANTHROPIC_API_KEY: {'set' if os.environ.get('ANTHROPIC_API_KEY') else 'not set'}")
+    if args.offline:
+        return 0 if ready else 1
     from .http import get_text
     for name, url in [("Europe PMC", "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=CTCF&format=json&pageSize=1"),
                       ("NCBI E-utilities", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?retmode=json"),
@@ -106,7 +132,7 @@ def cmd_check(args) -> int:
             print(f"{name}: reachable")
         except Exception as err:
             print(f"{name}: unreachable ({err})")
-    return 0
+    return 0 if ready else 1
 
 
 def cmd_tools(_args) -> int:
@@ -116,10 +142,21 @@ def cmd_tools(_args) -> int:
     return 0
 
 
+def cmd_web(args) -> int:
+    try:
+        from .web import serve
+    except ImportError:
+        print("The web app needs Flask: pip install 'peakannoagent[web]'", file=sys.stderr)
+        return 2
+    serve(args.runs_dir, args.host, args.port, rscript=args.rscript, model=args.model,
+          open_browser=args.open, debug=args.debug)
+    return 0
+
+
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        return {"run": cmd_run, "check": cmd_check, "tools": cmd_tools}[args.command](args)
+        return {"run": cmd_run, "check": cmd_check, "tools": cmd_tools, "web": cmd_web}[args.command](args)
     except (FileNotFoundError, ValueError, json.JSONDecodeError) as err:
         print(f"error: {err}", file=sys.stderr)
         return 2

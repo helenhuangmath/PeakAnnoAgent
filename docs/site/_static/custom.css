@@ -1,0 +1,15 @@
+/* PeakAnnoAgent colours (Flatly: navy #2c3e50, teal #18bc9c) on the Read the Docs theme. */
+.wy-side-nav-search, .wy-nav-top { background-color: #2c3e50; }
+.wy-side-nav-search > a, .wy-side-nav-search .wy-dropdown > a { color: #fff; }
+.wy-nav-side { background-color: #243342; }
+.wy-menu-vertical header, .wy-menu-vertical p.caption { color: #18bc9c; }
+a, a:visited { color: #128f76; }
+a:hover { color: #18bc9c; }
+.wy-nav-content { max-width: 960px; }
+.rst-content code.literal, .rst-content tt.literal { color: #c0392b; }
+.rst-content table.docutils td, .rst-content table.docutils th { white-space: normal; vertical-align: top; }
+.rst-content .admonition.tip .admonition-title, .rst-content .tip .admonition-title { background: #18bc9c; }
+.rst-content .tip { background: #e8f8f5; }
+.figure-pair { display: flex; gap: 16px; flex-wrap: wrap; }
+.figure-pair > figure, .figure-pair > div { flex: 1 1 300px; }
+img { max-width: 100%; height: auto; }

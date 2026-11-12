@@ -1,0 +1,51 @@
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+*.egg-info/
+.venv/
+venv/
+
+# Analysis outputs
+/results/
+/runs/
+*.pdf
+*.png
+!docs/figures/*.png
+*.rds
+*.Rds
+*.tar.gz
+*.Rcheck/
+
+# Large genomics inputs
+*.bam
+*.bai
+*.bw
+*.bigWig
+*.fastq
+*.fastq.gz
+*.fq.gz
+*.bed.gz
+
+# Committed demo outputs
+!docs/demo/**
+!docs/figures/demo/*.png
+!docs/figures/web/*.png
+
+# Documentation site build
+docs/site/_build/
+
+# Release build artifacts
+/build/
+/dist/
+/release-artifacts/
+/agent/build/
+/agent/dist/
+/agent/peakannoagent/_engine/

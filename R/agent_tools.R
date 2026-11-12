@@ -62,7 +62,10 @@ read_gmt <- function(path) {
 
 # Standardise any compareCluster-style result into the report's columns.
 standardise_enrichment <- function(res, method) {
-  if (is.null(res) || !nrow(res)) return(data.table::data.table())
+  if (is.null(res) || !nrow(res)) return(data.table::data.table(
+    method = character(), group = character(), term_id = character(), term = character(),
+    gene_ratio = character(), bg_ratio = character(), pvalue = numeric(), padj = numeric(),
+    count = integer(), genes = character()))
   res <- data.table::as.data.table(res)
   data.table::data.table(
     method = method,
@@ -119,6 +122,7 @@ tool_enrich_pathways <- function(params) {
   padj_cutoff <- as.numeric(param(params, "padj", 0.05))
   top <- as.integer(param(params, "top", 8))
   methods <- unlist(param(params, "methods", c("go_bp")))
+  if (!length(methods)) stop("At least one pathway method is required.", call. = FALSE)
   dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
   gene_lists <- read_gene_table(param(params, "gene_sets"), gene_col = "SYMBOL", cluster_col = "Cluster")
@@ -180,12 +184,18 @@ tool_enrich_pathways <- function(params) {
   }
 
   all_res <- list()
+  failed_methods <- list()
   for (m in methods) {
     res <- tryCatch(run_one(m), error = function(e) {
+      failed_methods[[m]] <<- conditionMessage(e)
       warnings <<- c(warnings, sprintf("%s failed: %s", m, conditionMessage(e)))
       NULL
     })
     all_res[[m]] <- standardise_enrichment(res, m)
+  }
+  if (length(failed_methods) == length(methods)) {
+    stop(paste("All pathway methods failed:", paste(names(failed_methods),
+      unlist(failed_methods), sep = ": ", collapse = "; ")), call. = FALSE)
   }
   combined <- data.table::rbindlist(all_res, fill = TRUE)
   table_path <- file.path(out_dir, paste0(prefix, "_enrichment.tsv"))
@@ -230,6 +240,7 @@ tool_enrich_pathways <- function(params) {
 
   list(
     methods = methods,
+    failed_methods = failed_methods,
     groups = as.list(lengths(gene_lists)),
     universe_size = length(universe),
     n_significant = if (nrow(combined)) combined[padj <= padj_cutoff, .N, by = .(method, group)] else list(),
@@ -239,7 +250,7 @@ tool_enrich_pathways <- function(params) {
     warnings = warnings,
     tables = c(list(enrichment = table_path), networks$tables),
     figures = figures,
-    versions = package_versions(c("clusterProfiler", "msigdbr", "ReactomePA", "igraph", "ggrepel",
+    versions = package_versions(c("clusterProfiler", "msigdbr", "ReactomePA", "igraph",
       infer_species_defaults(species)$orgdb))
   )
 }
@@ -284,11 +295,21 @@ tool_session_info <- function(params) {
   d <- infer_species_defaults(genome)
   pkgs <- c("ChIPpeakAnno", "ChIPseeker", "clusterProfiler", "ReactomePA", "msigdbr", "rGREAT", "monaLisa",
     "TFBSTools", "JASPAR2024", "JASPAR2022", "JASPAR2020", d$txdb, d$orgdb, d$bsgenome, "data.table", "jsonlite")
+  required <- c("data.table", "jsonlite", "ChIPpeakAnno", "clusterProfiler", "AnnotationDbi",
+    "GenomicRanges", "GenomicFeatures", "IRanges", d$txdb, d$orgdb)
+  if (!nzchar(Sys.which("findMotifsGenome.pl"))) {
+    required <- c(required, "monaLisa", "Biostrings", "SummarizedExperiment", "BiocParallel",
+      "TFBSTools", d$bsgenome)
+    jaspar <- c("JASPAR2024", "JASPAR2022", "JASPAR2020")
+    if (!any(vapply(jaspar, requireNamespace, logical(1), quietly = TRUE))) required <- c(required, "JASPAR2024")
+  }
+  versions <- package_versions(unique(c(pkgs, required)))
   list(
     r_version = R.version.string,
     genome = d$genome,
-    packages = package_versions(pkgs),
-    missing = setdiff(pkgs[!grepl("^JASPAR20(22|20)$", pkgs)], names(package_versions(pkgs))),
+    packages = versions,
+    required_missing = setdiff(required, names(versions)),
+    missing = setdiff(pkgs[!grepl("^JASPAR20(22|20)$", pkgs)], names(versions)),
     homer = nzchar(Sys.which("findMotifsGenome.pl"))
   )
 }

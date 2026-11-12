@@ -82,11 +82,19 @@ class RunConfig:
     started_at: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
 
     def __post_init__(self):
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", self.prefix):
+            raise ValueError("Prefix must start with a letter or digit and contain only letters, digits, _, . or -.")
+        if self.max_turns < 1 or self.chipatlas_wait_min < 0:
+            raise ValueError("max_turns must be positive and chipatlas_wait_min must be non-negative.")
         self.genome = normalize_genome(self.genome)
         self.peaks = str(Path(self.peaks).expanduser().resolve())
         self.out_dir = str(Path(self.out_dir).expanduser().resolve())
         if not Path(self.peaks).is_file():
             raise FileNotFoundError(f"Peak file not found: {self.peaks}")
+        if self.blacklist:
+            self.blacklist = str(Path(self.blacklist).expanduser().resolve())
+            if not Path(self.blacklist).is_file():
+                raise FileNotFoundError(f"Blacklist file not found: {self.blacklist}")
         for attr in ("custom_gmt", "rnaseq"):
             value = getattr(self.biology, attr)
             if value:

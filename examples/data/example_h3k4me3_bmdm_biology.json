@@ -1,0 +1,9 @@
+{
+  "description": "Real data: ENCODE H3K4me3 ChIP-seq in unstimulated mouse bone-marrow-derived macrophages, C57BL/6J (ENCSR916IRY, Hoffmann lab; file ENCFF813FPW, replicated peaks, mm10), the 800 strongest peaks. H3K4me3 marks active promoters, so nearly every peak should sit on a TSS and the gene set should read as macrophage identity and housekeeping genes. Good test of the promoter window and gene-set choice; motif scans on a broad mark are not very informative.",
+  "assay": "H3K4me3 ChIP-seq",
+  "target": "H3K4me3",
+  "cell_type": "bone-marrow-derived macrophages",
+  "condition": "unstimulated",
+  "expected_genes": ["Csf1r", "Emr1", "Adgre1", "Cd68", "Itgam", "Lyz2", "Spi1", "Cebpb", "Irf8", "Mafb"],
+  "expected_tfs": ["Spi1", "Cebpa", "Cebpb", "Irf8", "Runx1", "Mafb"]
+}

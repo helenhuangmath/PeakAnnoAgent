@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
-from . import analysis, literature, public_data
+from . import analysis, external, literature, public_data
 from .config import RunConfig
 from .evidence import Evidence, EvidenceStore
 from .rbridge import RBridge
@@ -157,6 +157,51 @@ def find_motifs(ctx: RunContext, args: dict) -> Evidence:
     if outcome.get("status") == "ok":
         ctx.state.setdefault("motif_tables", {})[regions] = outcome["result"]["tables"]["motifs"]
     return _record(ctx, "find_motifs", f"Known-motif enrichment ({regions} peaks)", args, outcome)
+
+
+# ------------------------------------------------------------------ companion tools
+
+def network_viz(ctx: RunContext, args: dict) -> Evidence:
+    """SimpNetworkViz: EnrichmentMap-style pathway network + gene network from this run's enrichment."""
+    enr = ctx.evidence.latest("enrich_pathways")
+    if not enr or "enrichment" not in enr.tables:
+        return _record(ctx, "network_viz", "Pathway network (SimpNetworkViz)", args, _skip("Run enrich_pathways first."))
+    if not external.find_snv():
+        return _record(ctx, "network_viz", "Pathway network (SimpNetworkViz)", args,
+                       _skip(f"SimpNetworkViz is not installed ({external.SNV_INSTALL})."))
+    table = enr.tables["enrichment"]
+    present = external.enrichment_methods(table)
+    method = args.get("method") or next((m for m in ("go_bp", "msigdb_H", "kegg", "reactome") if m in present),
+                                        next(iter(present), "go_bp"))
+    groups = present.get(method, [])
+    group = args.get("group") or ("all" if "all" in groups else (groups[0] if groups else "all"))
+    if group not in groups:
+        return _record(ctx, "network_viz", f"Pathway network ({method}, {group} peaks)", args,
+                       _skip("No enriched terms for this method/group; no network can be drawn."))
+    out = ctx.tables_dir / f"{ctx.config.prefix}_snv_{method.replace(':', '-')}_{group}"
+    outcome = _python_outcome(lambda: external.run_snv(
+        table, str(out), method, group, gmt=ctx.config.biology.custom_gmt,
+        max_pathways=int(args.get("max_pathways", 40)), gene_network=args.get("gene_network", "cnet"),
+        cutoff=float(args["cutoff"]) if args.get("cutoff") is not None else None,
+        title=f"{method} · {group} peaks"))
+    return _record(ctx, "network_viz", f"Pathway network ({method}, {group} peaks)", args, outcome)
+
+
+def pathway_consensus(ctx: RunContext, args: dict) -> Evidence:
+    """PathwayAgent: several enrichment engines on the peak-linked gene lists, with consensus themes and key genes."""
+    if not ctx.state.get("gene_sets"):
+        return _record(ctx, "pathway_consensus", "Pathway consensus (PathwayAgent)", args, _skip("Run annotate_peaks first."))
+    if not external.find_pathwayagent():
+        return _record(ctx, "pathway_consensus", "Pathway consensus (PathwayAgent)", args,
+                       _skip(f"PathwayAgent is not installed ({external.PA_INSTALL})."))
+    local_only = bool(args.get("local_only", ctx.config.offline))
+    preset = args.get("preset") or ("quick" if local_only else "standard")
+    lists = list(args.get("lists") or ["promoter", "distal", "all"])
+    out = ctx.tables_dir / f"{ctx.config.prefix}_pathwayagent"
+    outcome = _python_outcome(lambda: external.run_pathwayagent(
+        ctx.state["gene_sets"], ctx.state.get("universe"), str(out), ctx.config.genome, lists=lists,
+        preset=preset, local_only=local_only, title=f"{ctx.config.prefix}: peak-linked genes"))
+    return _record(ctx, "pathway_consensus", f"Pathway consensus (PathwayAgent, {preset})", args, outcome)
 
 
 # ------------------------------------------------------------------ public data
@@ -357,6 +402,28 @@ TOOLS: Dict[str, Tool] = {t.name: t for t in [
           "groups": {"type": "array", "items": {"type": "string", "enum": ["promoter", "distal", "all"]}},
           "padj": {"type": "number"}, "top": {"type": "integer", "description": "Top terms per group to return"}},
          enrich_pathways, required=["methods"]),
+    Tool("network_viz", "Draw EnrichmentMap/AutoAnnotate-style networks from this run's enrichment results "
+         "(SimpNetworkViz): pathways linked by shared genes, clustered into labelled themes, plus a gene-pathway "
+         "network; interactive HTML and Cytoscape files. Run after enrich_pathways. Pick the collection and peak "
+         "group to draw (default: go_bp, all peaks).",
+         {"method": {"type": "string", "description": "A method present in the enrichment table, e.g. go_bp, "
+                                                        "msigdb_H, msigdb_C7:IMMUNESIGDB, custom"},
+          "group": {"type": "string", "enum": ["promoter", "distal", "all"]},
+          "max_pathways": {"type": "integer", "description": "Most significant pathways to draw (default 40)"},
+          "cutoff": {"type": "number", "description": "Similarity needed for an edge (default 0.6 on hit genes; "
+                                                        "raise it if the network is one dense blob, lower it "
+                                                        "if nothing connects)"},
+          "gene_network": {"type": "string", "enum": ["cnet", "shared", "none"]}}, network_viz),
+    Tool("pathway_consensus", "Run PathwayAgent on the peak-linked gene lists: several enrichment engines "
+         "(local ORA on GO/KEGG/Reactome/WikiPathways/Hallmark/DisGeNET; with network access also Enrichr, "
+         "g:Profiler, Reactome, STRING, clusterProfiler, fgsea) combined into cross-tool consensus themes with "
+         "tiers (ROBUST / SUPPORTED / SINGLE-TOOL) and key driver genes. Complements enrich_pathways with "
+         "independent engines. Run after annotate_peaks.",
+         {"preset": {"type": "string", "enum": ["quick", "standard", "everything"],
+                     "description": "quick = local engines only (seconds); standard adds web tools (~1-2 min)"},
+          "lists": {"type": "array", "items": {"type": "string", "enum": ["promoter", "distal", "all"]}},
+          "local_only": {"type": "boolean", "description": "Never send genes to web services"}},
+         pathway_consensus),
     Tool("great_enrichment", "Region-based GREAT enrichment (rGREAT, local) - better than gene ORA for distal "
          "enhancer peaks because it models each gene's regulatory domain.",
          {"gene_sets": {"type": "string", "description": "e.g. GO:BP, GO:MF, msigdb:H, msigdb:C2:CP:KEGG"},
@@ -458,4 +525,7 @@ def run_tool(ctx: RunContext, name: str, args: dict) -> Evidence:
     missing = [k for k in tool.required if k not in args]
     if missing:
         return _record(ctx, name, name, args, {"status": "error", "error": f"Missing argument(s): {missing}"})
-    return tool.handler(ctx, args)
+    try:
+        return tool.handler(ctx, args)
+    except Exception as err:
+        return _record(ctx, name, name, args, {"status": "error", "error": f"{type(err).__name__}: {err}"})

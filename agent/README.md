@@ -6,11 +6,12 @@ biology. It then:
 1. QCs and cleans the peaks
 2. annotates them with ChIPpeakAnno
 3. tests pathways and gene sets
-4. finds enriched motifs
-5. finds co-binding TFs in public ChIP-seq (ChIP-Atlas)
-6. checks your positive controls
-7. integrates RNA-seq
-8. searches the literature and GEO
+4. draws clustered pathway networks (SimpNetworkViz) and runs a cross-tool pathway consensus (PathwayAgent), when installed
+5. finds enriched motifs
+6. finds co-binding TFs in public ChIP-seq (ChIP-Atlas)
+7. checks your positive controls
+8. integrates RNA-seq
+9. searches the literature and GEO
 
 Claude chooses the steps and settings and interprets the results. The output is an HTML report in which
 every claim links to the result it came from.
@@ -26,18 +27,28 @@ Rscript scripts/install_dependencies.R
 
 # Python agent
 pip install -e "agent[agent]"     # Anthropic SDK for agent mode
+pip install -e "agent[web]"       # web app (Flask)
 pip install -e "agent[mcp]"       # optional: MCP server (Python >= 3.10)
 ```
 
-The core package needs only the Python standard library (Python 3.9+). Agent mode needs the Anthropic
+The core package needs only the Python standard library (Python 3.10+). Agent mode needs the Anthropic
 SDK, which requires Python 3.10+, and Claude credentials (`ANTHROPIC_API_KEY`, or `ant auth login`).
 
 If the Bioconductor packages live in a different R installation, point the agent at it:
 
 ```bash
-export PEAKANNOAGENT_RSCRIPT=/Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/bin/Rscript
+export PEAKANNOAGENT_RSCRIPT=/path/to/your/Rscript
 peakanno-agent check --genome mm10     # R packages, HOMER, credentials, network
 ```
+
+**Companion tools (optional).** `network_viz` calls [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz)
+(`snv` on `PATH`, or `PEAKANNOAGENT_SNV`) on this run's enrichment table and writes the clustered pathway
+network, a gene–pathway network, cluster labels, an interactive HTML viewer and Cytoscape files.
+`pathway_consensus` calls [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) (`pathwayagent` on
+`PATH`, a checkout next to this repository with its `.venv`, or `PEAKANNOAGENT_PATHWAYAGENT`) on the promoter,
+distal and all peak-linked gene lists with the genome background, and reports consensus themes, tiers and key
+genes with their figures. Offline runs use PathwayAgent's local engines only (`--local-only`, preset `quick`);
+online runs default to preset `standard`. Both steps are skipped, not failed, when the program is missing.
 
 ## Run
 
@@ -72,6 +83,30 @@ with a markdown notes file. It changes how the run behaves:
 ChIP-Atlas jobs run on the DDBJ supercomputer and usually take 5–30 minutes. The agent submits early and
 collects later. `--chipatlas-wait` sets how long the fixed plan waits.
 
+## Web app
+
+```bash
+peakanno-agent web --runs-dir runs --port 8765 --open
+```
+
+| page | what it does |
+|---|---|
+| `/` | New-run form (peaks, genome, known biology, GMT, RNA-seq, mode) and the list of runs. The *Examples* gallery offers four peak sets (one synthetic, three from ENCODE); each card runs the example in one click (`use_example=<key>`) or fills the form with it (`/?example=<key>`). The *Test data* panel lists every bundled file (download at `/examples/<file>`). *Open an existing result folder* registers any `peakanno-agent run` output directory. |
+| `/runs/<id>` | Live log while the run works; afterwards the run in parts with a sidebar: Overview, Summary, Hypotheses, Interpretation, Peaks & annotation, Pathways, Motifs, Regulators, Expression & controls, Literature & data, Search results, Ask Claude, Methods, Analysis log. `#pathways` or `?tab=search&q=Tox` opens a part directly. Rendered by `peakannoagent.webview` from the evidence store; for older runs without a manifest the narrative is recovered from the report. |
+| `/api/runs/<id>/search?q=Tox&kind=gene` | JSON search over the run index. Kinds: gene, peak, pathway, module, motif, regulator, expression, control, paper, dataset, hypothesis, section, result. |
+| `/api/runs/<id>/gene/<symbol>` | Everything the run knows about one gene. |
+| `/api/runs/<id>/chat` | `GET` history, `POST {"message": …}` to ask, `DELETE` to clear. The transcript is saved as `<prefix>_chat.json` next to the run. |
+
+The chat assistant (`peakannoagent.chat`) sees the run configuration, the known biology, the report
+narrative and a compact view of every result, and has read-only tools: `search_run`, `gene_lookup`,
+`inspect_table`, `search_literature`, `search_geo` (the last two are hidden for offline runs). It is held
+to the same rule as the report: every claim cites an evidence id, PMID or accession from the run or from
+a tool call in the conversation, and unknown citations are flagged in the answer.
+
+Runs started from the app execute in a background thread of the server process; their status and log are
+in `status.json` in the run directory, so the list survives a restart. The app is meant for a lab machine
+or a laptop, not the public internet: it has no authentication and serves files from the run directories.
+
 ## Outputs
 
 | file | content |
@@ -100,9 +135,10 @@ claude mcp add peakanno -- python -m peakannoagent.mcp_server
 
 Claude Code then becomes the agent. It calls `start_run`, then the analysis tools, then `write_report`.
 
-## Tests
+## Version 1.0.2 release checks
 
-```bash
-cd agent && python -m unittest discover -s tests     # Python (uses the R bridge if Rscript is available)
-Rscript tests/run_tests.R                            # R engine, from the repo root
-```
+Python 3.10 or later is required. Wheels and source distributions bundle the R engine and small examples; R and its analysis dependencies must be installed separately.
+
+Run outcomes are `success`, `partial`, or `failed`, with CLI exits 0, 3, or 1 (invalid invocation: 2). Failed core analyses retain partial outputs. `peakanno-agent check --offline` exits nonzero when required local dependencies are missing.
+
+See [the release guide](../docs/release_1.0.2.md) for coordinate conventions, reproducible dependencies, package checks and biological validation.

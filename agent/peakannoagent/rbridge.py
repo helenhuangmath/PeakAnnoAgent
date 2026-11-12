@@ -7,6 +7,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import uuid
 from pathlib import Path
 
 
@@ -14,7 +15,10 @@ def repo_root() -> Path:
     env = os.environ.get("PEAKANNOAGENT_HOME")
     if env:
         return Path(env).expanduser().resolve()
-    return Path(__file__).resolve().parents[2]
+    checkout = Path(__file__).resolve().parents[2]
+    if (checkout / "scripts" / "peak_tools.R").is_file():
+        return checkout
+    return Path(__file__).resolve().parent / "_engine"
 
 
 class RBridge:
@@ -27,7 +31,7 @@ class RBridge:
         self.log_dir = Path(log_dir) if log_dir else None
 
     def available(self) -> bool:
-        return self.script.is_file() and (shutil.which(self.rscript) or Path(self.rscript).is_file())
+        return bool(self.script.is_file() and (shutil.which(self.rscript) or Path(self.rscript).is_file()))
 
     def run(self, tool: str, params: dict) -> dict:
         if not self.available():
@@ -38,15 +42,23 @@ class RBridge:
             params_path.write_text(json.dumps(params))
             try:
                 proc = subprocess.run(
-                    [self.rscript, str(self.script), tool, str(params_path), str(result_path)],
+                    [self.rscript, "--vanilla", str(self.script), tool, str(params_path), str(result_path)],
                     capture_output=True, text=True, timeout=self.timeout, cwd=str(self.root),
                 )
             except subprocess.TimeoutExpired:
                 return {"status": "error", "error": f"R tool '{tool}' timed out after {self.timeout}s."}
             if self.log_dir:
                 self.log_dir.mkdir(parents=True, exist_ok=True)
-                (self.log_dir / f"{tool}.log").write_text(proc.stdout + "\n--- stderr ---\n" + proc.stderr)
+                (self.log_dir / f"{tool}-{uuid.uuid4().hex}.log").write_text(proc.stdout + "\n--- stderr ---\n" + proc.stderr)
             if not result_path.is_file():
                 tail = "\n".join(proc.stderr.strip().splitlines()[-15:])
                 return {"status": "error", "error": f"R tool '{tool}' crashed (exit {proc.returncode}):\n{tail}"}
-            return json.loads(result_path.read_text())
+            try:
+                outcome = json.loads(result_path.read_text())
+                if not isinstance(outcome, dict) or outcome.get("status") not in ("ok", "error", "skipped"):
+                    raise ValueError("Invalid R outcome schema")
+            except (ValueError, OSError) as err:
+                return {"status": "error", "error": f"R tool '{tool}' returned an invalid result: {err}"}
+            if proc.returncode != 0 and outcome.get("status") == "ok":
+                return {"status": "error", "error": f"R tool '{tool}' exited {proc.returncode} despite reporting success."}
+            return outcome

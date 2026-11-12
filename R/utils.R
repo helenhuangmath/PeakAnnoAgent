@@ -83,13 +83,18 @@ read_peak_file <- function(path) {
   } else {
     stop("Peak file must contain at least three columns: Chr, Start, End.", call. = FALSE)
   }
-  dt[, Start := as.integer(Start)]
-  dt[, End := as.integer(End)]
+  for (column in c("Start", "End")) {
+    values <- suppressWarnings(as.numeric(dt[[column]]))
+    if (any(!is.na(values) & (values != floor(values) | abs(values) > .Machine$integer.max))) {
+      stop("Peak coordinates must be whole numbers within the R integer range.", call. = FALSE)
+    }
+    data.table::set(dt, j = column, value = as.integer(values))
+  }
   dt[, Chr := as.character(Chr)]
   if (!"PeakID" %in% names(dt)) {
     id_col <- intersect(c("name", "Name", "peak", "Peak", "V4"), names(dt))[1]
     ids <- if (!is.na(id_col)) as.character(dt[[id_col]]) else character()
-    if (!length(ids) || anyNA(ids) || anyDuplicated(ids)) {
+    if (!length(ids) || anyNA(ids) || anyDuplicated(ids) || any(!nzchar(ids))) {
       ids <- sprintf("peak_%05d", seq_len(nrow(dt)))
     }
     dt[, PeakID := ids]

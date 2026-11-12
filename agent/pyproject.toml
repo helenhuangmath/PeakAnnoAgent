@@ -1,23 +1,33 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77,<85"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "peakannoagent"
-version = "0.2.0"
+version = "1.0.2"
 description = "LLM agent for genomic peak annotation, pathway, motif and regulator analysis with an HTML report"
 readme = "README.md"
-requires-python = ">=3.9"
-license = {text = "MIT"}
-authors = [{name = "Hua Huang"}]
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Hua Huang", email = "helenhuang.math@gmail.com"}]
+maintainers = [{name = "Hua Huang", email = "helenhuang.math@gmail.com"}]
 dependencies = []
 
 [project.optional-dependencies]
-agent = ["anthropic>=0.80"]
-mcp = ["mcp>=2.0"]
+agent = ["anthropic>=2.8,<3"]
+mcp = ["mcp>=2.0,<3"]
+web = ["flask>=3.0,<4"]
 
 [project.scripts]
 peakanno-agent = "peakannoagent.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["peakannoagent*"]
+
+[tool.setuptools.package-data]
+peakannoagent = ["templates/*.html", "static/*", "_engine/R/*.R", "_engine/scripts/*.R", "_engine/examples/data/*", "_engine/DESCRIPTION", "_engine/LICENSE*", "_engine/NAMESPACE"]
+
+[project.urls]
+Homepage = "https://github.com/helenhuangmath/PeakAnnoAgent"
+Issues = "https://github.com/helenhuangmath/PeakAnnoAgent/issues"
+Changelog = "https://github.com/helenhuangmath/PeakAnnoAgent/blob/main/CHANGELOG.md"

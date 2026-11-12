@@ -8,6 +8,7 @@ if (getRversion() >= "2.15.1") {
     "pct_background", "pct_target", "PeakID", "PeakIndex", "promoter_symbols", "pvalue",
     "queryHits", "region_class", "Start", "subjectHits", "SYMBOL", "symbol", "Term", "term",
     "TermPlot", "tf", "Width", "x", "y", "best", "gene", "hub", "label", "module",
-    "module_id", "module_label", "n", "name", "neglog", "type", "xend", "yend"
+    "module_id", "module_label", "n", "name", "neglog", "type", "xend", "yend",
+    "groups", "i", "j", "node", "r", "clustered", "colour", "lw", "m1", "m2", "alpha", "lab", "gid"
   ))
 }

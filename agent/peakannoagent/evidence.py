@@ -10,13 +10,13 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
+from .artifacts import write_json
 
 CITATION_RE = re.compile(r"\[((?:E\d+|PMID:\s*\d+|G[SD][EM]\d+|SRX\d+|DRX\d+|ERX\d+)"
                          r"(?:\s*[,;]\s*(?:E\d+|PMID:\s*\d+|G[SD][EM]\d+|SRX\d+|DRX\d+|ERX\d+))*)\]")
 
 # Benign Bioconductor warnings that would only distract in the report.
-NOISY_R_WARNINGS = ("out-of-bound range", "sequence levels in common", "select()' returned",
-                    "built under R version")
+NOISY_R_WARNINGS = ("select()' returned", "built under R version")
 
 
 def _as_list(value) -> list:
@@ -67,7 +67,8 @@ class EvidenceStore:
             [w for w in _as_list(outcome.get("r_warnings")) if not any(n in w for n in NOISY_R_WARNINGS)],
             rationale=rationale,
             elapsed_sec=float(outcome.get("elapsed_sec") or 0.0),
-            versions=result.get("versions") or {},
+            versions={**(result.get("versions") or {}),
+                      **({"R": outcome["r_version"]} if outcome.get("r_version") else {})},
         )
         self.items[ev.id] = ev
         self.trace.append({"evidence": ev.id, "tool": tool, "status": ev.status, "rationale": rationale,
@@ -134,4 +135,18 @@ class EvidenceStore:
             "datasets": self.datasets,
             "trace": self.trace,
         }
-        Path(path).write_text(json.dumps(data, indent=2, default=str))
+        write_json(path, data)
+
+    @classmethod
+    def load(cls, path: str) -> "EvidenceStore":
+        """Rebuild a store from a saved <prefix>_evidence.json (for search and chat over a finished run)."""
+        data = json.loads(Path(path).read_text())
+        store = cls()
+        fields = set(Evidence.__dataclass_fields__)
+        for key, item in (data.get("evidence") or {}).items():
+            ev = Evidence(**{k: v for k, v in item.items() if k in fields})
+            store.items[ev.id] = ev
+        store.references = dict(data.get("references") or {})
+        store.datasets = dict(data.get("datasets") or {})
+        store.trace = list(data.get("trace") or [])
+        return store

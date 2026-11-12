@@ -1,9 +1,13 @@
 peaks_to_granges <- function(peaks) {
   require_pkg("GenomicRanges")
   require_pkg("IRanges")
+  if (anyNA(peaks$Start) || anyNA(peaks$End) ||
+      any(peaks$Start < 0 | peaks$End <= peaks$Start)) {
+    stop("Peaks must use valid zero-based, half-open intervals: 0 <= Start < End.", call. = FALSE)
+  }
   gr <- GenomicRanges::GRanges(
     seqnames = peaks$Chr,
-    ranges = IRanges::IRanges(start = peaks$Start, end = peaks$End)
+    ranges = IRanges::IRanges(start = peaks$Start + 1L, end = peaks$End)
   )
   if ("PeakID" %in% names(peaks)) names(gr) <- peaks$PeakID
   gr

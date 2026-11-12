@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-cran <- c("data.table", "ggplot2", "ggrepel", "igraph", "jsonlite", "RSQLite", "enrichR", "gprofiler2", "msigdbr")
+cran <- c("data.table", "ggplot2", "igraph", "jsonlite", "RSQLite", "enrichR", "gprofiler2", "msigdbr")
 missing_cran <- cran[!vapply(cran, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing_cran)) {
   install.packages(missing_cran, repos = "https://cloud.r-project.org")

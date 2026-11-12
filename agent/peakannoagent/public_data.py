@@ -54,7 +54,7 @@ def submit_enrichment(bed_path: str, genome: str, antigen_class: str = "TFs and 
         "permTime": "1", "title": re.sub(r"[^A-Za-z0-9_. -]", "_", title)[:60],
         "descriptionA": "user_peaks", "descriptionB": "random_permutation",
         "distanceUp": str(distance), "distanceDown": str(distance),
-        "sbatchOptions": "-p epyc -t 180",
+        "sbatchOptions": "-p epyc -t 180",  # ChIP-Atlas server queue; not executed locally.
     }
     text = post_form(SUBMIT_URL, fields)
     match = re.search(r"wabi_chipatlas_[\w-]+", text)

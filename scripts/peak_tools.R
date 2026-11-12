@@ -40,6 +40,7 @@ outcome <- tryCatch(
   error = function(e) list(status = "error", error = conditionMessage(e))
 )
 outcome$tool <- tool
+outcome$r_version <- R.version.string
 outcome$elapsed_sec <- round(as.numeric(difftime(Sys.time(), started, units = "secs")), 1)
 if (length(captured_warnings)) outcome$r_warnings <- utils::head(unique(captured_warnings), 10)
 

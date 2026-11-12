@@ -9,11 +9,9 @@
 \alias{infer_species_defaults}
 \alias{known_methods}
 \alias{parse_cli_args}
-\alias{peaks_to_granges}
 \alias{plot_annotation_summary}
 \alias{plot_enrichment_dotplot}
 \alias{read_gene_table}
-\alias{read_peak_file}
 \alias{run_annotatr_annotation}
 \alias{run_chipeakanno_annotation}
 \alias{run_chipseeker_annotation}

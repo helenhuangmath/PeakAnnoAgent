@@ -1,0 +1,9 @@
+{
+  "description": "Real data: ENCODE H3K27ac ChIP-seq in primary human CD8-positive alpha-beta T cells (ENCSR835OJV, Bernstein lab; file ENCFF283CAQ, replicated peaks, GRCh38), the 1000 strongest peaks. H3K27ac marks active promoters and enhancers, so these regions should be enriched for T-cell identity genes and bound by T-cell lineage factors (RUNX, ETS, TCF/LEF, T-bet/Eomes). Which pathways and regulators are active in resting human CD8 T cells?",
+  "assay": "H3K27ac ChIP-seq",
+  "target": "H3K27ac",
+  "cell_type": "CD8 T cells",
+  "condition": "primary human blood CD8 T cells, resting",
+  "expected_genes": ["CD8A", "CD8B", "CD3E", "CD3D", "LCK", "ZAP70", "IL7R", "TCF7", "RUNX3", "EOMES", "TBX21"],
+  "expected_tfs": ["RUNX3", "ETS1", "TCF7", "LEF1", "TBX21", "EOMES", "FLI1"]
+}

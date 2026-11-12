@@ -13,15 +13,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
+from . import __version__
 from .analysis import read_table
 from .evidence import CITATION_RE, Evidence, EvidenceStore
+from .explore import explore_data, explore_js, has_explore, inline_json
 
 IGV_JS = "https://cdn.jsdelivr.net/npm/igv@2.15.11/dist/igv.min.js"
 HIDDEN_TOOLS = ("inspect_table", "chipatlas_status")
 TOOL_SECTIONS = [
     ("Peak QC", ("peak_qc",)),
     ("Annotation", ("annotate_peaks",)),
-    ("Pathways", ("enrich_pathways", "great_enrichment")),
+    ("Pathways", ("enrich_pathways", "network_viz", "pathway_consensus", "great_enrichment")),
     ("Motifs and regulators", ("find_motifs", "chipatlas_submit", "chipatlas_collect", "chipatlas_target_genes")),
     ("Integration and controls", ("integrate_rnaseq", "check_expectations")),
     ("Literature and public data", ("search_literature", "search_geo")),
@@ -97,12 +99,13 @@ def _img(path: str, report_dir: Path | None = None) -> str:
     # Previews are 120 dpi; show them at ~80 px per inch so a figure's type size stays constant
     # whatever its canvas size (wide figures are still capped at the column width).
     width = _png_width(raw) * 2 // 3
-    caption = ""
     pdf = Path(path).with_suffix(".pdf")
     if Path(path).parent.name == ".preview":          # previews sit one level below their PDFs
         pdf = Path(path).parent.parent / pdf.name
+    links = [f'<a href="data:image/png;base64,{data}" download="{esc(Path(path).stem)}.png">PNG</a>']
     if report_dir is not None and pdf.is_file():
-        caption = f'<figcaption><a href="{esc(_rel(str(pdf), report_dir))}">PDF (vector)</a></figcaption>'
+        links.append(f'<a href="{esc(_rel(str(pdf), report_dir))}" download>PDF (vector)</a>')
+    caption = f'<figcaption><span>{esc(Path(path).stem.replace("_", " "))}</span><span class="dl">Download: {" · ".join(links)}</span></figcaption>'
     style = f' style="width:{width}px"' if width else ""
     return (f'<figure><img alt="{esc(Path(path).stem)}"{style} src="data:image/png;base64,{data}">'
             f'{caption}</figure>')
@@ -188,8 +191,26 @@ def evidence_card(ev: Evidence, report_dir: Path) -> str:
     papers = summary.pop("papers", None)
     datasets = summary.pop("datasets", None)
     summary.pop("note", None)
+    interactive = summary.pop("interactive", None) or {}
+    summary.pop("cytoscape", None)
+    if has_explore(ev):
+        def table(name: str) -> List[dict]:
+            path = Path(ev.tables[name])
+            for cand in (path, report_dir / "results" / path.name, report_dir / path.name):
+                if cand.is_file():
+                    try:
+                        return read_table(str(cand))
+                    except (OSError, UnicodeDecodeError):
+                        return []
+            return []
+        parts.append(f'<section class="explore-box"><h4>Explore the pathways</h4><div class="explore" id="explore-{ev.id}">'
+                     f'<p class="muted">Interactive view needs JavaScript.</p></div></section>'
+                     f'<script type="application/json" id="explore-data-{ev.id}">{inline_json(explore_data(ev, table))}</script>')
     if summary:
         parts.append(_summary_html(summary))
+    if interactive:
+        parts.append("<p>" + " · ".join(f'<a href="{esc(_rel(v, report_dir))}" target="_blank" rel="noopener">'
+                                        f'{esc(k.replace("_", " "))} (interactive) ↗</a>' for k, v in interactive.items()) + "</p>")
     if papers:
         parts.append(_paper_list(papers))
     if datasets:
@@ -235,6 +256,17 @@ def methods_text(store: EvidenceStore, config) -> str:
         s.append(f"Over-representation of peak-linked genes was tested with clusterProfiler{v('clusterProfiler')} "
                  f"(GO via org.*.eg.db, KEGG, ReactomePA{v('ReactomePA')}, MSigDB via msigdbr{v('msigdbr')}) "
                  "against all annotated genes as background, with Benjamini-Hochberg correction.")
+    nv = store.latest("network_viz")
+    if nv:
+        s.append(f"Pathway networks were drawn with SimpNetworkViz{v('SimpNetworkViz')}: enriched terms were linked "
+                 "by shared hit genes (combined Jaccard/overlap similarity ≥ 0.375), clustered with Markov clustering "
+                 "and labelled automatically, following EnrichmentMap and AutoAnnotate.")
+    pc = store.latest("pathway_consensus")
+    if pc:
+        s.append(f"Peak-linked gene lists were also analysed with PathwayAgent{v('PathwayAgent')} "
+                 f"({', '.join(pc.summary.get('tools_ok') or [])}); terms were matched across engines and combined "
+                 "into a consensus score, grouped into themes by hit-gene similarity, and key genes were ranked by "
+                 "their membership in supported themes.")
     if ok("great_enrichment"):
         s.append(f"Region-based enrichment used rGREAT{v('rGREAT')} (basal plus extension rule).")
     mot = store.latest("find_motifs")
@@ -314,44 +346,122 @@ def auto_narrative(store: EvidenceStore) -> dict:
 # ------------------------------------------------------------------ page
 
 CSS = """
-:root{--bg:#ffffff;--fg:#111111;--muted:#5c6370;--card:#fff;--line:#e2e5ea;--brand:#000000;--accent:#000000;
---accent2:#000000;--ok:#1a1a1a;--err:#000000;--warn-bg:#f3f3f3;--warn:#333333;--code:#f1f3f7;--bad:#000000}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e6e8eb;--muted:#9aa3ad;
---card:#1d2127;--line:#2e343c;--brand:#f2f2f2;--accent:#f2f2f2;--accent2:#f2f2f2;--ok:#e6e8eb;--err:#f2f2f2;
---warn-bg:#262626;--warn:#d9d9d9;--code:#262b32;--bad:#f2f2f2}}
-:root[data-theme="dark"]{--bg:#15181d;--fg:#e6e8eb;--muted:#9aa3ad;--card:#1d2127;--line:#2e343c;--brand:#f2f2f2;
---accent:#f2f2f2;--accent2:#f2f2f2;--ok:#e6e8eb;--err:#f2f2f2;--warn-bg:#262626;--warn:#d9d9d9;--code:#262b32;--bad:#f2f2f2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,
-BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-body{border-top:5px solid var(--brand)}main{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
-h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--brand);font-weight:700}
-h1{font-size:1.8rem;line-height:1.25;margin:.2em 0}
-h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--brand)}
+:root{--bg:#ffffff;--fg:#2c3e50;--muted:#7b8a8b;--card:#fff;--line:#dce4ec;--grey:#ecf0f1;--brand:#2c3e50;--accent:#18bc9c;
+--accent2:#3498db;--ok:#18bc9c;--err:#e74c3c;--warn-bg:#fef5e7;--warn:#b9770e;--code:#ecf0f1;--bad:#e74c3c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1b2631;--fg:#ecf0f1;--muted:#95a5a6;
+--card:#212f3d;--line:#2e4053;--grey:#2e4053;--brand:#2c3e50;--accent:#1dd1a1;--accent2:#5dade2;--ok:#1dd1a1;--err:#ec7063;
+--warn-bg:#3a3020;--warn:#f5b041;--code:#2e4053;--bad:#ec7063}}
+:root[data-theme="dark"]{--bg:#1b2631;--fg:#ecf0f1;--muted:#95a5a6;--card:#212f3d;--line:#2e4053;--grey:#2e4053;--brand:#2c3e50;
+--accent:#1dd1a1;--accent2:#5dade2;--ok:#1dd1a1;--err:#ec7063;--warn-bg:#3a3020;--warn:#f5b041;--code:#2e4053;--bad:#ec7063}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 "Lato","Helvetica Neue",
+Helvetica,Arial,sans-serif}
+.topbar{background:var(--brand);color:#fff;min-height:60px;display:flex;align-items:center;gap:14px;padding:0 22px;font-size:.95em}
+.topbar .brand{font-size:1.2rem;font-weight:700;color:#fff;text-decoration:none}.topbar .brand span{color:var(--accent)}
+.topbar .right{margin-left:auto;opacity:.85}main{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
+h1,h2{color:var(--fg);font-weight:700}
+h1{font-size:1.9rem;line-height:1.25;margin:.2em 0}
+h2{font-size:1.3rem;margin:2.2em 0 .6em;padding:8px 12px;background:var(--grey);border-left:4px solid var(--accent);border-radius:4px}
 h3{font-size:1.02rem;margin:0}h4{margin:1em 0 .3em;font-size:.92rem;color:var(--muted);text-transform:capitalize}
-a{color:var(--accent)}.muted{color:var(--muted);font-size:.88em}nav{display:flex;flex-wrap:wrap;gap:6px 14px;
-margin:12px 0 0;font-size:.9em}.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;
-margin:14px 0}.meta div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+a{color:var(--accent)}a:hover{color:var(--brand)}.muted{color:var(--muted);font-size:.88em}nav{display:flex;flex-wrap:wrap;gap:6px 8px;
+margin:12px 0 0;font-size:.9em}nav a{background:var(--grey);color:var(--fg);padding:4px 10px;border-radius:4px;text-decoration:none}nav a:hover{background:var(--brand);color:#fff}.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;
+margin:14px 0}.meta div{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:4px;padding:8px 10px}
 .meta b{display:block;font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin:12px 0;box-shadow:0 1px 1px rgba(0,0,0,.05)}
 .card header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.eid{font:600 .8em ui-monospace,monospace;color:#fff;
-background:var(--brand);padding:2px 6px;border-radius:5px}.status{margin-left:auto;font-size:.78em;font-weight:600}
+background:var(--brand);padding:2px 6px;border-radius:4px}.status{margin-left:auto;font-size:.78em;font-weight:600}
 .status.ok{color:var(--ok)}.status.err{color:var(--err)}.status.skip{color:var(--muted)}
 .why{color:var(--muted);font-style:italic;margin:.5em 0}pre.error{white-space:pre-wrap;color:var(--err);
 background:var(--code);padding:8px;border-radius:6px;font-size:.85em}
 .scroll{overflow-x:auto}table{border-collapse:collapse;font-size:.85em;margin:.4em 0}
 th,td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
-table.data th{position:sticky;top:0;background:var(--card)}table.kv th{color:var(--muted);font-weight:500;
+th{color:var(--brand);border-bottom:2px solid var(--line)}table.data th{position:sticky;top:0;background:var(--card)}table.kv th{color:var(--muted);font-weight:500;
 white-space:nowrap;text-transform:capitalize}figure{margin:10px 0}figcaption{font-size:.8em}figure img{max-width:100%;height:auto;
 border-radius:6px;background:#fff}ul.warn{background:var(--warn-bg);color:var(--warn);border-radius:6px;
 padding:8px 8px 8px 28px;font-size:.9em}details{margin:.5em 0}summary{cursor:pointer;color:var(--muted)}
-.summary{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;
-padding:4px 18px}a.cite{text-decoration:none;font-size:.85em;font-family:ui-monospace,monospace}
+.summary{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;
+padding:4px 18px}a.cite{text-decoration:none;font-size:.85em;font-family:ui-monospace,monospace;background:var(--grey);padding:0 4px;border-radius:3px}
 a.cite.unverified{color:var(--bad);text-decoration:line-through wavy}.tag{font-size:.72em;border:1px solid
 var(--line);border-radius:4px;padding:0 4px;color:var(--muted)}ol.refs li,ul.refs li{margin:.35em 0}
 .conf{font-size:.75em;font-weight:700;text-transform:uppercase}.conf.high{color:var(--ok)}.conf.medium{color:var(--warn)}
 .conf.low{color:var(--muted)}#igv{border:1px solid var(--line);border-radius:8px;min-height:120px;background:#fff}
 select{font:inherit;padding:4px;margin:6px 0;max-width:100%}code{background:var(--code);padding:0 4px;border-radius:4px}
 .flag{background:var(--warn-bg);color:var(--warn);padding:8px 12px;border-radius:6px;font-size:.9em}
+.search{display:flex;gap:8px;align-items:center;margin:14px 0 0}.search input{flex:1;font:inherit;padding:6px 10px;
+border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);max-width:480px}
+.search .n{font-size:.85em;color:var(--muted)}mark{background:#ffe97a;color:#111;padding:0 1px;border-radius:2px}
+.card.dim{opacity:.35}tr.dim{display:none}
+figcaption{display:flex;justify-content:space-between;gap:10px;color:var(--muted);margin-top:4px}figcaption .dl a{margin-left:4px}
+.explore-box{margin:14px 0;border:1px solid var(--line);border-radius:4px;background:var(--card)}
+.explore-box>h4{margin:0;padding:8px 12px;background:var(--grey);color:var(--brand);text-transform:none;font-size:.9em}
+.explore{padding:10px 12px}.ex-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:8px}
+.ex-tabs{display:flex;gap:4px}.ex-tab{font:inherit;font-size:.88em;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:4px;cursor:pointer}
+.ex-tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ex-controls{display:flex;flex-wrap:wrap;gap:10px;font-size:.86em;color:var(--muted)}.ex-controls label{display:inline-flex;align-items:center;gap:6px}
+.ex-controls select{margin:0;padding:3px 6px}.ex-dl{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ex-link{font:inherit;font-size:.86em;background:none;border:none;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline}
+.ex-body{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px}@media (max-width:900px){.ex-body{grid-template-columns:1fr}}
+.ex-stage{min-width:0;overflow-x:auto}.ex-svg{max-width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:4px}
+.ex-svg .node.sel circle,.ex-svg .bar.sel rect{stroke:var(--brand);stroke-width:3}.ex-svg .bar.sel text{font-weight:700}
+.ex-panel{border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--bg);font-size:.9em;align-self:start;max-height:640px;overflow:auto}
+.ex-panel h4{margin:0 0 4px;text-transform:none;font-size:1em;color:var(--brand)}.ex-panel h5{margin:12px 0 4px;font-size:.82em;color:var(--muted);text-transform:uppercase}
+.ex-genes{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.ex-gene{font:inherit;font-size:.82em;padding:2px 8px;border-radius:4px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}.ex-gene:hover{border-color:var(--accent)}
+.ex-actions{display:flex;gap:12px;margin:4px 0 8px}.ex-geneinfo{background:var(--grey);border-radius:4px;padding:8px 10px;margin:6px 0;font-size:.92em}
+.ex-geneinfo .ex-term{display:inline-block;margin:4px 6px 0 0;font-size:.9em}.ex-list{margin:4px 0;padding-left:18px}
+.ex-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;font-size:.82em;color:var(--muted)}.ex-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+"""
+
+REPORT_EXPLORE_JS = """
+(function(){
+  document.querySelectorAll('script[id^="explore-data-"]').forEach(function(sc){
+    var eid = sc.id.replace('explore-data-', ''), box = document.getElementById('explore-' + eid);
+    if (!box || !window.PeakExplore) return;
+    try {
+      var data = JSON.parse(sc.textContent);
+      box.innerHTML = '';
+      PeakExplore.mount(box, data, {title: document.title + '_' + eid, onGene: function(g){
+        var s = document.getElementById('rsearch'); if (!s) return;
+        s.value = g; s.dispatchEvent(new Event('input', {bubbles: true})); s.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }});
+    } catch (e) { box.textContent = 'Interactive view unavailable: ' + e; }
+  });
+})();
+"""
+
+REPORT_SEARCH_JS = """
+(function(){
+  const box = document.getElementById('rsearch'), out = document.getElementById('rsearch-n');
+  const cards = [...document.querySelectorAll('article.card')];
+  let marks = [];
+  function clearMarks(){ marks.forEach(m => m.replaceWith(document.createTextNode(m.textContent))); marks = [];
+    document.querySelectorAll('.card.dim, tr.dim').forEach(e => e.classList.remove('dim')); }
+  function markIn(el, q){
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    const nodes = []; let n; while ((n = walker.nextNode())) if (n.nodeValue.toLowerCase().includes(q)) nodes.push(n);
+    nodes.forEach(node => { const i = node.nodeValue.toLowerCase().indexOf(q); const m = document.createElement('mark');
+      const after = node.splitText(i); after.nodeValue = after.nodeValue.slice(q.length);
+      m.textContent = node.nodeValue.slice(i); node.nodeValue = node.nodeValue.slice(0, i);
+      node.parentNode.insertBefore(m, after); marks.push(m); });
+    return nodes.length;
+  }
+  function run(){
+    clearMarks(); const q = box.value.trim().toLowerCase();
+    if (!q) { out.textContent = ''; return; }
+    let hits = 0, first = null;
+    cards.forEach(card => {
+      card.querySelectorAll('details').forEach(d => {
+        d.querySelectorAll('tbody tr').forEach(tr => { if (!tr.textContent.toLowerCase().includes(q)) tr.classList.add('dim'); });
+        if ([...d.querySelectorAll('tbody tr')].some(tr => !tr.classList.contains('dim')) && d.textContent.toLowerCase().includes(q)) d.open = true;
+      });
+      const n = markIn(card, q); hits += n;
+      if (!n) card.classList.add('dim'); else if (!first) first = card;
+    });
+    out.textContent = hits ? hits + ' match(es) in ' + cards.filter(c => !c.classList.contains('dim')).length + ' result(s)' : 'no match in results';
+    if (first) first.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+  let t; box.addEventListener('input', () => { clearTimeout(t); t = setTimeout(run, 250); });
+  box.addEventListener('keydown', e => { if (e.key === 'Escape') { box.value = ''; run(); } });
+})();
 """
 
 
@@ -389,7 +499,7 @@ def _igv_section(config, store: EvidenceStore, ctx_state: dict) -> str:
   igv.createBrowser(document.getElementById('igv'), {{
     genome: {json.dumps(config.genome)}, locus: sel.value || 'all',
     tracks: [{{name: 'Peaks', type: 'annotation', format: 'bed', features: peaks, displayMode: 'EXPANDED',
-               color: '#000000'}}]
+               color: '#2c3e50'}}]
   }}).then(b => sel.addEventListener('change', () => b.search(sel.value)));
 }})();
 </script>"""
@@ -412,9 +522,17 @@ def build_report(store: EvidenceStore, config, narrative: Optional[dict], out_pa
 
     p = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' "
          f"content='width=device-width,initial-scale=1'><title>{esc(narrative.get('title') or 'Peak report')}</title>"
-         f"<style>{CSS}</style></head><body><main>"]
-    p.append(f"<p class='muted'>PeakAnnoAgent report · {datetime.now():%Y-%m-%d %H:%M}</p>"
-             f"<h1>{esc(narrative.get('title') or 'Peak annotation report')}</h1>")
+         f"<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>"
+         f"<link href='https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap' rel='stylesheet'>"
+         f"<style>{CSS}</style></head><body>"
+         f"<div class='topbar'><a class='brand' href='https://github.com/helenhuangmath/PeakAnnoAgent'><span>◆</span> PeakAnnoAgent</a>"
+         f"<span class='right'>Report · {datetime.now():%Y-%m-%d %H:%M} · v{__version__}</span></div><main>"]
+    p.append(f"<h1>{esc(narrative.get('title') or 'Peak annotation report')}</h1>")
+    from .outcome import assess_run
+    completion = (state or {}).get("completion") or assess_run(store, config)
+    p.append(f"<p class='{'flag' if completion['status'] != 'success' else 'muted'}' role='status'>"
+             f"Analysis status: <strong>{esc(completion['status'])}</strong>"
+             + (": " + esc("; ".join(completion["reasons"])) if completion["reasons"] else "") + "</p>")
     meta = [("Peaks", f"{Path(config.peaks).name} ({n_peaks})"), ("Genome", config.genome),
             ("Assay", bio.assay or "-"), ("Target", bio.target or "-"), ("Cell type", bio.cell_type or "-"),
             ("Condition", bio.condition or "-"),
@@ -422,6 +540,8 @@ def build_report(store: EvidenceStore, config, narrative: Optional[dict], out_pa
     p.append("<div class='meta'>" + "".join(f"<div><b>{esc(k)}</b>{esc(v)}</div>" for k, v in meta) + "</div>")
     nav = ["summary", "hypotheses", "interpretation", "results", "browser", "references", "methods", "log"]
     p.append("<nav>" + "".join(f"<a href='#{n}'>{n.capitalize()}</a>" for n in nav) + "</nav>")
+    p.append("<div class='search'><input id='rsearch' type='search' placeholder='Search results: gene, peak id, "
+             "pathway, motif, TF, PMID…' aria-label='Search this report'><span class='n' id='rsearch-n'></span></div>")
     if bio.description or bio.expected_genes or bio.expected_tfs:
         p.append("<details><summary>Known biology provided</summary>")
         if bio.description:
@@ -487,6 +607,9 @@ def build_report(store: EvidenceStore, config, narrative: Optional[dict], out_pa
     p.append("<h2 id='log'>Analysis log</h2>" + _table(
         [{"step": i + 1, "time": t["time"], "id": t["evidence"], "tool": t["tool"], "status": t["status"],
           "rationale": t["rationale"]} for i, t in enumerate(store.trace)], 500))
+    p.append(f"<script>{REPORT_SEARCH_JS}</script>")
+    if any(has_explore(e) for e in visible):
+        p.append(f"<script>{explore_js()}</script><script>{REPORT_EXPLORE_JS}</script>")
     p.append("</main></body></html>")
     out.write_text("\n".join(p))
     return {"path": str(out), "unverified_citations": unverified}

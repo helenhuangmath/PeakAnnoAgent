@@ -1,0 +1,9 @@
+{
+  "description": "Real data: ENCODE CTCF ChIP-seq in K562 (ENCSR000BPJ, Myers lab; file ENCFF582SNT, IDR thresholded peaks, GRCh38), the 1000 strongest peaks by signal. CTCF is an insulator protein that binds a strong, well-defined motif at TAD boundaries and loop anchors, mostly at distal and intergenic sites. We expect the CTCF motif to dominate and co-binding with cohesin (RAD21, SMC3). Use this set to check motif enrichment and public co-binding against a known answer.",
+  "assay": "TF ChIP-seq",
+  "target": "CTCF",
+  "cell_type": "K562 erythroleukaemia cells",
+  "condition": "unstimulated, ENCODE reference",
+  "expected_genes": ["MYC", "GATA1", "TAL1", "HBG1", "HBG2", "H19", "IGF2"],
+  "expected_tfs": ["CTCF", "RAD21", "SMC3", "ZNF143", "YY1"]
+}
