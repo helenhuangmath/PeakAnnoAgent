@@ -18,6 +18,20 @@ report with testable hypotheses. **Every statement in the report links to the re
 :width: 760px
 ```
 
+## Run it in your browser
+
+PeakAnnoAgent runs on your own computer; the web app is a local page, not a hosted service. After
+[installation](installation.md), start it with one command:
+
+```bash
+peakanno-agent web --port 8766 --open
+```
+
+**Run page: [http://127.0.0.1:8766](http://127.0.0.1:8766)** (works while the command above is running)
+
+On the page you upload a peak file (or pick an example), choose the genome, and press **Run**.
+[Tutorial 3](tutorials/web_app.md) walks through the page.
+
 ## What it does
 
 | Step | What it does | Built on |

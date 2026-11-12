@@ -86,7 +86,7 @@ collects later. `--chipatlas-wait` sets how long the fixed plan waits.
 ## Web app
 
 ```bash
-peakanno-agent web --runs-dir runs --port 8765 --open
+peakanno-agent web --runs-dir runs --port 8766 --open
 ```
 
 | page | what it does |

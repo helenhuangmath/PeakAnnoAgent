@@ -1,9 +1,13 @@
 # PeakAnnoAgent
 
-From a peak file to an evidence-linked biological report: annotation, pathways, motifs, regulators and literature in one run.
+**PeakAnnoAgent is an AI agent that turns a ChIP-seq, ATAC-seq, CUT&RUN or CUT&Tag peak file into an
+evidence-linked biological report: annotation, pathways, motifs, regulators and literature in one run.**
 
-**PeakAnnoAgent** annotates and interprets genomic peak sets from ChIP-seq, ATAC-seq, CUT&RUN or
-CUT&Tag. You give it three things:
+**Web page:** start it with `peakanno-agent web --port 8766 --open`, then open
+[http://127.0.0.1:8766](http://127.0.0.1:8766) to upload peaks and run the analysis in your browser
+([details](#run-it-in-your-browser)).
+
+You give it three things:
 
 - a peak file;
 - a reference genome;
@@ -22,6 +26,37 @@ You can run it in four ways:
 <p align="left">
   <img src="docs/figures/report.png" width="760" alt="PeakAnnoAgent HTML report">
 </p>
+
+## Run it in your browser
+
+PeakAnnoAgent runs on your own computer; the web app is a local page, not a hosted service. Start it
+with one command, then open the run page:
+
+```bash
+peakanno-agent web --port 8766 --open
+```
+
+**Run page: [http://127.0.0.1:8766](http://127.0.0.1:8766)** (works while the command above is running)
+
+<p align="left">
+  <img src="docs/figures/web/home_tabs.png" width="760" alt="PeakAnnoAgent web page with the Run your analysis, Examples and Runs tabs">
+</p>
+
+The page has three tabs: **Run your analysis**, **Examples** and **Runs**.
+On the page you upload a peak file (or pick an example), choose the genome, and press **Run**. See
+[Installation](#installation) to get the `peakanno-agent` command, and [Use the web app](#use-the-web-app)
+for what the page offers.
+
+With Docker, nothing else needs to be installed:
+
+```bash
+git clone https://github.com/helenhuangmath/PeakAnnoAgent.git && cd PeakAnnoAgent
+docker build -t peakannoagent .
+docker run --rm -p 127.0.0.1:8766:8766 -v "$PWD/runs:/work/runs" \
+  -e ANTHROPIC_API_KEY peakannoagent web --host 0.0.0.0
+```
+
+Then open the same run page. `ANTHROPIC_API_KEY` is only needed for agent mode and the chat.
 
 ## Highlights
 
@@ -132,10 +167,10 @@ You can give the same fields as a JSON file (`--biology-file`) or as free-text n
 ### Use the web app
 
 ```bash
-peakanno-agent web --open          # http://127.0.0.1:8765, runs are written to ./runs
+peakanno-agent web --port 8766 --open          # http://127.0.0.1:8766, runs are written to ./runs
 ```
 
-The home page is a three-step form: your peaks, what you know, how to run. The run page shows the
+The home page has Run your analysis, Examples and Runs tabs. The analysis form has three steps: your peaks, what you know, how to run. The run page shows the
 analysis in separate parts, with a sidebar to move between them:
 
 | Part | What it shows |
