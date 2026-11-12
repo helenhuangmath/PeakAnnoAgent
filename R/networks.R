@@ -282,9 +282,12 @@ pt_size <- function(pt) pt / ggplot2::.pt
 # behind them do not cut through the text.
 net_text <- function(d, y, pt, bg, face = "plain") {
   d <- data.frame(x = d$x, y = y, label = d$label)
-  ggplot2::geom_label(data = d, ggplot2::aes(x, y, label = label), vjust = 1, size = pt_size(pt),
-    fontface = face, lineheight = 0.9, colour = "#1A1A1A", fill = grDevices::adjustcolor(bg, alpha.f = 0.8),
-    label.size = 0, label.padding = ggplot2::unit(0.6, "pt"), label.r = ggplot2::unit(0, "pt"))
+  # No border around the patch: ggplot2 4.0 renamed `label.size` to `linewidth`.
+  border <- if (utils::packageVersion("ggplot2") >= "4.0.0") list(linewidth = 0) else list(label.size = 0)
+  do.call(ggplot2::geom_label, c(list(data = d, mapping = ggplot2::aes(x, y, label = label), vjust = 1,
+    size = pt_size(pt), fontface = face, lineheight = 0.9, colour = "#1A1A1A",
+    fill = grDevices::adjustcolor(bg, alpha.f = 0.8), label.padding = ggplot2::unit(0.6, "pt"),
+    label.r = ggplot2::unit(0, "pt")), border))
 }
 
 # Shared canvas: fixed aspect, 1 unit = 1 inch, figure size attached as attr "fig_size".

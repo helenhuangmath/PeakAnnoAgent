@@ -2,7 +2,7 @@
 
 ```text
 peakanno-agent run --peaks PEAKS --genome GENOME --out OUT [options]
-peakanno-agent web   [--runs-dir runs] [--port 8765] [--open]
+peakanno-agent web   [--runs-dir runs] [--port 8766] [--open]
 peakanno-agent check [--genome mm10]
 peakanno-agent tools
 ```

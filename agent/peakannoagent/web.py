@@ -1,7 +1,7 @@
 """Web app: submit a peak set with its biology, watch the agent work, then read the report,
 search every result, and ask Claude about the run.
 
-    peakanno-agent web --runs-dir runs --port 8765
+    peakanno-agent web --runs-dir runs --port 8766
 
 Runs are directories under --runs-dir; existing result folders can be opened in place.
 Requires `pip install 'peakannoagent[web]'` (Flask)."""
@@ -588,8 +588,17 @@ def create_app(runs_dir: str = "runs", rscript: Optional[str] = None, model: str
     return app
 
 
-def serve(runs_dir: str = "runs", host: str = "127.0.0.1", port: int = 8765, rscript: Optional[str] = None,
+def serve(runs_dir: str = "runs", host: str = "127.0.0.1", port: int = 8766, rscript: Optional[str] = None,
           model: str = DEFAULT_MODEL, open_browser: bool = False, debug: bool = False) -> None:
+    import socket
+    with socket.socket(socket.AF_INET6 if ":" in host else socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            probe.bind((host, port))
+        except OSError:
+            raise SystemExit(f"Port {port} on {host} is already used by another program, so PeakAnnoAgent "
+                             f"was not started. Stop that program or choose another port: "
+                             f"peakanno-agent web --port {port + 1}")
     app = create_app(runs_dir, rscript, model)
     url = f"http://{host}:{port}/"
     print(f"PeakAnnoAgent web: {url}  (runs in {Path(runs_dir).resolve()})")

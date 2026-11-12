@@ -56,7 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     web = sub.add_parser("web", help="Start the web app: submit runs, watch progress, search results, chat.")
     web.add_argument("--runs-dir", default="runs", help="Where runs are written (default ./runs)")
     web.add_argument("--host", default="127.0.0.1")
-    web.add_argument("--port", type=int, default=8765)
+    web.add_argument("--port", type=int, default=8766)
     web.add_argument("--model", default=DEFAULT_MODEL, help="Default model for agent runs and the chat")
     web.add_argument("--rscript", default=os.environ.get("PEAKANNOAGENT_RSCRIPT", "Rscript"))
     web.add_argument("--open", action="store_true", help="Open the browser")

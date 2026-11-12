@@ -13,8 +13,8 @@
 <header class="top">
   <a class="brand" href="/"><span class="logo">◆</span> PeakAnnoAgent</a>
   <nav class="topnav">
+    <a href="#new">Run your analysis</a>
     <a href="#examples">Examples</a>
-    <a href="#new">New run</a>
     <a href="#runs">Runs</a>
     <a href="https://github.com/helenhuangmath/PeakAnnoAgent" target="_blank" rel="noopener">Docs</a>
   </nav>
@@ -28,12 +28,18 @@
       links to the result it came from.</p>
   </section>
 
+  <div class="home-tabs" role="tablist">
+    <a role="tab" href="#new" data-tab="new">Run your analysis</a>
+    {% if examples %}<a role="tab" href="#examples" data-tab="examples">Examples <span class="n">{{ examples | length }}</span></a>{% endif %}
+    <a role="tab" href="#runs" data-tab="runs">Runs{% if jobs %} <span class="n">{{ jobs | length }}</span>{% endif %}</a>
+  </div>
+
   {% if examples %}
-  <section class="examples" id="examples">
+  <section class="examples home-panel" id="examples" data-panel="examples">
     <div class="examples-head">
       <h2>New here? Start from an example</h2>
       <p class="muted">Real ENCODE peak sets and one synthetic demo. <b>Run</b> starts the analysis as is;
-        <b>Edit</b> fills the form below so you can change the biology first.</p>
+        <b>Edit first</b> fills the <i>Run your analysis</i> form so you can change the biology first.</p>
     </div>
     <div class="example-grid">
       {% for key, ex in examples %}
@@ -57,9 +63,10 @@
   </section>
   {% endif %}
 
+  <div class="home-panel" id="new" data-panel="new">
   {% if error %}<p class="flag">{{ error }}</p>{% endif %}
 
-  <form method="post" action="/runs" enctype="multipart/form-data" id="new" class="steps-form">
+  <form method="post" action="/runs" enctype="multipart/form-data" class="steps-form">
     {% if form and form.example %}<input type="hidden" name="example" value="{{ form.example }}">{% endif %}
 
     <section class="step">
@@ -144,8 +151,9 @@
       </div>
     </section>
   </form>
+  </div>
 
-  <section id="runs" class="runs-section">
+  <section id="runs" class="runs-section home-panel" data-panel="runs">
     <h2>Runs</h2>
     {% if jobs %}
     <ul class="runlist">
@@ -198,5 +206,25 @@
   <span>Hua Huang · <a href="mailto:helenhuang.math@gmail.com">helenhuang.math@gmail.com</a></span>
   <span><a href="https://github.com/helenhuangmath/PeakAnnoAgent/blob/main/LICENSE.md" target="_blank" rel="noopener">MIT licence</a> · © 2026</span>
 </footer>
+<script>
+// Home tabs: one panel at a time, chosen by the URL hash (#new, #examples, #runs). Without JavaScript
+// every panel stays visible and the links are plain anchors.
+(function () {
+  var tabs = document.querySelectorAll(".home-tabs [data-tab]"), panels = document.querySelectorAll("[data-panel]");
+  function show() {
+    var want = location.hash.slice(1), found = false;
+    panels.forEach(function (p) { if (p.dataset.panel === want) found = true; });
+    if (!found) want = "new";
+    panels.forEach(function (p) { p.hidden = p.dataset.panel !== want; });
+    tabs.forEach(function (t) {
+      var on = t.dataset.tab === want;
+      t.classList.toggle("on", on); t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+  }
+  window.addEventListener("hashchange", function () { show(); window.scrollTo(0, 0); });
+  show();
+  window.addEventListener("load", function () { window.scrollTo(0, 0); });
+})();
+</script>
 </body>
 </html>

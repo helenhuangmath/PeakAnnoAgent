@@ -17,6 +17,6 @@ RUN Rscript -e 'writeLines(capture.output(sessionInfo()), "/opt/PeakAnnoAgent/R-
 RUN /opt/peakanno-venv/bin/pip freeze > /opt/PeakAnnoAgent/python-packages.txt
 ENV PATH="/opt/peakanno-venv/bin:${PATH}"
 WORKDIR /work
-EXPOSE 8765
+EXPOSE 8766
 ENTRYPOINT ["peakanno-agent"]
 CMD ["--help"]
