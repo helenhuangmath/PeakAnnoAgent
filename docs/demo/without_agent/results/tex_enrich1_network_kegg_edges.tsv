@@ -1,53 +1,51 @@
 from	to	jaccard
-Graft-versus-host disease	Type I diabetes mellitus	1
-Allograft rejection	Graft-versus-host disease	0.833
-Natural killer cell mediated cytotoxicity	Graft-versus-host disease	0.625
-Allograft rejection	Type I diabetes mellitus	0.833
-Natural killer cell mediated cytotoxicity	Type I diabetes mellitus	0.625
-Natural killer cell mediated cytotoxicity	Allograft rejection	0.556
-Viral protein interaction with cytokine and cytokine receptor	Cytokine-cytokine receptor interaction	0.75
-Viral protein interaction with cytokine and cytokine receptor	Chemokine signaling pathway	0.615
-Viral protein interaction with cytokine and cytokine receptor	Toll-like receptor signaling pathway	0.308
-Cytokine-cytokine receptor interaction	Chemokine signaling pathway	0.471
-JAK-STAT signaling pathway	Cytokine-cytokine receptor interaction	0.318
-T cell receptor signaling pathway	Yersinia infection	0.636
-T cell receptor signaling pathway	PD-L1 expression and PD-1 checkpoint pathway in cancer	0.385
-T cell receptor signaling pathway	Osteoclast differentiation	0.357
-Yersinia infection	C-type lectin receptor signaling pathway	0.5
-Yersinia infection	Hepatitis B	0.364
-Rheumatoid arthritis	Chagas disease	0.625
-Rheumatoid arthritis	Toll-like receptor signaling pathway	0.5
-Rheumatoid arthritis	Lipid and atherosclerosis	0.364
-Prolactin signaling pathway	Growth hormone synthesis, secretion and action	0.625
-JAK-STAT signaling pathway	Prolactin signaling pathway	0.357
-Osteoclast differentiation	Prolactin signaling pathway	0.273
-Chagas disease	Toll-like receptor signaling pathway	0.571
-Chagas disease	Lipid and atherosclerosis	0.4
-Osteoclast differentiation	Growth hormone synthesis, secretion and action	0.364
-JAK-STAT signaling pathway	Growth hormone synthesis, secretion and action	0.25
+Th17 cell differentiation	Inflammatory bowel disease (IBD)	0.357
 Th17 cell differentiation	Th1 and Th2 cell differentiation	0.615
-Th17 cell differentiation	PD-L1 expression and PD-1 checkpoint pathway in cancer	0.385
+Th17 cell differentiation	JAK-STAT signaling pathway	0.333
 Th17 cell differentiation	Human T-cell leukemia virus 1 infection	0.375
-Chemokine signaling pathway	Human cytomegalovirus infection	0.286
+Th17 cell differentiation	Hepatitis B	0.357
+Inflammatory bowel disease (IBD)	JAK-STAT signaling pathway	0.312
+Inflammatory bowel disease (IBD)	Toxoplasmosis	0.444
+Inflammatory bowel disease (IBD)	Hepatitis B	0.333
 Th1 and Th2 cell differentiation	Human T-cell leukemia virus 1 infection	0.4
 Th1 and Th2 cell differentiation	Hepatitis B	0.385
-Lipid and atherosclerosis	Toll-like receptor signaling pathway	0.444
-Human cytomegalovirus infection	Lipid and atherosclerosis	0.545
-Human cytomegalovirus infection	Toll-like receptor signaling pathway	0.4
+JAK-STAT signaling pathway	Cytokine-cytokine receptor interaction	0.304
+JAK-STAT signaling pathway	Prolactin signaling pathway	0.357
+T cell receptor signaling pathway	Osteoclast differentiation	0.385
+T cell receptor signaling pathway	Chagas disease (American trypanosomiasis)	0.333
+T cell receptor signaling pathway	Hematopoietic cell lineage	0.25
+T cell receptor signaling pathway	Cell adhesion molecules (CAMs)	0.267
+T cell receptor signaling pathway	Leishmaniasis	0.4
+Cytokine-cytokine receptor interaction	Chagas disease (American trypanosomiasis)	0.278
+Cytokine-cytokine receptor interaction	Chemokine signaling pathway	0.444
+Osteoclast differentiation	Natural killer cell mediated cytotoxicity	0.333
+Osteoclast differentiation	Prolactin signaling pathway	0.273
+Osteoclast differentiation	TNF signaling pathway	0.4
+Natural killer cell mediated cytotoxicity	Allograft rejection	0.556
 Natural killer cell mediated cytotoxicity	Human cytomegalovirus infection	0.308
-Hepatitis B	Lipid and atherosclerosis	0.455
-Hepatitis B	C-type lectin receptor signaling pathway	0.444
-T cell receptor signaling pathway	C-type lectin receptor signaling pathway	0.333
-Hepatitis B	Human T-cell leukemia virus 1 infection	0.462
-Inflammatory bowel disease	Toxoplasmosis	0.444
-Th17 cell differentiation	Inflammatory bowel disease	0.357
-Inflammatory bowel disease	Hepatitis B	0.333
-Allograft rejection	Toxoplasmosis	0.375
-Chagas disease	Toxoplasmosis	0.375
-PD-L1 expression and PD-1 checkpoint pathway in cancer	Osteoclast differentiation	0.364
-Osteoclast differentiation	Yersinia infection	0.364
-Th17 cell differentiation	JAK-STAT signaling pathway	0.333
-Efferocytosis	C-type lectin receptor signaling pathway	0.333
-Yersinia infection	Efferocytosis	0.273
-Yersinia infection	Hematopoietic cell lineage	0.333
-T cell receptor signaling pathway	Cell adhesion molecule (CAM) interaction	0.312
+Natural killer cell mediated cytotoxicity	Graft-versus-host disease	0.625
+Natural killer cell mediated cytotoxicity	Type I diabetes mellitus	0.625
+Rheumatoid arthritis	Chagas disease (American trypanosomiasis)	0.556
+Rheumatoid arthritis	Toll-like receptor signaling pathway	0.444
+Rheumatoid arthritis	Leishmaniasis	0.333
+Rheumatoid arthritis	Salmonella infection	0.333
+Allograft rejection	Graft-versus-host disease	0.833
+Allograft rejection	Type I diabetes mellitus	0.833
+Allograft rejection	African trypanosomiasis	0.429
+Chagas disease (American trypanosomiasis)	Toll-like receptor signaling pathway	0.571
+Chagas disease (American trypanosomiasis)	Leishmaniasis	0.667
+Chagas disease (American trypanosomiasis)	TNF signaling pathway	0.333
+Chagas disease (American trypanosomiasis)	Salmonella infection	0.429
+Prolactin signaling pathway	Hepatitis B	0.273
+Human cytomegalovirus infection	Chemokine signaling pathway	0.286
+Human cytomegalovirus infection	Toll-like receptor signaling pathway	0.4
+Human cytomegalovirus infection	Hepatitis B	0.308
+Chemokine signaling pathway	Toll-like receptor signaling pathway	0.273
+Hematopoietic cell lineage	Primary immunodeficiency	0.6
+Graft-versus-host disease	Type I diabetes mellitus	1.0
+Toll-like receptor signaling pathway	TNF signaling pathway	0.375
+Toll-like receptor signaling pathway	Salmonella infection	0.5
+Human T-cell leukemia virus 1 infection	Hepatitis B	0.462
+Toxoplasmosis	Leishmaniasis	0.5
+Toxoplasmosis	African trypanosomiasis	0.5
+Leishmaniasis	African trypanosomiasis	0.6

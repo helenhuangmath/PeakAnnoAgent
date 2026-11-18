@@ -81,3 +81,4 @@ Colours follow ChIPpeakAnno's defaults (`--palette chippeakanno`, the default). 
 | `*_enrich1_enrichment_<method>_dotplot.pdf` | Top terms per peak group |
 | `*_enrich1_network_<method>.pdf` | Enrichment map with labelled modules |
 | `*_enrich1_cnet_<method>.pdf` | Gene–pathway network |
+

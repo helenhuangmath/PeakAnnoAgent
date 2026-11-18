@@ -32,10 +32,11 @@ class ConversionTest(unittest.TestCase):
         out = self.tmp / "e.csv"
         n = external.enrichment_to_clusterprofiler(str(ENRICHMENT), "go_bp", "all", str(out))
         self.assertGreater(n, 100)
-        head = out.read_text().splitlines()[:2]
-        self.assertEqual(head[0], "ID,Description,pvalue,p.adjust,geneID,Count")
-        self.assertIn("/", head[1])            # clusterProfiler separates genes with '/'
-        self.assertNotIn(";", head[1].split(",")[4])
+        lines = out.read_text().splitlines()
+        self.assertEqual(lines[0], "ID,Description,pvalue,p.adjust,geneID,Count")
+        genes = [line.split(",")[4] for line in lines[1:]]
+        self.assertTrue(any("/" in g for g in genes))          # clusterProfiler separates genes with '/'
+        self.assertFalse(any(";" in g for g in genes))
         methods = external.enrichment_methods(str(ENRICHMENT))
         self.assertIn("go_bp", methods)
         self.assertIn("all", methods["go_bp"])
@@ -90,6 +91,22 @@ class ToolSkipTest(unittest.TestCase):
             ev = run_tool(self.ctx, "network_viz", {})
         self.assertEqual(ev.status, "skipped")
         self.assertIn("No enriched terms", ev.error)
+
+    def test_too_few_significant_terms_is_a_network_skip_not_an_error(self):
+        # Found on real data: small peak sets can have every term tested and none (or one) significant.
+        table = Path(self.tmp) / "weak.tsv"
+        table.write_text("method\tgroup\tterm\tpadj\tgenes\n"
+                         "go_bp\tall\tGOBP_A\t0.04\tTox;Tcf7\n"
+                         "go_bp\tall\tGOBP_B\t0.21\tTox\n"
+                         "go_bp\tall\tGOBP_C\t0.90\tTcf7\n")
+        self.ctx.evidence.add("enrich_pathways", "Pathways", {}, {"status": "ok", "result": {
+            "tables": {"enrichment": str(table)}}})
+        with mock.patch.object(external, "find_snv", return_value=["snv"]), \
+                mock.patch.object(external, "run_snv", side_effect=AssertionError("must not be called")):
+            ev = run_tool(self.ctx, "network_viz", {})
+        self.assertEqual(ev.status, "skipped")
+        self.assertIn("1 significant go_bp term ", ev.error)
+        self.assertIn("at least two", ev.error)
 
 
 @unittest.skipUnless(os.environ.get("PEAKANNOAGENT_LIVE_TESTS") == "1" and ENRICHMENT.is_file()

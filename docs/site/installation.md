@@ -70,7 +70,7 @@ refuses to download and uses the cache only.
 
 | Tool | Used for | Without it |
 |---|---|---|
-| `ANTHROPIC_API_KEY` and the Anthropic SDK | Agent mode and the chat in the web app | Use `--no-llm` |
+| Anthropic credentials (`ant auth login` browser sign-in, or `ANTHROPIC_API_KEY`) and the Anthropic SDK | Agent mode and the chat in the web app | Use `--no-llm` |
 | [HOMER](http://homer.ucsd.edu/homer/) with its genome package, `findMotifsGenome.pl` on `PATH` | Motif enrichment | The motif step is skipped |
 | [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) | Clustered, interactive pathway networks | The step is skipped; the built-in networks are still drawn |
 | [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) | Cross-tool pathway consensus | The step is skipped |

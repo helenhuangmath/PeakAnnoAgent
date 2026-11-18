@@ -13,6 +13,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import threading
 import zipfile
 import time
@@ -28,7 +29,7 @@ from flask import Flask, abort, jsonify, redirect, render_template, request, sen
 
 from . import __version__
 from .artifacts import write_json
-from .config import DEFAULT_MODEL, REFERENCES, SUPPORTED_GENOMES, RunConfig, build_biology
+from .config import CREDENTIALS_HELP, DEFAULT_MODEL, anthropic_credentials, REFERENCES, SUPPORTED_GENOMES, RunConfig, build_biology
 from .report import md
 from .search import KINDS, Run, RunIndex
 from .engine import PALETTE_OPTIONS
@@ -317,6 +318,13 @@ class JobManager:
 
 # ------------------------------------------------------------------ app
 
+def sdk_hint() -> str:
+    """How to add the Anthropic SDK to the Python that is running this server."""
+    return (f"Install the Anthropic SDK into the Python that runs this server, then restart it: "
+            f"{sys.executable} -m pip install 'anthropic>=2.8,<3'. "
+            f"You also need credentials. {CREDENTIALS_HELP}")
+
+
 def environment() -> dict:
     try:
         import anthropic
@@ -325,7 +333,7 @@ def environment() -> dict:
         sdk = None
     from .external import available
     return {"anthropic_sdk": sdk, **available(),
-            "api_key": bool(os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")),
+            "api_key": bool(anthropic_credentials()), "credentials": anthropic_credentials(),
             "homer": bool(shutil.which("findMotifsGenome.pl"))}
 
 
@@ -431,8 +439,8 @@ def create_app(runs_dir: str = "runs", model: str = DEFAULT_MODEL,
                 try:
                     import anthropic  # noqa: F401
                 except ImportError:
-                    raise ValueError("Agent mode needs the Anthropic SDK (pip install 'peakannoagent[agent]'); "
-                                     "choose the deterministic mode instead.")
+                    raise ValueError("Agent mode needs the Anthropic SDK. " + sdk_hint()
+                                     + " Or choose the fixed plan, which needs neither.")
         except (ValueError, FileNotFoundError, json.JSONDecodeError) as err:
             shutil.rmtree(job.dir, ignore_errors=True)
             manager.jobs.pop(job.id, None)
@@ -568,7 +576,9 @@ def create_app(runs_dir: str = "runs", model: str = DEFAULT_MODEL,
             try:
                 import anthropic  # noqa: F401
             except ImportError:
-                return jsonify({"error": "The chat needs the Anthropic SDK: pip install 'peakannoagent[agent]'"}), 503
+                return jsonify({"error": "The chat needs the Anthropic SDK. " + sdk_hint()}), 503
+            if not anthropic_credentials():
+                return jsonify({"error": "The chat needs Anthropic credentials. " + CREDENTIALS_HELP}), 503
         text = (request.get_json(silent=True) or {}).get("message", "")
         try:
             entry = session.ask(text)

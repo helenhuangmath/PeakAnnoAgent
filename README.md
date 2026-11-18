@@ -98,7 +98,7 @@ build) and cached in `~/.cache/peakannoagent`; set `PEAKANNOAGENT_CACHE` to move
 <details>
 <summary><b>Optional tools</b></summary>
 
-- **Claude API access** for agent mode and the chat. Set `ANTHROPIC_API_KEY`.
+- **Claude API access** for agent mode and the chat. Sign in with the browser (`brew install anthropics/tap/ant`, then `ant auth login`), or set `ANTHROPIC_API_KEY`.
 - [HOMER](http://homer.ucsd.edu/homer/) with its genome package, and `findMotifsGenome.pl` on `PATH`,
   for motif enrichment. Without it the motif step is skipped.
 - [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) (`pip install git+https://github.com/helenhuangmath/SimpNetworkViz`), for the clustered pathway networks.
@@ -275,13 +275,14 @@ res   = run_annotation(peaks, "results/py", "run", genome="hg38", reference=ref)
 
 ## Demo: with and without the agent
 
-> The two demo reports below were generated with version 1.0.2, when the analysis ran in R. The
-> report layout is the same today; annotation file names, the motif backend and the Methods text
-> differ. Run the example yourself to see current output.
+> The **without-agent** demo below was regenerated with the current Python engine (HOMER was not
+> installed on that machine, so its motif steps were skipped). The **with-agent** demo is still the
+> version 1.0.2 run, made when the analysis ran in R: its figures use the older style, and its
+> annotation file names, motif backend and Methods text differ from current output.
 
 The same 351 example peaks were run twice: once with Claude as the agent, and once with `--no-llm`.
-Historical example runs are bundled under [docs/demo/](docs/demo/), so you can explore the reports without
-running anything. These pre-1.0.2 outputs illustrate the interface; re-run them with 1.0.2 before using
+Both runs are bundled under [docs/demo/](docs/demo/), so you can explore the reports without
+running anything. The with-agent run illustrates the interface; re-run it before using its
 quantitative annotation or overlap results.
 
 | | With agent | Without agent (`--no-llm`) |
@@ -290,15 +291,15 @@ quantitative annotation or overlap results.
 | **Evidence** | [tex_evidence.json](docs/demo/with_agent/tex_evidence.json) | [tex_evidence.json](docs/demo/without_agent/tex_evidence.json) · [tex_manifest.json](docs/demo/without_agent/tex_manifest.json) |
 | **Figures and tables** | [results/](docs/demo/with_agent/results/) | [results/](docs/demo/without_agent/results/) |
 | **Needs** | `ANTHROPIC_API_KEY` | nothing |
-| **Plan** | Claude chooses steps and settings from the known biology (22 steps) | Fixed plan with default settings (12 steps) |
+| **Plan** | Claude chooses steps and settings from the known biology (22 steps) | Fixed plan with default settings (13 steps) |
 | **Promoter window** | −1000/+500 bp, chosen for sharp ATAC peaks | −2000/+500 bp default |
 | **Gene sets** | GO BP, Hallmark, **ImmuneSigDB** (CD8 T-cell system) and the user's exhaustion signatures, promoter vs distal | GO BP, **KEGG**, Hallmark and the user's signatures, all/promoter/distal |
-| **Motifs** | Distal-only scan first (79 % of peaks are distal), then all peaks | All peaks, then distal |
+| **Motifs** | Distal-only scan first (79 % of peaks are distal), then all peaks | All peaks, then distal (needs HOMER) |
 | **Regulators** | ChIP-Atlas co-binding restricted to immune (Blood) experiments; Tcf7 and Batf target-gene overlap tests | ChIP-Atlas co-binding, all cell classes |
 | **Literature** | Nine targeted queries (TOX, NR4A, TCF1, BATF, exhaustion chromatin), re-queried by citations when the first pass returned only reviews | One generic query built from the biology fields |
 | **Summary** | Titled narrative: what the peaks are, pathways, candidate regulators, caveats | Automated bullet list of key statistics |
 | **Hypotheses** | Three, each with evidence IDs and a proposed next experiment | None |
-| **Statistics** | Identical: computed by the R engine in both modes | Identical |
+| **Statistics** | Identical: computed by the same engine in both modes | Identical |
 
 ### With agent
 
@@ -344,7 +345,7 @@ peakanno-agent run \
     <td width="50%"><a href="docs/demo/without_agent/results/tex_enrich1_enrichment_kegg_dotplot.pdf"><img src="docs/figures/demo/without_agent_kegg_dotplot.png" alt="KEGG dot plot"></a><br>
       <sub><b>KEGG.</b> The fixed plan runs the default GO, KEGG and Hallmark collections for all, promoter and distal peaks.</sub></td>
     <td width="50%"><a href="docs/demo/without_agent/results/tex_enrich1_enrichment_custom_dotplot.pdf"><img src="docs/figures/demo/without_agent_signatures_dotplot.png" alt="Exhaustion signature dot plot"></a><br>
-      <sub><b>User signatures.</b> Same statistics as the agent run: the enrichment is computed by the R engine in both modes.</sub></td>
+      <sub><b>User signatures.</b> Same statistics as the agent run: the enrichment is computed by the same engine in both modes.</sub></td>
   </tr>
 </table>
 
@@ -363,7 +364,7 @@ These figures come from the bundled example, analysed by the agent. The pathway 
 <table>
   <tr>
     <td width="50%"><img src="docs/figures/enrichment_map.png" alt="Pathway enrichment map"><br>
-      <sub><b>Pathway enrichment map.</b> GO terms are linked by shared genes and grouped into labelled modules (M1–M5), each in its own outline.</sub></td>
+      <sub><b>Pathway enrichment map.</b> GO terms are linked by shared genes and grouped into named modules, each in its own outline.</sub></td>
     <td width="50%"><img src="docs/figures/gene_pathway_network.png" alt="Gene-pathway network"><br>
       <sub><b>Gene–pathway network.</b> Module-lead pathways and their genes; genes shared by several pathways are hubs.</sub></td>
   </tr>
@@ -380,6 +381,10 @@ These figures come from the bundled example, analysed by the agent. The pathway 
       <sub><b>Feature overlaps.</b> Peaks by the combination of feature types they overlap.</sub></td>
   </tr>
 </table>
+
+For a full walk-through of a real run, with every figure and how to read it, see the tutorial
+[A real data set from start to finish](docs/site/tutorials/real_data_h3k27ac.md) (ENCODE H3K27ac
+ChIP-seq, human CD8 T cells).
 
 Each run writes:
 

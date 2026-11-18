@@ -6,7 +6,7 @@ a good way to check that your installation works and to see how the assay change
 | Example | Genome | Peaks | ENCODE | Expected result |
 |---|---|---|---|---|
 | CTCF ChIP-seq, K562 | hg38 | 1000 strongest | ENCSR000BPJ, file ENCFF582SNT (IDR thresholded) | CTCF motif dominates; co-binding with cohesin (RAD21, SMC3) |
-| H3K27ac ChIP-seq, human CD8 T cells | hg38 | 1000 strongest | ENCSR835OJV, file ENCFF283CAQ (replicated) | T-cell identity genes and pathways; RUNX, ETS, TCF/LEF, T-bet/Eomes regulators |
+| H3K27ac ChIP-seq, human CD8 T cells | hg38 | 1000 strongest | ENCSR835OJV, file ENCFF283CAQ (replicated) | Highly active promoters; housekeeping pathways plus NF-κB targets; T-cell factors (T-bet, BCL11B, ETS1) in ChIP-Atlas |
 | H3K4me3 ChIP-seq, mouse BMDM | mm10 | 800 strongest | ENCSR916IRY, file ENCFF813FPW (replicated) | Nearly every peak on a promoter; macrophage identity genes |
 
 Each example has a peak file and a biology file in `peakannoagent/examples/`.
@@ -39,10 +39,16 @@ peakanno-agent run \
 
 What to look for:
 
-- **Pathways.** T-cell activation and differentiation modules in the enrichment map, and CD8 T-cell
-  signatures in ImmuneSigDB, which the agent adds because the cell type is an immune cell.
-- **Positive controls.** CD8A, CD8B, CD3E, LCK and the other expected genes should carry peaks.
-- **Regulators.** Lineage factors (RUNX3, ETS1, TCF7, EOMES) among the motif and ChIP-Atlas results.
+- **Annotation.** About 90 % of these peaks are promoters: the strongest H3K27ac peaks are highly
+  active promoters, not enhancers.
+- **Pathways.** Mostly housekeeping functions (RNA splicing, translation), with NF-κB target genes
+  such as CD69, IL7R and JUN.
+- **Regulators.** The cell type shows in ChIP-Atlas: Mediator and BRD4 experiments from T cells, and
+  the lineage factors T-bet (TBX21), BCL11B, RUNX1 and ETS1.
+- **Positive controls.** Only IL7R of the expected identity genes is among the 1000 strongest peaks;
+  use the full ENCODE peak set to recover the rest.
+
+[Tutorial 6](real_data_h3k27ac.md) walks through this run in full, with every figure.
 
 ## H3K4me3 in mouse macrophages: a promoter mark
 

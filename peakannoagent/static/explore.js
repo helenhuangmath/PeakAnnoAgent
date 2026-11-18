@@ -67,7 +67,7 @@
         for (let j = i + 1; j < n; j++) {
           const b = nodes[j];
           let ddx = a.x - b.x, ddy = a.y - b.y; let d = Math.sqrt(ddx * ddx + ddy * ddy) || 0.01;
-          const min = a.r + b.r + 6;                       // never overlap
+          const min = (a.space || a.r) + (b.space || b.r) + 6;   // never overlap
           const f = (k * k) / d * (d < min ? 3 : 1);
           ddx /= d; ddy /= d;
           dx[i] += ddx * f; dy[i] += ddy * f; dx[j] -= ddx * f; dy[j] -= ddy * f;
@@ -92,6 +92,34 @@
       }
     }
     return nodes;
+  }
+
+  // Readable term name (the server sends `label`; older runs only have the raw id).
+  const nameOf = (r) => (r && (r.label || r.term)) || "";
+  // Wrap on spaces to `width` characters; words are never cut and no line is dropped.
+  function wrapText(t, width) {
+    const lines = [];
+    String(t).split(/\s+/).forEach((w) => { const l = lines.length ? lines[lines.length - 1] : null; if (l !== null && (l + " " + w).length <= width) lines[lines.length - 1] = l + " " + w; else lines.push(w); });
+    return lines;
+  }
+  const HALO = "paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round";
+  // Push labelled boxes apart ({x, y, hw, up, down} in px) until none overlap.
+  function separate(boxes, pad, w, h) {
+    for (let it = 0; it < 300; it++) {
+      let moved = false;
+      for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i], b = boxes[j];
+        const dx = b.x - a.x, dy = (b.y + (b.down - b.up) / 2) - (a.y + (a.down - a.up) / 2);
+        const ox = a.hw + b.hw + pad - Math.abs(dx), oy = (a.up + a.down + b.up + b.down) / 2 + pad - Math.abs(dy);
+        if (ox > 0 && oy > 0) {
+          if (ox < oy * 1.6) { const sg = dx >= 0 ? 1 : -1; a.x -= sg * (ox / 2 + 0.5); b.x += sg * (ox / 2 + 0.5); }
+          else { const sg = dy >= 0 ? 1 : -1; a.y -= sg * (oy / 2 + 0.5); b.y += sg * (oy / 2 + 0.5); }
+          moved = true;
+        }
+      }
+      if (w) boxes.forEach((b) => { b.x = Math.max(b.hw + 4, Math.min(w - b.hw - 4, b.x)); b.y = Math.max(b.up + 4, Math.min(h - b.down - 4, b.y)); });
+      if (!moved) break;
+    }
   }
 
   // ------------------------------------------------------------------ the explorer
@@ -160,8 +188,8 @@
       panel.innerHTML = "";
       if (!t) { panel.append(el("p", {class: "muted", text: "Click a bar, a node or a term to see its genes."})); return; }
       const genes = t.genes_list || genesOf(t.genes);
-      panel.append(el("h4", {text: t.term}),
-        el("p", {class: "muted small", html: `${esc(t.method || state.method)}${t.group ? " · " + esc(t.group) + " peaks" : ""}${t.module_label ? " · module: " + esc(t.module_label) : ""}<br>padj ${esc(fmtP(t.padj))} · ${genes.length} gene${genes.length === 1 ? "" : "s"}${t.gene_ratio ? " · ratio " + esc(t.gene_ratio) : ""}`}));
+      panel.append(el("h4", {text: nameOf(t), title: t.term}),
+        el("p", {class: "muted small", html: `${esc(t.method || state.method)}${t.group ? " · " + esc(t.group) + " peaks" : ""}${t.module_label ? " · module: " + esc(t.module_title || t.module_label) : ""}<br>padj ${esc(fmtP(t.padj))} · ${genes.length} gene${genes.length === 1 ? "" : "s"}${t.gene_ratio ? " · ratio " + esc(t.gene_ratio) : ""}`}));
       const chips = el("div", {class: "ex-genes"});
       genes.forEach((g) => chips.append(el("button", {type: "button", class: "ex-gene", text: g, title: "gene details", onclick: () => showGene(g, t)})));
       panel.append(chips);
@@ -170,7 +198,7 @@
         el("button", {type: "button", class: "ex-link", text: "genes.tsv", onclick: () => download(`${t.term.replace(/\W+/g, "_")}_genes.tsv`, "gene\n" + genes.join("\n"))})));
       // which other shown terms share these genes
       const others = rows().filter((r) => r !== t && r.term !== t.term).map((r) => [r, r.genes_list.filter((g) => genes.includes(g)).length]).filter((x) => x[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 6);
-      if (others.length) panel.append(el("h5", {text: "Shares genes with"}), el("ul", {class: "ex-list"}, ...others.map(([r, n]) => el("li", {}, el("a", {href: "#", text: r.term, onclick: (e) => { e.preventDefault(); showTerm(r); highlight(r); }}), ` (${n})`))));
+      if (others.length) panel.append(el("h5", {text: "Shares genes with"}), el("ul", {class: "ex-list"}, ...others.map(([r, n]) => el("li", {}, el("a", {href: "#", text: nameOf(r), onclick: (e) => { e.preventDefault(); showTerm(r); highlight(r); }}), ` (${n})`))));
     }
     async function showGene(g, fromTerm) {
       state.gene = g;
@@ -194,7 +222,7 @@
           }
         } catch (e) { /* offline or no index */ }
       }
-      uniq.filter((t) => !fromTerm || t !== fromTerm.term).slice(0, 8).forEach((t) => box.append(el("a", {href: "#", class: "ex-term", text: t, onclick: (e) => { e.preventDefault(); const r = enrich.find((x) => x.term === t && x.method === state.method); if (r) { showTerm(r); highlight(r); } }})));
+      uniq.filter((t) => !fromTerm || t !== fromTerm.term).slice(0, 8).forEach((t) => box.append(el("a", {href: "#", class: "ex-term", text: nameOf(enrich.find((x) => x.term === t)) || t, onclick: (e) => { e.preventDefault(); const r = enrich.find((x) => x.term === t && x.method === state.method); if (r) { showTerm(r); highlight(r); } }})));
     }
     function highlight(t) {
       stage.querySelectorAll(".sel").forEach((n) => n.classList.remove("sel"));
@@ -222,8 +250,8 @@
       rs.forEach((r, i) => {
         const y = 30 + i * rowH;
         const g = el("svg:g", {class: "bar node", "data-term": r.term, onclick: () => { showTerm(r); highlight(r); }});
-        g.append(el("svg:title", {text: `${r.term}\npadj ${fmtP(r.padj)} · ${r.count || r.genes_list.length} genes\n${r.genes_list.slice(0, 12).join(", ")}${r.genes_list.length > 12 ? " …" : ""}`}));
-        const label = r.term.length > left / 6.2 ? r.term.slice(0, left / 6.2 - 1) + "…" : r.term;
+        g.append(el("svg:title", {text: `${nameOf(r)}\npadj ${fmtP(r.padj)} · ${r.count || r.genes_list.length} genes\n${r.genes_list.slice(0, 12).join(", ")}${r.genes_list.length > 12 ? " …" : ""}`}));
+        const full = nameOf(r), label = full.length > left / 6.2 ? full.slice(0, left / 6.2 - 1) + "…" : full;
         g.append(el("svg:text", {x: left - 8, y: y + rowH / 2 + 4, "font-size": 12, "text-anchor": "end", text: label}));
         g.append(el("svg:rect", {x: left, y: y + 3, width: Math.max(2, x(r.score) - left), height: rowH - 6, rx: 2, fill: r.group === "distal" ? "#3498db" : r.group === "promoter" ? "#e74c3c" : "#18bc9c"}));
         g.append(el("svg:text", {x: x(r.score) + 5, y: y + rowH / 2 + 4, "font-size": 10, fill: "#7b8a8b", text: String(r.count || r.genes_list.length)}));
@@ -252,39 +280,45 @@
       const net = networks[state.method];
       stage.innerHTML = "";
       if (!net || !net.nodes || !net.nodes.length) { stage.append(el("p", {class: "muted", text: "No network for this collection."})); return; }
-      const W = Math.max(560, Math.min(stage.clientWidth || 760, 900));
+      const colours = (data.palette && data.palette.length) ? data.palette : NET_PALETTE;
       const maxC = Math.max(...net.nodes.map((n) => +n.count || 1));
-      const nodes = net.nodes.map((n) => ({...n, id: n.term, genes_list: genesOf(n.genes), method: state.method, r: 5 + 11 * Math.sqrt((+n.count || 1) / maxC)}));
+      const nodes = net.nodes.map((n) => ({...n, id: n.term, genes_list: genesOf(n.genes), method: state.method}));
       const edges = (net.edges || []).map((e) => ({source: e.from, target: e.to, weight: +e.jaccard || 0.2}));
       const sizes = {};
       nodes.forEach((n) => { sizes[n.module] = (sizes[n.module] || 0) + 1; });
       const clustered = (n) => sizes[n.module] >= 2;
-      const color = (n) => clustered(n) ? NET_PALETTE[(+n.module - 1) % NET_PALETTE.length] : "#BDBDBD";
+      // Modules with two or more terms get the palette colours in order, as in the PDF figure.
+      const named = [...new Set(nodes.filter(clustered).map((n) => +n.module))].sort((x, y) => x - y);
+      const color = (n) => clustered(n) ? colours[named.indexOf(+n.module) % colours.length] : "#BDBDBD";
       const fixed = nodes.every((n) => n.x !== undefined && n.x !== null && n.x !== "" && isFinite(+n.x) && isFinite(+n.y));
-      let H;
+      const avail = Math.max(560, stage.clientWidth || 760);
+      let W = Math.min(avail, 1100), H, FS = 12, TS = 14;
       if (fixed) {
-        const pad = 70, xs = nodes.map((n) => +n.x), ys = nodes.map((n) => +n.y);
+        // The layout (inches) left room for 14 pt labels wrapped at 18 characters: draw at a scale that
+        // keeps them readable (at least 11 px), and let the stage scroll sideways when it is wider.
+        const xs = nodes.map((n) => +n.x), ys = nodes.map((n) => +n.y);
         const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-        const sc = Math.min((W - 2 * pad) / Math.max(x1 - x0, 1e-6), 95);
-        H = Math.round((y1 - y0) * sc + 2 * pad + 20);
-        nodes.forEach((n) => { n.x = pad + (+n.x - x0) * sc + (W - 2 * pad - (x1 - x0) * sc) / 2; n.y = pad + 20 + (y1 - +n.y) * sc; });
+        const padX = 110, padTop = 90, padBot = 150;
+        const sc = Math.max(50, Math.min((avail - 2 * padX) / Math.max(x1 - x0, 1e-6), 76));
+        FS = 14 * sc / 72; TS = 17 * sc / 72;
+        W = Math.round((x1 - x0) * sc + 2 * padX);
+        H = Math.round((y1 - y0) * sc + padTop + padBot);
+        nodes.forEach((n) => { n.x = padX + (+n.x - x0) * sc; n.y = padTop + (y1 - +n.y) * sc; n.r = sc * (0.1 + 0.14 * Math.sqrt((+n.count || 1) / maxC)); });
       } else {
+        nodes.forEach((n) => { n.r = 5 + 11 * Math.sqrt((+n.count || 1) / maxC); });
         H = Math.max(420, Math.min(640, 160 + nodes.length * 12));
         layout(nodes, edges, W, H, 300, {k: 0.45, gravity: 0.1, pull: 0.4});
       }
-      const svg = el("svg:svg", {width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: "ex-svg"});
+      const LH = FS * 1.1;
+      const svg = el("svg:svg", {width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: "ex-svg ex-wide"});
       svg.append(el("svg:style", {text: SVG_STYLE}));
       const byId = new Map(nodes.map((n) => [n.id, n]));
-      const label = (t) => t.length > 30 ? t.slice(0, 29) + "…" : t;
-      // Same wrapping as the R figure (18 characters, at most 4 lines), which the layout made room for.
-      const wrap = (t) => {
-        const lines = [];
-        t.split(/\s+/).forEach((w) => { const l = lines.length ? lines[lines.length - 1] : null; if (l !== null && (l + " " + w).length <= 18) lines[lines.length - 1] = l + " " + w; else lines.push(w); });
-        if (lines.length > 4) { lines.length = 4; lines[3] = lines[3].replace(/[ ,;:-]*$/, "") + "…"; }
-        return lines;
-      };
-      const FS = 10, LH = 11.5;
-      nodes.forEach((n) => { n.lines = fixed ? wrap(n.term) : [label(n.term)]; n.lw = Math.max(...n.lines.map((l) => l.length)) * 0.58 * FS / 2; });
+      nodes.forEach((n) => { n.lines = wrapText(nameOf(n), 18); n.lw = Math.max(...n.lines.map((l) => l.length)) * 0.55 * FS / 2; });
+      if (!fixed) {      // no precomputed positions: keep the labels apart here
+        const boxes = nodes.map((n) => ({n, x: n.x, y: n.y, hw: Math.max(n.lw, n.r), up: n.r, down: n.r + 4 + n.lines.length * LH}));
+        separate(boxes, 6, W, H);
+        boxes.forEach((b) => { b.n.x = b.x; b.n.y = b.y; });
+      }
       // Outlines and titles per module (only for the precomputed layout, where modules are apart).
       const mods = [...new Set(nodes.map((n) => String(n.module)))];
       const hg = el("svg:g");
@@ -293,11 +327,15 @@
           const ms = nodes.filter((n) => String(n.module) === m);
           if (ms.length < 2) return;
           const pts = [];
-          ms.forEach((n) => { const w = Math.max(n.r, n.lw) + 8, bot = n.y + n.r + 6 + n.lines.length * LH; for (let a = 0; a < 16; a++) pts.push([n.x + (n.r + 10) * Math.cos(a * Math.PI / 8), n.y + (n.r + 10) * Math.sin(a * Math.PI / 8)]); pts.push([n.x - w, bot], [n.x + w, bot]); });
+          ms.forEach((n) => { const w = Math.max(n.r, n.lw) + 8, bot = n.y + n.r + 6 + n.lines.length * LH; for (let a = 0; a < 16; a++) pts.push([n.x + (n.r + 10) * Math.cos(a * Math.PI / 8), n.y + (n.r + 10) * Math.sin(a * Math.PI / 8)]); pts.push([n.x - w, bot], [n.x + w, bot], [n.x - w, n.y - n.r], [n.x + w, n.y - n.r]); });
           const hull = convexHull(pts), base = color(ms[0]);
           hg.append(el("svg:polygon", {points: hull.map((q) => q.join(",")).join(" "), fill: mixHex(base, 255, 0.86), stroke: mixHex(base, 255, 0.25), "stroke-width": 1.4, "stroke-linejoin": "round"}));
           const top = Math.min(...hull.map((q) => q[1])), xs = hull.map((q) => q[0]);
-          hg.append(el("svg:text", {x: (Math.min(...xs) + Math.max(...xs)) / 2, y: top - 7, "text-anchor": "middle", "font-size": 13, style: `fill:${mixHex(base, 0, 0.45)}`, text: `M${m}: ${label(ms[0].module_label || "")}`}));
+          const span = Math.max(...xs) - Math.min(...xs);
+          const rows = wrapText(`Module ${m}: ${ms[0].module_title || ms[0].module_label || ""}`, Math.max(24, Math.floor(span / (0.56 * TS))));
+          const t = el("svg:text", {x: (Math.min(...xs) + Math.max(...xs)) / 2, y: top - 8 - (rows.length - 1) * TS * 1.1, "text-anchor": "middle", "font-size": TS, "font-weight": 700, style: `fill:${mixHex(base, 0, 0.35)}`});
+          rows.forEach((l, i) => t.append(el("svg:tspan", {x: (Math.min(...xs) + Math.max(...xs)) / 2, dy: i ? TS * 1.1 : 0, text: l})));
+          hg.append(t);
         });
       }
       svg.append(hg);
@@ -306,27 +344,25 @@
         const a = byId.get(e.source), b = byId.get(e.target);
         if (!a || !b) return;
         const within = String(a.module) === String(b.module);
-        eg.append(el("svg:line", {class: "edge", x1: a.x, y1: a.y, x2: b.x, y2: b.y, "stroke-width": within ? 0.5 + 3 * e.weight : 0.6, style: within ? "" : "stroke-opacity:.18", "data-a": a.id, "data-b": b.id}));
+        eg.append(el("svg:line", {class: "edge", x1: a.x, y1: a.y, x2: b.x, y2: b.y, "stroke-width": within ? 0.5 + 3 * e.weight : 0.6, style: within ? "" : "stroke-opacity:.25;stroke-dasharray:4 3", "data-a": a.id, "data-b": b.id}));
       });
       svg.append(eg);
       const ng = el("svg:g");
       nodes.forEach((n) => {
         const g = el("svg:g", {class: "node", "data-term": n.term, transform: `translate(${n.x},${n.y})`, onclick: () => { showTerm({...n, module_label: n.module_label}); highlight(n); }});
-        g.append(el("svg:title", {text: `${n.term}\nmodule ${n.module}: ${n.module_label || ""}\npadj ${fmtP(n.padj)} · ${n.count} genes`}));
+        g.append(el("svg:title", {text: `${nameOf(n)}\nmodule ${n.module}: ${n.module_title || n.module_label || ""}\npadj ${fmtP(n.padj)} · ${n.count} genes`}));
         g.append(el("svg:circle", {r: n.r, fill: color(n), stroke: mixHex(color(n), 0, 0.3), "stroke-width": 0.8}));
-        if (fixed || n.r > 11 || nodes.length <= 40) {
-          const t = el("svg:text", {y: n.r + 11, "font-size": FS, "text-anchor": "middle"});
-          n.lines.forEach((l, i) => t.append(el("svg:tspan", {x: 0, dy: i ? LH : 0, text: l})));
-          g.append(t);
-        }
+        const t = el("svg:text", {y: n.r + FS, "font-size": FS, "text-anchor": "middle", style: HALO});
+        n.lines.forEach((l, i) => t.append(el("svg:tspan", {x: 0, dy: i ? LH : 0, text: l})));
+        g.append(t);
         drag(g, n, () => { g.setAttribute("transform", `translate(${n.x},${n.y})`); eg.querySelectorAll(`line[data-a="${CSS.escape(n.id)}"]`).forEach((l) => { l.setAttribute("x1", n.x); l.setAttribute("y1", n.y); }); eg.querySelectorAll(`line[data-b="${CSS.escape(n.id)}"]`).forEach((l) => { l.setAttribute("x2", n.x); l.setAttribute("y2", n.y); }); });
         ng.append(g);
       });
       svg.append(ng);
       stage.append(svg);
       const legend = el("div", {class: "ex-legend"});
-      mods.forEach((m) => { const n0 = nodes.find((n) => String(n.module) === m) || {}; if (fixed && !clustered(n0)) return; legend.append(el("span", {}, el("i", {style: `background:${color(n0)}`}), ` M${m}: ${n0.module_label || ""}`)); });
-      stage.append(legend, el("p", {class: "muted small", text: "Nodes are pathways (size = genes, colour = module); edges link pathways that share genes (width = Jaccard; faint lines join different modules). Grey nodes share too few genes to join a module. Drag to rearrange, click for genes."}));
+      mods.forEach((m) => { const n0 = nodes.find((n) => String(n.module) === m) || {}; if (fixed && !clustered(n0)) return; legend.append(el("span", {}, el("i", {style: `background:${color(n0)}`}), ` Module ${m}: ${n0.module_title || n0.module_label || ""}`)); });
+      stage.append(legend, el("p", {class: "muted small", text: "Nodes are pathways (size = genes, colour = module); edges link pathways that share genes (width = Jaccard; dashed lines join different modules). A module is a group of pathways that share genes, numbered by significance and named after its most significant pathway. Grey nodes share too few genes to join a module. Drag to rearrange, click for genes."}));
     }
 
     function drawGeneMap() {
@@ -334,30 +370,46 @@
       stage.innerHTML = "";
       if (!rs.length) { stage.append(el("p", {class: "muted", text: "No terms for this selection."})); return; }
       const terms = rs.slice(0, Math.min(rs.length, 15));
+      const colours = (data.palette && data.palette.length) ? data.palette : PALETTE;
       const geneCount = new Map();
       terms.forEach((t) => t.genes_list.forEach((g) => geneCount.set(g, (geneCount.get(g) || 0) + 1)));
       const genes = [...geneCount.keys()];
-      const W = Math.max(560, Math.min(stage.clientWidth || 760, 900)), H = Math.max(520, Math.min(760, 320 + genes.length * 3));
+      const W = Math.max(640, Math.min(stage.clientWidth || 760, 1100)), H = Math.max(620, Math.min(900, 420 + genes.length * 4 + terms.length * 14));
+      const TFS = 12.5, TLH = TFS * 1.12, GFS = 10;
+      const maxG = Math.max(1, ...terms.map((x) => x.genes_list.length));
       const nodes = [
-        ...terms.map((t) => ({id: "T:" + t.term, kind: "term", data: t, r: 9 + 10 * Math.sqrt(t.genes_list.length / Math.max(1, Math.max(...terms.map((x) => x.genes_list.length)))), label: t.term})),
-        ...genes.map((g) => ({id: "G:" + g, kind: "gene", data: g, r: Math.min(9, 3 + 1.1 * geneCount.get(g)), label: g})),
+        ...terms.map((t) => { const lines = wrapText(nameOf(t), 22); return {id: "T:" + t.term, kind: "term", data: t, r: 9 + 10 * Math.sqrt(t.genes_list.length / maxG), lines, hw: Math.max(...lines.map((l) => l.length)) * 0.56 * TFS / 2}; }),
+        ...genes.map((g) => ({id: "G:" + g, kind: "gene", data: g, r: Math.min(9, 3 + 1.1 * geneCount.get(g)), lines: [g], hw: g.length * 0.56 * GFS / 2})),
       ];
       const edges = []; terms.forEach((t) => t.genes_list.forEach((g) => edges.push({source: "T:" + t.term, target: "G:" + g, weight: 0.05})));
+      // Terms repel each other as far as their labels reach, so the names have room.
+      nodes.forEach((n) => { n.space = n.kind === "term" ? Math.max(n.r, n.hw * 0.8) : n.r + 4; });
       layout(nodes, edges, W, H, 300, {k: 0.7, gravity: 0.06, pull: 0.08});
+      const labelled = (n) => n.kind === "term" || geneCount.get(n.data) > 1 || genes.length <= 60;
+      const boxes = nodes.filter(labelled).map((n) => { const fs = n.kind === "term" ? TLH : GFS * 1.1; return {n, x: n.x, y: n.y, hw: Math.max(n.hw, n.r) + 2, up: n.r, down: n.r + 3 + n.lines.length * fs}; });
+      separate(boxes, 3, W, H);
+      boxes.forEach((b) => { b.n.x = b.x; b.n.y = b.y; });
       const svg = el("svg:svg", {width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: "ex-svg"});
       svg.append(el("svg:style", {text: SVG_STYLE}));
       const byId = new Map(nodes.map((n) => [n.id, n]));
       const eg = el("svg:g");
-      edges.forEach((e) => { const a = byId.get(e.source), b = byId.get(e.target); eg.append(el("svg:line", {class: "edge", x1: a.x, y1: a.y, x2: b.x, y2: b.y, "stroke-width": 0.7, "data-a": a.id, "data-b": b.id})); });
+      edges.forEach((e) => { const a = byId.get(e.source), b = byId.get(e.target); eg.append(el("svg:line", {class: "edge", x1: a.x, y1: a.y, x2: b.x, y2: b.y, "stroke-width": 0.7, style: `stroke:${colours[terms.indexOf(a.data) % colours.length]};stroke-opacity:.35`, "data-a": a.id, "data-b": b.id})); });
       svg.append(eg);
       const ng = el("svg:g");
-      nodes.forEach((n, i) => {
+      // genes first, pathways on top, so pathway names are never hidden
+      nodes.slice().sort((a, b) => (a.kind === "term") - (b.kind === "term")).forEach((n) => {
         const isT = n.kind === "term";
         const g = el("svg:g", {class: "node" + (isT ? " term" : " gene"), "data-term": isT ? n.data.term : null, transform: `translate(${n.x},${n.y})`,
           onclick: () => { if (isT) { showTerm(n.data); highlight(n.data); } else { showTerm(terms.find((t) => t.genes_list.includes(n.data))); showGene(n.data); } }});
-        g.append(el("svg:title", {text: isT ? `${n.data.term}\npadj ${fmtP(n.data.padj)} · ${n.data.genes_list.length} genes` : `${n.data}\nin ${geneCount.get(n.data)} of the ${terms.length} terms shown`}));
-        g.append(el("svg:circle", {r: n.r, fill: isT ? PALETTE[terms.indexOf(n.data) % PALETTE.length] : (geneCount.get(n.data) > 1 ? "#2c3e50" : "#95a5a6"), stroke: "#fff", "stroke-width": 1}));
-        if (isT || geneCount.get(n.data) > 1 || genes.length <= 60) g.append(el("svg:text", {y: n.r + 10, "font-size": isT ? 11 : 9, "font-weight": isT ? 700 : 400, "text-anchor": "middle", text: n.label.length > 30 ? n.label.slice(0, 29) + "…" : n.label}));
+        g.append(el("svg:title", {text: isT ? `${nameOf(n.data)}\npadj ${fmtP(n.data.padj)} · ${n.data.genes_list.length} genes` : `${n.data}\nin ${geneCount.get(n.data)} of the ${terms.length} terms shown`}));
+        const fill = isT ? colours[terms.indexOf(n.data) % colours.length] : (geneCount.get(n.data) > 1 ? "#2c3e50" : "#95a5a6");
+        g.append(el("svg:circle", {r: n.r, fill, stroke: "#fff", "stroke-width": 1}));
+        if (labelled(n)) {
+          const fs = isT ? TFS : GFS, lh = isT ? TLH : GFS * 1.1;
+          const t = el("svg:text", {y: n.r + fs, "font-size": fs, "font-weight": isT ? 700 : 400, "text-anchor": "middle", style: HALO + (isT ? `;fill:${mixHex(fill, 0, 0.35)}` : "")});
+          n.lines.forEach((l, i) => t.append(el("svg:tspan", {x: 0, dy: i ? lh : 0, text: l})));
+          g.append(t);
+        }
         drag(g, n, () => { g.setAttribute("transform", `translate(${n.x},${n.y})`); eg.querySelectorAll(`line[data-a="${CSS.escape(n.id)}"]`).forEach((l) => { l.setAttribute("x1", n.x); l.setAttribute("y1", n.y); }); eg.querySelectorAll(`line[data-b="${CSS.escape(n.id)}"]`).forEach((l) => { l.setAttribute("x2", n.x); l.setAttribute("y2", n.y); }); });
         ng.append(g);
       });

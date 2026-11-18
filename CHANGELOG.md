@@ -2,6 +2,22 @@
 
 ## 1.1.0 — add-features
 
+- **Interpretation without the agent**: runs with `--no-llm` now include an automated, rule-based
+  reading of the results (where the peaks are, pathway themes, candidate regulators, positive
+  controls, expression), each statement linked to its result.
+- **Interactive pathway views** in the web app and report show readable pathway names wrapped onto
+  several rows, keep labels apart and use the same colours and module names as the PDF figures.
+- **Sign in with the browser**: agent mode and the chat accept an `ant auth login` profile as well
+  as `ANTHROPIC_API_KEY`; messages say how to sign in when no credentials are found.
+- **Figures**: module names are written out ("Module 1: ...") and explained in the figure; long
+  names wrap and are never cut; gene-pathway networks grow to fit pathways with many genes.
+- **Lookups work on Python builds without root certificates** (python.org on macOS): the HTTP
+  helper falls back to the system certificate bundle; verification stays on.
+- **Documentation**: Tutorial 6 walks through a real ENCODE run with every figure; the bundled
+  without-agent demo is regenerated with the current engine.
+
+## 1.1.0 — add-features
+
 PeakAnnoAgent is now one Python package. The R package and every Bioconductor dependency are gone.
 
 - **Python analysis engine** (`peakannoagent.engine`), replacing the R engine:

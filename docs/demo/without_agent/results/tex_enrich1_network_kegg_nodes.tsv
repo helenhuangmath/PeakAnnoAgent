@@ -1,31 +1,31 @@
-term	module	module_label	padj	count	groups	genes
-Viral protein interaction with cytokine and cytokine receptor	1	Viral protein interaction with cytokine and cytokine receptor	1.0636000399417e-08	12	all;distal;promoter	Il10;Il2ra;Cxcr5;Cx3cr1;Ccl5;Ccl3;Ccl4;Ccr7;Il2rb;Tnf;Ccl9;Ccl6
-Cytokine-cytokine receptor interaction	1	Viral protein interaction with cytokine and cytokine receptor	1.85483669867533e-07	16	all;distal;promoter	Il10;Il2ra;Il21;Cxcr5;Cx3cr1;Ifng;Ccl5;Ccl3;Ccl4;Ccr7;Il7r;Il2rb;Tnf;Ccl9;Ccl6;Il15ra
-Chemokine signaling pathway	1	Viral protein interaction with cytokine and cytokine receptor	0.000807920864277346	9	all;distal;promoter	Cxcr5;Cx3cr1;Ccl5;Ccl3;Ccl4;Ccr7;Stat3;Ccl9;Ccl6
-Th17 cell differentiation	2	Th17 cell differentiation	3.53468339737587e-08	11	all;distal;promoter	Il2ra;Nfatc2;Il21;Ifng;Tbx21;Stat3;Fos;Irf4;Il2rb;Nfatc1;Stat5a
-Th1 and Th2 cell differentiation	2	Th17 cell differentiation	7.4275793579131e-08	10	all;distal;promoter	Stat4;Il2ra;Nfatc2;Runx3;Ifng;Tbx21;Fos;Il2rb;Nfatc1;Stat5a
-Inflammatory bowel disease	2	Th17 cell differentiation	7.63622698107404e-08	8	all;distal;promoter	Stat4;Il10;Il21;Ifng;Tbx21;Stat3;Tnf;Nfatc1
-Hepatitis B	2	Th17 cell differentiation	0.000463569087976618	8	all;distal;promoter	Stat4;Nfatc2;Egr2;Stat3;Fos;Tnf;Nfatc1;Stat5a
-Human T-cell leukemia virus 1 infection	2	Th17 cell differentiation	0.000773879527615139	11	all;distal;promoter	Il2ra;Nfatc2;Egr2;Fos;Il2rb;Tnf;Egr1;Nfatc1;Stat5a;H2-D1;Il15ra
-Toxoplasmosis	2	Th17 cell differentiation	0.0026292224182224	5	all;promoter	Il10;Ifng;Stat3;Socs1;Tnf
-T cell receptor signaling pathway	3	T cell receptor signaling pathway	7.4275793579131e-08	11	all;distal;promoter	Ctla4;Pdcd1;Il10;Nfatc2;Cd8b1;Cd8a;Ifng;Fos;Tnf;Nfatc1;Icos
-JAK-STAT signaling pathway	3	T cell receptor signaling pathway	9.40093222438789e-08	13	all;distal;promoter	Stat4;Il10;Il2ra;Il21;Cish;Ifng;Stat3;Socs3;Il7r;Il2rb;Socs1;Stat5a;Il15ra
-PD-L1 expression and PD-1 checkpoint pathway in cancer	3	T cell receptor signaling pathway	1.50356349135065e-05	7	all;distal;promoter	Pdcd1;Nfatc2;Ifng;Stat3;Fos;Batf;Nfatc1
-Osteoclast differentiation	3	T cell receptor signaling pathway	1.5797345014322e-05	8	all;distal;promoter	Nfatc2;Junb;Ifng;Socs3;Fos;Socs1;Tnf;Nfatc1
-Yersinia infection	3	T cell receptor signaling pathway	0.00017593566328056	7	all;distal;promoter	Il10;Nfatc2;Cd8b1;Cd8a;Fos;Tnf;Nfatc1
-Cell adhesion molecule (CAM) interaction	3	T cell receptor signaling pathway	0.000302409955676093	10	all;distal;promoter	Ctla4;Pdcd1;Sell;Cd8b1;Cd8a;Tigit;Icos;Sele;Cldn9;H2-D1
-Efferocytosis	3	T cell receptor signaling pathway	0.000463569087976618	7	all;distal;promoter	Il10;Nfatc2;S1pr1;Cx3cr1;Havcr2;Ptger4;Nfatc1
-Prolactin signaling pathway	3	T cell receptor signaling pathway	0.000650083656817636	6	all;distal;promoter	Cish;Stat3;Socs3;Fos;Socs1;Stat5a
-Hematopoietic cell lineage	3	T cell receptor signaling pathway	0.00141299528844261	5	all;promoter	Il2ra;Cd8b1;Cd8a;Il7r;Tnf
-C-type lectin receptor signaling pathway	3	T cell receptor signaling pathway	0.00286797237109542	5	all;promoter	Il10;Nfatc2;Egr2;Tnf;Nfatc1
-Growth hormone synthesis, secretion and action	3	T cell receptor signaling pathway	0.00315137243538918	7	all;distal;promoter	Junb;Stat3;Socs3;Fos;Socs1;Stat5a;Sstr3
-Natural killer cell mediated cytotoxicity	4	Natural killer cell mediated cytotoxicity	7.32862335229327e-05	8	all;distal;promoter	Cd244a;Nfatc2;Prf1;Ifng;Gzmb;Tnf;Nfatc1;H2-D1
-Allograft rejection	4	Natural killer cell mediated cytotoxicity	0.00026008311754733	6	all;distal;promoter	Il10;Prf1;Ifng;Gzmb;Tnf;H2-D1
-Graft-versus-host disease	4	Natural killer cell mediated cytotoxicity	0.00225077667153798	5	all;distal;promoter	Prf1;Ifng;Gzmb;Tnf;H2-D1
-Type I diabetes mellitus	4	Natural killer cell mediated cytotoxicity	0.00310879085049096	5	all;distal;promoter	Prf1;Ifng;Gzmb;Tnf;H2-D1
-Rheumatoid arthritis	5	Rheumatoid arthritis	0.000162366206301985	7	all;distal;promoter	Ctla4;Ifng;Ccl5;Ccl3;Fos;Tnf;Atp6v0a1
-Chagas disease	5	Rheumatoid arthritis	0.000335578950725687	6	all;promoter	Il10;Ifng;Ccl5;Ccl3;Fos;Tnf
-Human cytomegalovirus infection	5	Rheumatoid arthritis	0.000824407304947212	9	all;promoter	Nfatc2;Ccl5;Ccl3;Ccl4;Stat3;Ptger4;Tnf;Nfatc1;H2-D1
-Lipid and atherosclerosis	5	Rheumatoid arthritis	0.00179944543931025	8	all;promoter	Nfatc2;Ccl5;Ccl3;Stat3;Fos;Tnf;Nfatc1;Sele
-Toll-like receptor signaling pathway	5	Rheumatoid arthritis	0.00225077667153798	5	all;promoter	Ccl5;Ccl3;Ccl4;Fos;Tnf
-FoxO signaling pathway	6	FoxO signaling pathway	0.000896472736220614	6	all;distal;promoter	Il10;S1pr1;Klf2;Stat3;Il7r;Bcl6
+term	module	module_label	padj	count	groups	genes	x	y
+Th17 cell differentiation	1	Th17 cell differentiation	3.562076232392064e-07	11	all;distal;promoter	Fos;Ifng;Il21;Il2ra;Il2rb;Irf4;Nfatc1;Nfatc2;Stat3;Tbx21;Stat5a	13.001	-2.323
+Inflammatory bowel disease (IBD)	1	Th17 cell differentiation	4.880648345852611e-07	8	all;distal;promoter	Ifng;Il10;Il21;Nfatc1;Stat3;Stat4;Tbx21;Tnf	12.671	-0.948
+Th1 and Th2 cell differentiation	1	Th17 cell differentiation	4.880648345852611e-07	10	all;distal;promoter	Fos;Ifng;Il2ra;Il2rb;Nfatc1;Nfatc2;Runx3;Stat4;Tbx21;Stat5a	14.203	-3.547
+JAK-STAT signaling pathway	1	Th17 cell differentiation	7.801350455262329e-07	13	all;distal;promoter	Cish;Ifng;Il10;Il21;Il2ra;Il2rb;Il7r;Socs1;Socs3;Stat3;Stat4;Il15ra;Stat5a	10.456	-1.237
+Prolactin signaling pathway	1	Th17 cell differentiation	0.0022302900810531397	6	all;distal;promoter	Cish;Fos;Socs1;Socs3;Stat3;Stat5a	9.597	-2.781
+Human T-cell leukemia virus 1 infection	1	Th17 cell differentiation	0.006419832128213276	11	all;distal;promoter	Egr1;Fos;Il2ra;Il2rb;Nfatc1;Nfatc2;Tnf;Egr2;H2-D1;Il15ra;Stat5a	13.255	-4.66
+Hepatitis B	1	Th17 cell differentiation	0.007719137731385639	8	all;distal;promoter	Fos;Nfatc1;Nfatc2;Stat3;Stat4;Tnf;Egr2;Stat5a	12.041	-3.417
+T cell receptor signaling pathway	2	T cell receptor signaling pathway	1.2210846480137989e-06	10	all;distal;promoter	Cd8a;Cd8b1;Fos;Ifng;Il10;Nfatc1;Nfatc2;Pdcd1;Tnf;Ctla4	2.78	-10.141
+Osteoclast differentiation	2	T cell receptor signaling pathway	5.8541277177705654e-05	8	all;distal;promoter	Fos;Ifng;Junb;Nfatc1;Nfatc2;Socs1;Socs3;Tnf	4.777	-9.436
+Hematopoietic cell lineage	2	T cell receptor signaling pathway	0.004347738596570683	5	promoter	Cd8a;Cd8b1;Il2ra;Il7r;Tnf	1.858	-12.596
+Cell adhesion molecules (CAMs)	2	T cell receptor signaling pathway	0.00441946204353755	9	all;distal;promoter	Cd8a;Cd8b1;Pdcd1;Sell;Tigit;Cldn9;Ctla4;H2-D1;Sele	1.578	-8.215
+Primary immunodeficiency	2	T cell receptor signaling pathway	0.010584633057246239	3	promoter	Cd8a;Cd8b1;Il7r	1.196	-14.367
+Cytokine-cytokine receptor interaction	3	Cytokine-cytokine receptor interaction	2.433759197938902e-06	17	all;distal;promoter	Ccl3;Ccl4;Ccl5;Ccr7;Cx3cr1;Cxcr5;Ifng;Il10;Il21;Il2ra;Il2rb;Il7r;Tnf;Ccl6;Ccl9;Il15ra;Ltb	4.584	-1.023
+Rheumatoid arthritis	3	Cytokine-cytokine receptor interaction	0.0004077476862211849	8	all;distal;promoter	Ccl3;Ccl5;Fos;Ifng;Tnf;Atp6v0a1;Ctla4;Ltb	6.973	-4.031
+Chagas disease (American trypanosomiasis)	3	Cytokine-cytokine receptor interaction	0.0014365518881944651	6	all;promoter	Ccl3;Ccl5;Fos;Ifng;Il10;Tnf	5.299	-3.609
+Human cytomegalovirus infection	3	Cytokine-cytokine receptor interaction	0.003977243894961164	9	all;promoter	Ccl3;Ccl4;Ccl5;Nfatc1;Nfatc2;Ptger4;Stat3;Tnf;H2-D1	1.142	-3.193
+Chemokine signaling pathway	3	Cytokine-cytokine receptor interaction	0.004058785832799495	9	all;promoter	Ccl3;Ccl4;Ccl5;Ccr7;Cx3cr1;Cxcr5;Stat3;Ccl6;Ccl9	2.476	-1.762
+Toll-like receptor signaling pathway	3	Cytokine-cytokine receptor interaction	0.005706326795264226	5	promoter	Ccl3;Ccl4;Ccl5;Fos;Tnf	3.191	-3.985
+TNF signaling pathway	3	Cytokine-cytokine receptor interaction	0.007719137731385639	6	all;promoter	Ccl5;Fos;Junb;Socs3;Tnf;Sele	3.691	-5.788
+Salmonella infection	3	Cytokine-cytokine receptor interaction	0.012001158175833969	4	promoter	Ccl3;Ccl4;Fos;Ifng	5.653	-5.259
+Natural killer cell mediated cytotoxicity	4	Natural killer cell mediated cytotoxicity	0.00030795360963962006	8	all;distal;promoter	Cd244a;Gzmb;Ifng;Nfatc1;Nfatc2;Prf1;Tnf;H2-D1	9.732	-9.111
+Allograft rejection	4	Natural killer cell mediated cytotoxicity	0.000567411642806813	6	all;distal;promoter	Gzmb;Ifng;Il10;Prf1;Tnf;H2-D1	8.212	-8.466
+Graft-versus-host disease	4	Natural killer cell mediated cytotoxicity	0.005185654033979888	5	all;distal;promoter	Gzmb;Ifng;Prf1;Tnf;H2-D1	7.668	-9.474
+Type I diabetes mellitus	4	Natural killer cell mediated cytotoxicity	0.006494275796293063	5	all;promoter	Gzmb;Ifng;Prf1;Tnf;H2-D1	8.649	-10.463
+FoxO signaling pathway	5	FoxO signaling pathway	0.003977243894961164	6	promoter	Bcl6;Il10;Il7r;Klf2;S1pr1;Stat3	0.789	-15.936
+Transcriptional misregulation in cancer	6	Transcriptional misregulation in cancer	0.005572821030236448	9	all;distal;promoter	Bcl6;Dusp6;Gzmb;Id2;Il2rb;Nr4a3;Hhex;Sin3a;Taf15	2.973	-15.968
+Toxoplasmosis	7	Toxoplasmosis	0.0076389109756437685	5	promoter	Ifng;Il10;Socs1;Stat3;Tnf	13.849	-8.925
+Leishmaniasis	7	Toxoplasmosis	0.007719137731385639	4	promoter	Fos;Ifng;Il10;Tnf	12.463	-8.156
+African trypanosomiasis	7	Toxoplasmosis	0.011075554504568805	4	all;promoter	Ifng;Il10;Tnf;Sele	12.463	-9.693
+Acute myeloid leukemia	8	Acute myeloid leukemia	0.00870938096174862	5	all;distal;promoter	Dusp6;Lef1;Stat3;Tcf7;Stat5a	5.103	-15.923

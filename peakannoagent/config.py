@@ -155,3 +155,29 @@ def build_biology(file_fields: dict, **overrides) -> BiologyContext:
     merged["expected_genes"] = split_list(merged.get("expected_genes"))
     merged["expected_tfs"] = split_list(merged.get("expected_tfs"))
     return BiologyContext(**merged)
+
+
+def anthropic_credentials() -> Optional[str]:
+    """Where the Anthropic SDK will find credentials, or None. It looks, in this order, at
+    ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, a login profile written by `ant auth login`
+    (browser sign-in, no key to copy) and Workload Identity Federation variables."""
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        return "API key (ANTHROPIC_API_KEY)"
+    if os.environ.get("ANTHROPIC_AUTH_TOKEN"):
+        return "token (ANTHROPIC_AUTH_TOKEN)"
+    root = Path(os.environ.get("ANTHROPIC_CONFIG_DIR") or Path.home() / ".config" / "anthropic")
+    if os.name == "nt" and not os.environ.get("ANTHROPIC_CONFIG_DIR") and os.environ.get("APPDATA"):
+        root = Path(os.environ["APPDATA"]) / "Anthropic"
+    try:
+        if any((root / "credentials").glob("*.json")):
+            return "sign-in profile (ant auth login)"
+    except OSError:
+        pass
+    if os.environ.get("ANTHROPIC_FEDERATION_RULE_ID") and os.environ.get("ANTHROPIC_ORGANIZATION_ID"):
+        return "workload identity federation"
+    return None
+
+
+CREDENTIALS_HELP = ("Sign in once in a terminal with `ant auth login` (opens the browser; install the CLI with "
+                    "`brew install anthropics/tap/ant`), or set ANTHROPIC_API_KEY (keys are created at "
+                    "console.anthropic.com). Then restart this program.")

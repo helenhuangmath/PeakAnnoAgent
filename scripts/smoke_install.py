@@ -12,7 +12,8 @@ from pathlib import Path
 import peakannoagent
 from peakannoagent import __version__, build_reference, read_peak_file, annotate_peaks
 from peakannoagent.cli import main
-assert __version__ == "1.0.2", __version__
+from importlib.metadata import version as installed_version
+assert __version__ == installed_version("peakannoagent"), (__version__, installed_version("peakannoagent"))
 package = Path(peakannoagent.__file__).parent
 assert "site-packages" in str(package) or "dist-packages" in str(package), package
 examples = package / "examples"
@@ -41,7 +42,7 @@ else:
     with create_app("runs").test_client() as client:
         response = client.get("/")
         assert response.status_code == 200, response.data[:200]
-print("Installed 1.0.2 package: examples, templates, annotation engine and figures available")
+print(f"Installed {__version__} package: examples, templates, annotation engine and figures available")
 '''
 
 with tempfile.TemporaryDirectory(prefix="peakanno-wheel-") as directory:

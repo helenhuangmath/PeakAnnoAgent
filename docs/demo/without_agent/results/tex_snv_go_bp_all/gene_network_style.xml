@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vizmap id="VizMap-simpnetworkviz" documentVersion="3.1">
+  <visualStyle name="SimpNetworkViz">
+    <network>
+      <visualProperty name="NETWORK_BACKGROUND_PAINT" default="#FFFFFF"/>
+    </network>
+    <node>
+      <dependency name="nodeSizeLocked" value="true"/>
+      <visualProperty name="NODE_SHAPE" default="ELLIPSE"/>
+      <visualProperty name="NODE_FILL_COLOR" default="#BDBDBD">
+        <passthroughMapping attributeName="color" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_BORDER_PAINT" default="#555555">
+        <passthroughMapping attributeName="border_color" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_BORDER_WIDTH" default="1.0"/>
+      <visualProperty name="NODE_SIZE" default="30.0">
+        <passthroughMapping attributeName="size_px" attributeType="float"/>
+      </visualProperty>
+      <visualProperty name="NODE_LABEL" default="">
+        <passthroughMapping attributeName="label" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_LABEL_FONT_SIZE" default="9"/>
+      <visualProperty name="NODE_LABEL_POSITION" default="N,S,c,0.00,3.00"/>
+    </node>
+    <edge>
+      <dependency name="arrowColorMatchesEdge" value="true"/>
+      <visualProperty name="EDGE_WIDTH" default="1.5">
+        <passthroughMapping attributeName="width_px" attributeType="float"/>
+      </visualProperty>
+      <visualProperty name="EDGE_STROKE_UNSELECTED_PAINT" default="#9A9A9A">
+        <passthroughMapping attributeName="color" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="EDGE_TRANSPARENCY" default="140"/>
+    </edge>
+  </visualStyle>
+</vizmap>

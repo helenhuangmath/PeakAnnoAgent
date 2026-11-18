@@ -173,6 +173,19 @@ def network_viz(ctx: RunContext, args: dict) -> Evidence:
     if group not in groups:
         return _record(ctx, "network_viz", f"Pathway network ({method}, {group} peaks)", args,
                        _skip("No enriched terms for this method/group; no network can be drawn."))
+    # The enrichment table lists every tested term. A network needs at least two significant ones;
+    # with fewer there is nothing to link, so the step is skipped instead of failing.
+    def padj(row) -> float:
+        try:
+            return float(row.get("padj"))
+        except (TypeError, ValueError):
+            return 1.0
+    significant = sum(1 for r in analysis.read_table(table)
+                      if r.get("method") == method and r.get("group") == group and padj(r) < 0.05)
+    if significant < 2:
+        return _record(ctx, "network_viz", f"Pathway network ({method}, {group} peaks)", args,
+                       _skip(f"{significant} significant {method} term{'' if significant == 1 else 's'} "
+                             f"(adjusted p < 0.05) for {group} peaks; a pathway network needs at least two."))
     out = ctx.tables_dir / f"{ctx.config.prefix}_snv_{method.replace(':', '-')}_{group}"
     outcome = _python_outcome(lambda: external.run_snv(
         table, str(out), method, group, gmt=ctx.config.biology.custom_gmt,

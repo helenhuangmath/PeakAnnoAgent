@@ -1,4 +1,4 @@
-term	module	module_label	padj	count	groups	genes
-TEX_TERMINAL	1	TEX_TERMINAL	3.58277583171471e-28	11	all;distal;promoter	Pdcd1;Cd244a;Cd160;Tox;Lag3;Cx3cr1;Prdm1;Havcr2;Gzmb;Tigit;Entpd1
-TEX_EFFECTOR_LIKE	2	TEX_EFFECTOR_LIKE	8.76327812157679e-21	8	all;distal;promoter	Zeb2;S1pr1;Klrg1;Klf2;Cx3cr1;Prf1;Tbx21;Gzmb
-TEX_PROGENITOR	3	TEX_PROGENITOR	5.24499642497881e-20	8	all;distal;promoter	Sell;Lef1;Bach2;Id3;Cxcr5;Myb;Tcf7;Ccr7
+term	module	module_label	padj	count	groups	genes	x	y
+TEX_TERMINAL	1	TEX_TERMINAL	5.333696053263742e-24	11	all;distal;promoter	Cd160;Cd244a;Cx3cr1;Entpd1;Gzmb;Havcr2;Lag3;Pdcd1;Tigit;Tox;Prdm1	0.682	-0.24
+TEX_EFFECTOR_LIKE	2	TEX_EFFECTOR_LIKE	2.468027626911613e-20	8	all;distal;promoter	Cx3cr1;Gzmb;Klf2;Klrg1;Prf1;S1pr1;Tbx21;Zeb2	0.949	-1.373
+TEX_PROGENITOR	3	TEX_PROGENITOR	1.4766551366405003e-19	8	all;distal;promoter	Bach2;Ccr7;Cxcr5;Id3;Lef1;Myb;Sell;Tcf7	0.789	-2.367

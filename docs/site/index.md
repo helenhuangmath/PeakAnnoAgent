@@ -27,14 +27,14 @@ what you already know about the biology. It then:
 - writes a self-contained HTML report in which every statement links to the result behind it.
 
 An LLM agent (Claude) can plan the analysis and interpret the results, or a fixed, deterministic
-plan can run with no API key. Every step is also an R function.
+plan can run with no API key. The analysis is also available from Python and from R.
 
 ```{image} ../figures/report.png
 :alt: PeakAnnoAgent HTML report
 :width: 760px
 ```
 
-## Changes in the development version
+## Changes in version {{ release }}
 
 ### Features and performance
 
@@ -46,11 +46,17 @@ plan can run with no API key. Every step is also an R function.
 - **`peakanno-agent annotate`**: annotation only, from the command line.
 - **Choice of gene models**: `--reference gencode` (default), `gencode:<release>`, `refseq`,
   `ucsc`, or `--gtf <file>`. See [Gene models and the annotation method](execution.md).
-- **Annotation figures**, each as PDF and PNG: feature-type pie chart, feature bar,
+- **Annotation figures**, each as a vector PDF: feature-type pie chart, feature bar,
   distance-to-TSS bars, feature-overlap upset plot, peaks over chromosomes, genomic-region
   distribution, TSS profile and TSS-distance histogram.
 - **Pathway enrichment** with a built-in hypergeometric test on MSigDB and KEGG gene sets, which
   are downloaded once and cached.
+- **Figure colours**: `--palette chippeakanno` (default), `npg`, `spectral` or any Matplotlib
+  colormap; larger type; pathway modules drawn by their links inside rounded outlines.
+- **An interpretation in every report**: without the agent, a rule-based reading of the results,
+  each statement linked to the result behind it.
+- **Sign in with the browser** (`ant auth login`) for agent mode and the chat, as an alternative
+  to an API key.
 
 ### Removed
 
@@ -61,6 +67,8 @@ plan can run with no API key. Every step is also an R function.
 ### Documentation
 
 - This site, a Python API reference, and a small R interface for people who work in R.
+- [Tutorial 6](tutorials/real_data_h3k27ac.md): a real ENCODE data set from start to finish, with
+  every figure and how to read it.
 
 The full history is in the [changelog](reference/changelog.md).
 
