@@ -142,7 +142,7 @@
           <label class="choice {% if not env.anthropic_sdk %}off{% endif %}">
             <input type="radio" name="mode" value="agent" {% if env.anthropic_sdk %}checked{% else %}disabled{% endif %}>
             <b>Agent</b><span>Claude plans, runs the tools, interprets, proposes experiments</span>
-            {% if not env.anthropic_sdk %}<em>needs the Anthropic SDK</em>{% elif not env.api_key %}<em>no API credentials found</em>{% endif %}
+            {% if not env.anthropic_sdk %}<em>needs the Anthropic SDK</em>{% elif not env.api_key %}<em>not signed in: run <code>ant auth login</code> or set <code>ANTHROPIC_API_KEY</code></em>{% endif %}
           </label>
           <label class="choice">
             <input type="radio" name="mode" value="deterministic" {% if not env.anthropic_sdk %}checked{% endif %}>
@@ -205,7 +205,7 @@
       <summary>Environment</summary>
       <ul class="plainlist">
         <li>Anthropic SDK: {% if env.anthropic_sdk %}{{ env.anthropic_sdk }}{% else %}<b>not installed</b>: pip install 'peakannoagent[agent]'{% endif %}</li>
-        <li>API credentials: {% if env.api_key %}set{% else %}not set (ANTHROPIC_API_KEY, or ant auth login){% endif %}</li>
+        <li>API credentials: {% if env.api_key %}{{ env.credentials }}{% else %}none: run <code>ant auth login</code> to sign in with the browser, or set <code>ANTHROPIC_API_KEY</code>{% endif %}</li>
         <li>HOMER: {% if env.homer %}found{% else %}not found, motif analysis is skipped{% endif %}</li>
         <li>SimpNetworkViz (pathway networks): {% if env.snv %}found{% else %}not found, step skipped{% endif %}</li>
         <li>PathwayAgent (consensus pathways): {% if env.pathwayagent %}found{% else %}not found, step skipped{% endif %}</li>

@@ -11,6 +11,7 @@ minutes. The others can be read in any order.
 | [3. The web app](tutorials/web_app.md) | Submitting, watching and exploring a run in the browser |
 | [4. Pathway networks](tutorials/pathway_networks.md) | Reading enrichment maps and gene-pathway networks; Cytoscape export |
 | [5. Python and R](tutorials/r_engine.md) | Calling the engine from Python, and the program from R |
+| [6. A real data set from start to finish](tutorials/real_data_h3k27ac.md) | Every output of one real ENCODE run (H3K27ac, human CD8 T cells), with its figures and how to read them |
 
 ```{toctree}
 :maxdepth: 1
@@ -21,4 +22,5 @@ tutorials/encode_examples
 tutorials/web_app
 tutorials/pathway_networks
 tutorials/r_engine
+tutorials/real_data_h3k27ac
 ```

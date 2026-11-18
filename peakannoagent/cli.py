@@ -9,7 +9,7 @@ import os
 import shutil
 import sys
 
-from .config import DEFAULT_MODEL, SUPPORTED_GENOMES, RunConfig, build_biology, load_biology_file
+from .config import DEFAULT_MODEL, anthropic_credentials, SUPPORTED_GENOMES, RunConfig, build_biology, load_biology_file
 from .engine import Engine, REFERENCE_OPTIONS
 
 PALETTE_HELP = ("Figure colours: chippeakanno (default), npg (Nature style), spectral, or a Matplotlib colormap name "
@@ -158,7 +158,7 @@ def cmd_check(args) -> int:
     except ImportError:
         print("anthropic SDK: not installed (needed for agent mode; --no-llm works without it)")
     print(f"ant CLI: {'found' if shutil.which('ant') else 'not found'}; "
-          f"ANTHROPIC_API_KEY: {'set' if os.environ.get('ANTHROPIC_API_KEY') else 'not set'}")
+          f"Anthropic credentials: {anthropic_credentials() or 'none (run `ant auth login` or set ANTHROPIC_API_KEY)'}")
     if args.offline:
         return 0 if ready else 1
     from .http import get_text

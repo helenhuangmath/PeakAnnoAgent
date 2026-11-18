@@ -1,0 +1,16 @@
+$ /home/user/miniconda3/bin/snv run --enrichment /work/demo_no_agent/results/tex_snv_go_bp_all/enrichment_input.csv -o /work/demo_no_agent/results/tex_snv_go_bp_all --max-pathways 40 --gene-network cnet --formats png,pdf,html,csv,cyjs --title go_bp · all peaks --cutoff 0.6 --similarity-genes hits
+
+--- stdout ---
+Pathway network: 40 pathways, 121 edges, 5 clusters
+  [ 1] Leukocyte adhesion activation  (14 pathways)
+  [ 2] Alpha beta activation  (10 pathways)
+  [ 3] Adaptive immune response  (6 pathways)
+  [ 4] Myeloid leukocyte differentiation  (4 pathways)
+  [ 5] Eosinophil migration  (2 pathways)
+Gene network: 77 genes, 299 edges
+
+Results written to /work/demo_no_agent/results/tex_snv_go_bp_all/
+  open pathway_network.html in a browser for the interactive view;
+  import *.cyjs into Cytoscape (File > Import > Network from File) with *_style.xml.
+
+--- stderr ---

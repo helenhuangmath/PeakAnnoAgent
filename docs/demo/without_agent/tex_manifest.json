@@ -1,8 +1,57 @@
 {
+  "schema_version": 1,
+  "coordinate_system": "0-based-half-open",
+  "version": "1.0.2",
+  "status": "success",
+  "required_steps": [
+    "peak_qc",
+    "annotate_peaks",
+    "enrich_pathways",
+    "find_motifs",
+    "integrate_rnaseq"
+  ],
+  "missing_steps": [],
+  "unsuccessful_steps": [],
+  "reasons": [],
+  "inputs": {
+    "peaks": {
+      "path": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_peaks_mm10.bed",
+      "bytes": 14727,
+      "sha256": "dd6efc078d27a56022700aa91a4f43e9e58c67ce4493564029076d8a53d39f93"
+    },
+    "custom_gmt": {
+      "path": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_signatures.gmt",
+      "bytes": 234,
+      "sha256": "0b15a2f3d5515387eb98aa5dc2a94508eb7645a9c9e0f3a812a003e82ce227fe"
+    },
+    "rnaseq": {
+      "path": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_rnaseq_de.tsv",
+      "bytes": 1380,
+      "sha256": "0eb76843c1470b72b89ec995b6432697ebe9a8b21c76049a35ab718dadfd4d8a"
+    }
+  },
+  "runtime": {
+    "python": "3.10.11",
+    "platform": "macOS-26.7.3-arm64-arm-64bit",
+    "tools": {
+      "E2": {
+        "annotation": "gencode.vM25.basic"
+      },
+      "E4": {
+        "go_bp": "MSigDB m5.go.bp.v2024.1.Mm.symbols.gmt",
+        "kegg": "Enrichr KEGG_2019_Mouse",
+        "hallmark": "MSigDB mh.all.v2024.1.Mm.symbols.gmt",
+        "custom": "GMT example_tex_signatures.gmt"
+      },
+      "E5": {
+        "SimpNetworkViz": "0.2.0"
+      }
+    }
+  },
   "config": {
-    "peaks": "/Users/hhua/Desktop/Berger_Wherry_Lab/0_Projects/0_HH_Projects/GitHub/PeakAnnoAgent/PeakAnnoAgent/examples/data/example_tex_peaks_mm10.bed",
+    "peaks": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_peaks_mm10.bed",
     "genome": "mm10",
-    "out_dir": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12",
+    "out_dir": "/work/demo_no_agent",
     "prefix": "tex",
     "biology": {
       "description": "Synthetic example. Peaks from chronically stimulated (exhausted-like) CD8 T cells. Exhaustion is driven by TOX and NR4A family factors downstream of persistent TCR/NFAT signalling, while TCF1 (Tcf7) marks the progenitor-exhausted subset. We want to know which pathways and transcription factors these peaks point to.",
@@ -24,22 +73,26 @@
         "Batf",
         "Tcf7"
       ],
-      "custom_gmt": "/Users/hhua/Desktop/Berger_Wherry_Lab/0_Projects/0_HH_Projects/GitHub/PeakAnnoAgent/PeakAnnoAgent/examples/data/example_tex_signatures.gmt",
-      "rnaseq": "/Users/hhua/Desktop/Berger_Wherry_Lab/0_Projects/0_HH_Projects/GitHub/PeakAnnoAgent/PeakAnnoAgent/examples/data/example_tex_rnaseq_de.tsv"
+      "custom_gmt": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_signatures.gmt",
+      "rnaseq": "/work/PeakAnnoAgent/peakannoagent/examples/example_tex_rnaseq_de.tsv"
     },
     "blacklist": null,
+    "reference": "gencode",
+    "gtf": null,
+    "palette": "chippeakanno",
+    "keep_previews": false,
     "offline": false,
     "use_llm": false,
     "model": "claude-opus-5-5",
     "effort": "high",
     "max_turns": 40,
-    "rscript": "/Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/bin/Rscript",
-    "chipatlas_wait_min": 50.0,
-    "started_at": "2026-10-11T18:06:19"
+    "chipatlas_wait_min": 25.0,
+    "started_at": "2026-11-18T10:23:51"
   },
-  "finished_at": "2026-10-11T18:18:34",
-  "report": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/tex_report.html",
+  "finished_at": "2026-11-18T10:24:29",
+  "report": "/work/demo_no_agent/tex_report.html",
   "unverified_citations": [],
+  "narrative": null,
   "llm_usage": null,
   "steps": [
     {
@@ -47,84 +100,91 @@
       "tool": "peak_qc",
       "status": "ok",
       "rationale": "Baseline QC and cleaning before annotation.",
-      "time": "18:06:20"
+      "time": "10:23:51"
     },
     {
       "evidence": "E2",
       "tool": "annotate_peaks",
       "status": "ok",
-      "rationale": "Default ChIPpeakAnno workflow (-2000/+500 bp promoter window).",
-      "time": "18:06:41"
+      "rationale": "Default annotation (-2000/+500 bp promoter window).",
+      "time": "10:23:52"
     },
     {
       "evidence": "E3",
       "tool": "chipatlas_submit",
       "status": "ok",
       "rationale": "Find public TF ChIP-seq that overlaps these peaks.",
-      "time": "18:06:42"
+      "time": "10:23:57"
     },
     {
       "evidence": "E4",
       "tool": "enrich_pathways",
       "status": "ok",
       "rationale": "Standard GO/KEGG/Hallmark ORA on peak-linked genes.",
-      "time": "18:07:52"
+      "time": "10:24:02"
     },
     {
       "evidence": "E5",
-      "tool": "great_enrichment",
-      "status": "error",
-      "rationale": "Region-based enrichment for distal peaks.",
-      "time": "18:07:52"
+      "tool": "network_viz",
+      "status": "ok",
+      "rationale": "EnrichmentMap-style view of the GO result: themes instead of redundant terms.",
+      "time": "10:24:08"
     },
     {
       "evidence": "E6",
-      "tool": "find_motifs",
-      "status": "ok",
-      "rationale": "Known-motif enrichment at peak centres.",
-      "time": "18:08:48"
+      "tool": "pathway_consensus",
+      "status": "skipped",
+      "rationale": "Independent engines on the same gene lists; consensus themes and key genes.",
+      "time": "10:24:08"
     },
     {
       "evidence": "E7",
       "tool": "find_motifs",
-      "status": "ok",
-      "rationale": "Enhancer motifs without promoter GC bias.",
-      "time": "18:09:41"
+      "status": "skipped",
+      "rationale": "Known-motif enrichment at peak centres.",
+      "time": "10:24:08"
     },
     {
       "evidence": "E8",
-      "tool": "integrate_rnaseq",
-      "status": "ok",
-      "rationale": "Link binding to expression changes.",
-      "time": "18:09:41"
+      "tool": "find_motifs",
+      "status": "skipped",
+      "rationale": "Enhancer motifs without promoter GC bias.",
+      "time": "10:24:08"
     },
     {
       "evidence": "E9",
-      "tool": "chipatlas_collect",
+      "tool": "integrate_rnaseq",
       "status": "ok",
-      "rationale": "Collect public co-binding results.",
-      "time": "18:18:32"
+      "rationale": "Link binding to expression changes.",
+      "time": "10:24:08"
     },
     {
       "evidence": "E10",
-      "tool": "check_expectations",
+      "tool": "chipatlas_collect",
       "status": "ok",
-      "rationale": "Positive controls from the user's known biology.",
-      "time": "18:18:32"
+      "rationale": "Collect public co-binding results.",
+      "time": "10:24:13"
     },
     {
       "evidence": "E11",
-      "tool": "search_literature",
+      "tool": "check_expectations",
       "status": "ok",
-      "rationale": "Most-cited papers on these factors in this cell type.",
-      "time": "18:18:33"
+      "rationale": "Positive controls from the user's known biology.",
+      "time": "10:24:13"
     },
     {
       "evidence": "E12",
+      "tool": "search_literature",
+      "status": "ok",
+      "rationale": "Most-cited papers on these factors in this cell type.",
+      "time": "10:24:29"
+    },
+    {
+      "evidence": "E13",
       "tool": "search_geo",
       "status": "ok",
       "rationale": "Comparable public datasets.",
-      "time": "18:18:34"
+      "time": "10:24:29"
     }
   ]
 }

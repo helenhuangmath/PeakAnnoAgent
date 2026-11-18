@@ -10,12 +10,37 @@ import urllib.parse
 import urllib.request
 
 from . import __version__
+from .engine.common import _ssl_contexts
 
 USER_AGENT = f"PeakAnnoAgent/{__version__} (+https://github.com/helenhuangmath/PeakAnnoAgent)"
 
 
 class HttpError(RuntimeError):
     pass
+
+
+_context = [None]      # the certificate store that worked, reused for later requests
+
+
+def _open(req, timeout: int) -> bytes:
+    """Open a request, trying the next certificate store only when verification fails because this
+    Python has no root certificates (python.org builds on macOS). Verification is never turned off."""
+    import ssl
+    contexts = [_context[0]] if _context[0] is not None else _ssl_contexts()
+    error = None
+    for context in contexts:
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=context) as resp:
+                data = resp.read()
+            _context[0] = context
+            return data
+        except urllib.error.HTTPError:
+            raise
+        except urllib.error.URLError as err:
+            error = err
+            if not isinstance(err.reason, ssl.SSLCertVerificationError):
+                raise
+    raise error
 
 
 def _request(url: str, data: bytes = None, headers: dict = None, timeout: int = 60, retries: int = 2) -> bytes:
@@ -25,8 +50,7 @@ def _request(url: str, data: bytes = None, headers: dict = None, timeout: int = 
     for attempt in range(retries + 1):
         try:
             req = urllib.request.Request(url, data=data, headers=hdrs)
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return resp.read()
+            return _open(req, timeout)
         except urllib.error.HTTPError as err:
             last = err
             if err.code not in (429, 500, 502, 503, 504):

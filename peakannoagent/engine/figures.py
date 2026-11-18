@@ -231,16 +231,20 @@ def pretty_term(term: str) -> str:
     if not re.fullmatch(r"[A-Z0-9]+(_[A-Z0-9]+)+", term):
         return term
     words = re.sub(r"^(HALLMARK|KEGG|KEGG_MEDICUS|REACTOME|WP|BIOCARTA|GOBP|GOMF|GOCC)_", "", term).lower().split("_")
-    small = {"via", "and", "of", "in", "to", "the", "by", "for", "up", "dn", "vs", "or", "on", "at"}
+    small = {"via", "and", "of", "in", "to", "the", "by", "for", "up", "dn", "vs", "or", "on", "at", "a", "an",
+             "as", "is", "be", "from", "into", "with"}
+    special = {"mrna": "mRNA", "trna": "tRNA", "rrna": "rRNA", "ncrna": "ncRNA", "mirna": "miRNA",
+               "lncrna": "lncRNA", "snrna": "snRNA", "snorna": "snoRNA", "gtpase": "GTPase", "atpase": "ATPase"}
     # Short words are usually acronyms (T, CD4, DNA, NFKB); common four-letter English words are not.
     plain = {"cell", "beta", "type", "like", "acid", "host", "self", "bone", "stem", "with", "from", "into", "cycle",
              "gene", "fate", "body", "tube", "node", "ion", "late", "early", "wall", "tail", "head", "limb", "lung",
              "skin", "axis", "site", "base", "pore", "ring", "rate", "size", "loss", "gain", "pair", "long", "fold",
              "lipid", "iron", "zinc", "heme", "bile", "salt", "drug", "pain", "heat", "cold", "male", "germ", "egg",
              "eye", "ear", "gut", "fat", "end", "cap", "arm", "leg", "non", "pre", "pro", "anti", "post", "down", "over"}
-    words = [w.upper() if (len(w) <= 4 or any(ch.isdigit() for ch in w)) and w not in small and w not in plain
+    words = [special[w] if w in special
+             else w.upper() if (len(w) <= 4 or any(ch.isdigit() for ch in w)) and w not in small and w not in plain
              else w for w in words]
-    if words:
+    if words and words[0] not in special.values():
         words[0] = words[0][0].upper() + words[0][1:]
     return " ".join(words)
 
@@ -249,7 +253,7 @@ def wrap_label(term: str, width: int = 42, max_lines: int = 0) -> str:
     text = pretty_term(term)
     if text[:1].islower() and re.fullmatch(r"[a-z][a-z-]*", text.split(" ")[0]):
         text = text[0].upper() + text[1:]
-    lines = textwrap.wrap(text, width) or [text]
+    lines = textwrap.wrap(text, width, break_long_words=False) or [text]     # never split a word
     if max_lines and len(lines) > max_lines:
         lines = lines[:max_lines]
         lines[-1] = lines[-1][:max(1, width - 3)].rstrip(" ,;:-") + "..."
@@ -537,7 +541,8 @@ def gene_concept_figure(terms: List[dict], links: List[Tuple[str, str]], term_co
         a = math.atan2(cy, cx)
         r = 1.05 + 0.55 * ((len(genes) - 1) // 7 if genes else -1) + 0.85
         label_pos[term] = (cx + r * math.cos(a), cy + r * math.sin(a))
-    extent = ring + 2.9
+    reach = max([abs(v) for xy in list(pos.values()) + list(label_pos.values()) for v in xy] or [0.0])
+    extent = max(ring + 2.9, reach + 1.0)                  # pathways with many genes fan out further
     radii = dict(zip([t["term"] for t in terms], _radius([t["count"] for t in terms], 0.2, 0.34)))
 
     def draw(fig):
@@ -560,7 +565,7 @@ def gene_concept_figure(terms: List[dict], links: List[Tuple[str, str]], term_co
             ax.add_patch(Circle((x, y), radii[t["term"]], facecolor=term_colour[t["term"]],
                                 edgecolor=_ink(term_colour[t["term"]], 0.35), linewidth=0.8, zorder=4))
             lx, ly = label_pos[t["term"]]
-            ax.text(lx, ly, wrap_label(t["term"], 20, 3), fontsize=12.5, fontweight="bold", ha="center", va="center",
+            ax.text(lx, ly, wrap_label(t["term"], 20), fontsize=12.5, fontweight="bold", ha="center", va="center",
                     color=_ink(term_colour[t["term"]]), zorder=5,
                     bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8, "pad": 1.5})
         ax.text(-extent - 0.8, -extent, "Dark genes belong to several of the pathways shown (hubs).", fontsize=12,

@@ -19,6 +19,7 @@ venv/
 *.pdf
 *.png
 !docs/figures/*.png
+!docs/figures/**/*.png
 *.rds
 *.Rds
 *.tar.gz

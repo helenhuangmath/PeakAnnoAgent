@@ -7,7 +7,14 @@ import json
 from pathlib import Path
 from typing import Callable, Dict, List
 
+from .engine.common import Palette, DEFAULT_PALETTE
+from .engine.figures import wrap_label
 from .evidence import Evidence
+
+def _label(term) -> str:
+    """Readable name of a term: GOBP_T_CELL_ACTIVATION -> "T cell activation"."""
+    return wrap_label(str(term or ""), 10 ** 6)
+
 
 ENRICH_COLS = ("method", "group", "term_id", "term", "gene_ratio", "padj", "count", "genes")
 NODE_COLS = ("term", "module", "module_label", "padj", "count", "groups", "genes", "x", "y")
@@ -24,17 +31,20 @@ def explore_data(ev: Evidence, table: Callable[[str], List[dict]], max_terms_per
             by_set.setdefault((r.get("method"), r.get("group")), []).append(r)
         for rows in by_set.values():
             rows.sort(key=lambda r: float(r.get("padj") or 1))
-            enrich.extend({k: r.get(k) for k in ENRICH_COLS if k in r} for r in rows[:max_terms_per_set])
+            enrich.extend(dict({k: r.get(k) for k in ENRICH_COLS if k in r}, label=_label(r.get("term")))
+                          for r in rows[:max_terms_per_set])
     networks: Dict[str, dict] = {}
     for name in ev.tables:
         if name.startswith("network_nodes_"):
             key = name[len("network_nodes_"):]
-            nodes = [{k: r.get(k) for k in NODE_COLS if k in r} for r in table(name)]
+            nodes = [dict({k: r.get(k) for k in NODE_COLS if k in r}, label=_label(r.get("term")),
+                          module_title=_label(r.get("module_label"))) for r in table(name)]
             edges = table(f"network_edges_{key}") if f"network_edges_{key}" in ev.tables else []
             if nodes:
                 networks[key] = {"nodes": nodes,
                                  "edges": [{"from": e.get("from"), "to": e.get("to"), "jaccard": e.get("jaccard")} for e in edges]}
-    return {"evidence": ev.id, "enrichment": enrich, "networks": networks}
+    return {"evidence": ev.id, "enrichment": enrich, "networks": networks,
+            "palette": Palette(DEFAULT_PALETTE).colors(10)}
 
 
 def has_explore(ev: Evidence) -> bool:

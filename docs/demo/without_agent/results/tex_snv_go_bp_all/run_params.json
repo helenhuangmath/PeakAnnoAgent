@@ -1,0 +1,46 @@
+{
+  "simpnetworkviz": "0.2.0",
+  "date": "2026-11-18T10:24:07",
+  "genes": null,
+  "enrichment": "<table with 2469 rows>",
+  "pathways": null,
+  "conditions": null,
+  "gene_sets": null,
+  "outdir": "/work/demo_no_agent/results/tex_snv_go_bp_all",
+  "background": null,
+  "method": "ora",
+  "fdr_cutoff": 0.05,
+  "max_pathways": 40,
+  "similarity_cutoff": 0.6,
+  "similarity_metric": "combined",
+  "use_full_gene_sets": false,
+  "cluster_method": "mcl",
+  "cluster_kwargs": {
+    "mcl_inflation": "2.0",
+    "louvain_resolution": "1.0",
+    "hierarchical_threshold": "None"
+  },
+  "library_network": false,
+  "gene_network_mode": "cnet",
+  "color_by": "auto",
+  "formats": [
+    "png",
+    "pdf",
+    "html",
+    "csv",
+    "cyjs"
+  ],
+  "title": "go_bp \u00b7 all peaks",
+  "js_path": null,
+  "seed": 0,
+  "dpi": 300,
+  "split_updown": true,
+  "gene_network_kwargs": {
+    "max_genes": "150",
+    "string_species": "9606"
+  },
+  "enrich_kwargs": {},
+  "pathway_map": null,
+  "species": "human",
+  "f": "png"
+}

@@ -216,7 +216,7 @@ th{color:var(--navy);border-bottom:2px solid var(--line2)}
 .ex-dl{margin-left:auto;display:flex;align-items:center;gap:8px}
 .ex-link{font:inherit;font-size:.86em;background:none;border:none;color:var(--teal-2);cursor:pointer;padding:0;text-decoration:underline}.ex-link:hover{color:var(--navy)}
 .ex-body{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px}@media (max-width:900px){.ex-body{grid-template-columns:1fr}}
-.ex-stage{min-width:0;overflow-x:auto}.ex-svg{max-width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:4px}
+.ex-stage{min-width:0;overflow-x:auto}.ex-svg.ex-wide{max-width:none}.ex-svg{max-width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:4px}
 .ex-svg .node.sel circle,.ex-svg .bar.sel rect{stroke:var(--navy);stroke-width:3}.ex-svg .bar.sel text{font-weight:700}
 .ex-panel{border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--bg);font-size:.9em;align-self:start;max-height:640px;overflow:auto}
 .ex-panel h4{margin:0 0 4px;text-transform:none;font-size:1em;color:var(--navy)}.ex-panel h5{margin:12px 0 4px;font-size:.82em;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}

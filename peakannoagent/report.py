@@ -321,6 +321,116 @@ def methods_text(store: EvidenceStore, config) -> str:
 
 # ------------------------------------------------------------------ auto narrative (no LLM)
 
+def _pretty(term) -> str:
+    from .engine.figures import wrap_label
+    return wrap_label(str(term or ""), 10 ** 6)
+
+
+def auto_interpretation(store: EvidenceStore) -> List[dict]:
+    """Rule-based reading of the results for runs without the LLM agent: one short section per
+    question, each statement citing the result it comes from. It states what the numbers mean in
+    general terms; it does not know the biology of the experiment."""
+    out: List[dict] = []
+    ann = store.latest("annotate_peaks")
+    if ann and ann.status == "ok":
+        rc = ann.summary.get("region_class_counts", {})
+        total = sum(rc.values()) or 1
+        prom = 100 * rc.get("promoter", 0) / total
+        dist = ann.summary.get("median_abs_distance_to_tss")
+        if prom >= 60:
+            reading = ("The peak set is promoter-centred, as expected for promoter marks (H3K4me3), strong "
+                       "H3K27ac peaks or factors that bind at transcription start sites. Peak-to-gene links are "
+                       "reliable here, because most peaks sit on the promoter of the gene they are assigned to.")
+        elif prom <= 30:
+            reading = ("The peak set is mostly distal, as expected for enhancers, accessible chromatin (ATAC-seq) "
+                       "or many transcription factors. Distal peaks are linked to the nearest gene, which is a "
+                       "reasonable first guess but not proof of regulation; treat the gene lists from distal peaks "
+                       "as candidates.")
+        else:
+            reading = ("The peak set is a mix of promoter and distal sites. Results are reported for promoter and "
+                       "distal peaks separately where possible, because the two groups often point to different "
+                       "biology.")
+        body = f"{prom:.0f}% of peaks are at promoters and {100 - prom:.0f}% are distal [{ann.id}]."
+        if dist is not None:
+            body += f" The median distance to the nearest TSS is {float(dist):,.0f} bp."
+        out.append({"heading": "Where the peaks are", "body": body + "\n\n" + reading})
+    enr = store.latest("enrich_pathways")
+    if enr and enr.status == "ok":
+        lines = []
+        for method, mods in (enr.summary.get("pathway_modules") or {}).items():
+            if isinstance(mods, list) and mods:
+                names = "; ".join(f"{_pretty(m['lead_term'])} ({m['n_terms']} term{'s' if m['n_terms'] != 1 else ''})"
+                                  for m in mods[:5])
+                lines.append(f"- **{method}**: {names} [{enr.id}].")
+        if not lines:
+            for t in (enr.summary.get("top_terms") or [])[:5]:
+                lines.append(f"- **{t['method']}** ({t['group']} peaks): {_pretty(t['term'])}, adjusted p {t['padj']} "
+                             f"[{enr.id}].")
+        hubs = [f"**{method}**: {', '.join(h['gene'] for h in hs[:8])}"
+                for method, hs in (enr.summary.get("hub_genes") or {}).items() if isinstance(hs, list) and hs]
+        body = ("Related pathway terms are grouped into modules, so each line below is one theme, named after "
+                "its most significant term:\n\n" + "\n".join(lines)) if lines else \
+            f"No pathway passed the significance cutoff [{enr.id}]."
+        if hubs:
+            body += ("\n\nGenes that appear in several of the top pathways are the ones driving these themes: "
+                     + "; ".join(hubs) + f" [{enr.id}].")
+        body += ("\n\nEnrichment says that the genes near the peaks are over-represented in a pathway. It does not "
+                 "say whether the pathway is switched on or off; that needs expression data.")
+        out.append({"heading": "Pathway themes", "body": body})
+    regs = []
+    mot = store.latest("find_motifs")
+    if mot and mot.status == "ok" and mot.summary.get("top_motifs"):
+        regs.append("The most enriched known motifs are " + ", ".join(m["tf"] for m in mot.summary["top_motifs"][:8])
+                    + f" [{mot.id}]. Factors of one family share a motif, so a motif points to a family, not to "
+                      "one protein.")
+    elif mot and mot.status != "ok":
+        regs.append(f"Motif enrichment was not run ({mot.status}) [{mot.id}].")
+    ca = store.latest("chipatlas_collect")
+    if ca and ca.status == "ok" and ca.summary.get("top_antigens"):
+        names = ", ".join(f"{a['antigen']} ({a.get('best_cell')})" for a in ca.summary["top_antigens"][:8])
+        regs.append(f"Public ChIP-seq experiments that overlap these peaks most strongly are for {names} [{ca.id}]. "
+                    "General chromatin factors (Mediator, BRD4, cohesin, CTCF) often rank first for any active "
+                    "region; the cell types of the best experiments and the lineage-specific factors further down "
+                    "the list are usually more informative.")
+    if regs:
+        out.append({"heading": "Candidate regulators", "body": "\n\n".join(regs)})
+    exp = store.latest("check_expectations")
+    if exp and exp.status == "ok":
+        genes = exp.summary.get("genes") or []
+        bound = [g["gene"] for g in genes if g.get("bound")]
+        missing = [g["gene"] for g in genes if not g.get("bound")]
+        tfs = exp.summary.get("tfs") or []
+        found = [t["tf"] for t in tfs if t.get("chipatlas_rank") or t.get("motif_rank")]
+        parts = []
+        if genes:
+            parts.append(f"{len(bound)} of {len(genes)} expected genes have a peak"
+                         + (f" ({', '.join(bound[:12])})" if bound else "")
+                         + (f"; without a peak: {', '.join(missing[:12])}" if missing else "") + f" [{exp.id}].")
+        if tfs:
+            parts.append(f"{len(found)} of {len(tfs)} expected factors appear among the regulator results"
+                         + (f" ({', '.join(found)})" if found else "") + f" [{exp.id}].")
+        if genes and len(bound) * 2 >= len(genes):
+            parts.append("Most expected genes are recovered, which supports that the peak set captures the biology "
+                         "you described.")
+        elif genes:
+            parts.append("Most expected genes are not recovered. Check the genome build and the peak set (for "
+                         "example a strongest-peaks subset may miss them) before interpreting the other results.")
+        out.append({"heading": "Positive controls", "body": "\n\n".join(parts)})
+    rna = store.latest("integrate_rnaseq")
+    if rna and rna.status == "ok":
+        up, down = rna.summary.get("up_any_peak") or {}, rna.summary.get("down_any_peak") or {}
+        body = (f"{up.get('n_with_peak')} of {up.get('n_de')} up-regulated genes and {down.get('n_with_peak')} of "
+                f"{down.get('n_de')} down-regulated genes have a peak, against {up.get('background_pct')}% of all "
+                f"tested genes [{rna.id}].")
+        top = rna.summary.get("top_bound_de_genes") or []
+        if top:
+            body += f" Differentially expressed genes with peaks include {', '.join(top[:10])}."
+        body += ("\n\nA peak near a differentially expressed gene is consistent with direct regulation but does not "
+                 "prove it, and it does not give the direction of the effect.")
+        out.append({"heading": "Peaks and expression", "body": body})
+    return out
+
+
 def auto_narrative(store: EvidenceStore) -> dict:
     facts = []
     qc = store.latest("peak_qc")
@@ -360,9 +470,10 @@ def auto_narrative(store: EvidenceStore) -> dict:
     return {
         "title": "Peak annotation report",
         "executive_summary": "Automated summary (no LLM interpretation was run). Key results:\n\n" + "\n".join(facts),
-        "sections": [], "hypotheses": [],
-        "caveats": ["This report was generated without the LLM agent: steps followed a fixed plan and no "
-                    "biological interpretation is provided."],
+        "sections": auto_interpretation(store), "hypotheses": [],
+        "caveats": ["This report was generated without the LLM agent: steps followed a fixed plan, and the "
+                    "interpretation is an automated, rule-based reading of the numbers. It does not weigh the "
+                    "biology of your experiment or the literature, and it proposes no hypotheses."],
     }
 
 

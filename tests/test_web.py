@@ -80,7 +80,10 @@ class RunIndexTest(unittest.TestCase):
 
     def test_regulators_papers_datasets_indexed(self):
         counts = self.index.counts()
-        for kind in ("regulator", "paper", "dataset", "motif", "pathway", "module", "expression", "control"):
+        kinds = ["regulator", "paper", "dataset", "pathway", "module", "expression", "control"]
+        if any(self.demo.glob("results/*_motifs_*.tsv")):          # the demo has motifs only where HOMER ran
+            kinds.append("motif")
+        for kind in kinds:
             self.assertGreater(counts.get(kind, 0), 0, kind)
         self.assertIn("regulator", self.index.search("Bcl11b")["groups"])
 
@@ -88,7 +91,7 @@ class RunIndexTest(unittest.TestCase):
         client = ChatClient([
             response([block(type="tool_use", id="t1", name="gene_lookup", input={"gene": "Tox"}),
                       block(type="tool_use", id="t2", name="inspect_table",
-                            input={"evidence_id": "E6", "sort_by": "padj", "n": 2})]),
+                            input={"evidence_id": "E4", "sort_by": "padj", "n": 2})]),     # E4: pathway enrichment
             response([block(type="text", text="**Tox** has 3 peaks [E2]; see also [E99].")], stop="end_turn"),
         ])
         session = ChatSession(self.demo_run, self.index, client=client, offline=True)
@@ -161,7 +164,7 @@ class WebAppTest(unittest.TestCase):
             self.assertIn(part, page.data)
         with self.c.get(f"/runs/{jid}/files/tex_report.html") as response:
             self.assertEqual(response.status_code, 200)
-        with self.c.get(f"/runs/{jid}/files/results/tex_chippeakanno_peak_genes.tsv") as response:
+        with self.c.get(f"/runs/{jid}/files/results/tex_peak_genes.tsv") as response:
             self.assertEqual(response.status_code, 200)
         self.assertEqual(self.c.get(f"/runs/{jid}/files/../../etc/passwd").status_code, 404)
         self.assertEqual(self.c.get("/runs/nope").status_code, 404)

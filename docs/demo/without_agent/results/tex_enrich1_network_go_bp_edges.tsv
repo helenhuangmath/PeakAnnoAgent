@@ -1,60 +1,57 @@
 from	to	jaccard
-alpha-beta T cell differentiation involved in immune response	alpha-beta T cell activation involved in immune response	1
-alpha-beta T cell differentiation involved in immune response	T cell differentiation involved in immune response	1
-alpha-beta T cell differentiation involved in immune response	T cell activation involved in immune response	0.929
-alpha-beta T cell activation involved in immune response	T cell differentiation involved in immune response	1
-alpha-beta T cell activation involved in immune response	T cell activation involved in immune response	0.929
-leukocyte activation involved in immune response	cell activation involved in immune response	1
-lymphocyte activation involved in immune response	leukocyte activation involved in immune response	0.85
-leukocyte activation involved in immune response	T cell activation involved in immune response	0.7
-positive regulation of leukocyte differentiation	positive regulation of hemopoiesis	1
-regulation of leukocyte differentiation	positive regulation of leukocyte differentiation	0.769
-regulation of hemopoiesis	positive regulation of leukocyte differentiation	0.714
-T cell differentiation involved in immune response	T cell activation involved in immune response	0.929
-lymphocyte activation involved in immune response	cell activation involved in immune response	0.85
-cell activation involved in immune response	T cell activation involved in immune response	0.7
-regulation of leukocyte differentiation	positive regulation of hemopoiesis	0.769
-regulation of hemopoiesis	positive regulation of hemopoiesis	0.714
-positive regulation of cell activation	positive regulation of leukocyte activation	0.963
-positive regulation of cell activation	positive regulation of lymphocyte activation	0.852
-positive regulation of cell activation	regulation of leukocyte cell-cell adhesion	0.688
-positive regulation of leukocyte activation	positive regulation of lymphocyte activation	0.885
-regulation of leukocyte cell-cell adhesion	positive regulation of leukocyte activation	0.71
-leukocyte cell-cell adhesion	regulation of leukocyte cell-cell adhesion	0.931
-leukocyte cell-cell adhesion	regulation of T cell activation	0.719
-leukocyte cell-cell adhesion	positive regulation of leukocyte activation	0.667
-regulation of T cell activation	regulation of leukocyte cell-cell adhesion	0.767
-regulation of hemopoiesis	regulation of leukocyte differentiation	0.929
-regulation of hemopoiesis	regulation of lymphocyte differentiation	0.75
-regulation of leukocyte differentiation	regulation of lymphocyte differentiation	0.808
-alpha-beta T cell differentiation involved in immune response	CD4-positive, alpha-beta T cell differentiation involved in immune response	0.923
-alpha-beta T cell activation involved in immune response	CD4-positive, alpha-beta T cell differentiation involved in immune response	0.923
-T cell differentiation involved in immune response	CD4-positive, alpha-beta T cell differentiation involved in immune response	0.923
-CD4-positive, alpha-beta T cell differentiation involved in immune response	T-helper cell differentiation	0.917
-alpha-beta T cell differentiation involved in immune response	T-helper cell differentiation	0.846
-alpha-beta T cell activation involved in immune response	T-helper cell differentiation	0.846
-regulation of T cell activation	positive regulation of lymphocyte activation	0.69
-CD4-positive, alpha-beta T cell activation	CD4-positive, alpha-beta T cell differentiation	0.882
-alpha-beta T cell activation	CD4-positive, alpha-beta T cell activation	0.773
-alpha-beta T cell differentiation	CD4-positive, alpha-beta T cell activation	0.75
-alpha-beta T cell differentiation	CD4-positive, alpha-beta T cell differentiation	0.833
-CD4-positive, alpha-beta T cell differentiation	CD4-positive, alpha-beta T cell differentiation involved in immune response	0.8
-lymphocyte activation involved in immune response	T cell activation involved in immune response	0.824
-lymphocyte differentiation	T cell differentiation	0.844
-lymphocyte differentiation	regulation of lymphocyte differentiation	0.656
-lymphocyte differentiation	regulation of hemopoiesis	0.622
-T cell differentiation	alpha-beta T cell differentiation	0.667
-T cell differentiation	alpha-beta T cell activation	0.633
-alpha-beta T cell activation	alpha-beta T cell differentiation	0.818
-alpha-beta T cell activation	CD4-positive, alpha-beta T cell differentiation	0.682
-regulation of lymphocyte differentiation	regulation of T cell differentiation	0.81
-regulation of leukocyte differentiation	regulation of T cell differentiation	0.654
-regulation of T cell activation	regulation of T cell differentiation	0.654
-adaptive immune response	adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains	0.643
-adaptive immune response	leukocyte activation involved in immune response	0.412
-adaptive immune response	cell activation involved in immune response	0.412
-T cell activation involved in immune response	adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains	0.455
-CD4-positive, alpha-beta T cell differentiation involved in immune response	adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains	0.429
-regulation of T cell activation	immune system development	0.452
-regulation of T cell differentiation	immune system development	0.44
-regulation of lymphocyte differentiation	immune system development	0.429
+GOBP_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_ACTIVATION	0.81
+GOBP_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_ALPHA_BETA_T_CELL_DIFFERENTIATION	0.857
+GOBP_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_T_CELL_DIFFERENTIATION	0.679
+GOBP_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION	0.714
+GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_ALPHA_BETA_T_CELL_DIFFERENTIATION	0.75
+GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_T_CELL_DIFFERENTIATION	0.593
+GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_ACTIVATION	GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION	0.882
+GOBP_ALPHA_BETA_T_CELL_DIFFERENTIATION	GOBP_T_CELL_DIFFERENTIATION	0.692
+GOBP_ALPHA_BETA_T_CELL_DIFFERENTIATION	GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION	0.833
+GOBP_T_CELL_DIFFERENTIATION	GOBP_IMMUNE_SYSTEM_DEVELOPMENT	0.387
+GOBP_ADAPTIVE_IMMUNE_RESPONSE	GOBP_ADAPTIVE_IMMUNE_RESPONSE_BASED_ON_SOMATIC_RECOMBINATION_OF_IMMUNE_RECEPTORS_BUILT_FROM_IMMUNOGLOBULIN_SUPERFAMILY_DOMAINS	0.643
+GOBP_ADAPTIVE_IMMUNE_RESPONSE	GOBP_LEUKOCYTE_MEDIATED_IMMUNITY	0.455
+GOBP_ADAPTIVE_IMMUNE_RESPONSE	GOBP_LYMPHOCYTE_MEDIATED_IMMUNITY	0.452
+GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION	GOBP_T_CELL_DIFFERENTIATION_INVOLVED_IN_IMMUNE_RESPONSE	0.75
+GOBP_CD4_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION	GOBP_T_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.706
+GOBP_T_CELL_DIFFERENTIATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_LYMPHOCYTE_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.765
+GOBP_T_CELL_DIFFERENTIATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.65
+GOBP_T_CELL_DIFFERENTIATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_T_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.929
+GOBP_LYMPHOCYTE_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.85
+GOBP_LYMPHOCYTE_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_T_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.824
+GOBP_LYMPHOCYTE_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_NEGATIVE_REGULATION_OF_CYTOKINE_PRODUCTION	0.348
+GOBP_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_T_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	0.7
+GOBP_CELL_ACTIVATION_INVOLVED_IN_IMMUNE_RESPONSE	GOBP_NEGATIVE_REGULATION_OF_CYTOKINE_PRODUCTION	0.36
+GOBP_POSITIVE_REGULATION_OF_CELL_ACTIVATION	GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_ACTIVATION	0.875
+GOBP_POSITIVE_REGULATION_OF_CELL_ACTIVATION	GOBP_POSITIVE_REGULATION_OF_LEUKOCYTE_CELL_CELL_ADHESION	0.692
+GOBP_POSITIVE_REGULATION_OF_CELL_ACTIVATION	GOBP_POSITIVE_REGULATION_OF_CELL_CELL_ADHESION	0.692
+GOBP_POSITIVE_REGULATION_OF_CELL_ACTIVATION	GOBP_B_CELL_ACTIVATION	0.333
+GOBP_REGULATION_OF_HEMOPOIESIS	GOBP_POSITIVE_REGULATION_OF_HEMOPOIESIS	0.714
+GOBP_REGULATION_OF_HEMOPOIESIS	GOBP_REGULATION_OF_LEUKOCYTE_DIFFERENTIATION	0.929
+GOBP_REGULATION_OF_HEMOPOIESIS	GOBP_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.714
+GOBP_REGULATION_OF_HEMOPOIESIS	GOBP_MYELOID_CELL_DIFFERENTIATION	0.441
+GOBP_LEUKOCYTE_CELL_CELL_ADHESION	GOBP_REGULATION_OF_T_CELL_ACTIVATION	0.69
+GOBP_LEUKOCYTE_CELL_CELL_ADHESION	GOBP_REGULATION_OF_CELL_CELL_ADHESION	0.889
+GOBP_LEUKOCYTE_CELL_CELL_ADHESION	GOBP_POSITIVE_REGULATION_OF_LEUKOCYTE_CELL_CELL_ADHESION	0.769
+GOBP_LEUKOCYTE_CELL_CELL_ADHESION	GOBP_POSITIVE_REGULATION_OF_CELL_CELL_ADHESION	0.769
+GOBP_POSITIVE_REGULATION_OF_HEMOPOIESIS	GOBP_REGULATION_OF_LEUKOCYTE_DIFFERENTIATION	0.769
+GOBP_POSITIVE_REGULATION_OF_HEMOPOIESIS	GOBP_MYELOID_CELL_DIFFERENTIATION	0.414
+GOBP_POSITIVE_REGULATION_OF_HEMOPOIESIS	GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.7
+GOBP_POSITIVE_REGULATION_OF_HEMOPOIESIS	GOBP_MYELOID_LEUKOCYTE_DIFFERENTIATION	0.423
+GOBP_REGULATION_OF_LEUKOCYTE_DIFFERENTIATION	GOBP_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.769
+GOBP_REGULATION_OF_LEUKOCYTE_DIFFERENTIATION	GOBP_MYELOID_LEUKOCYTE_DIFFERENTIATION	0.387
+GOBP_IMMUNE_SYSTEM_DEVELOPMENT	GOBP_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.423
+GOBP_IMMUNE_SYSTEM_DEVELOPMENT	GOBP_B_CELL_ACTIVATION	0.435
+GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_ACTIVATION	GOBP_REGULATION_OF_T_CELL_ACTIVATION	0.692
+GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_ACTIVATION	GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.667
+GOBP_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	GOBP_POSITIVE_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	0.7
+GOBP_REGULATION_OF_LYMPHOCYTE_DIFFERENTIATION	GOBP_B_CELL_ACTIVATION	0.385
+GOBP_REGULATION_OF_T_CELL_ACTIVATION	GOBP_REGULATION_OF_CELL_CELL_ADHESION	0.714
+GOBP_ADAPTIVE_IMMUNE_RESPONSE_BASED_ON_SOMATIC_RECOMBINATION_OF_IMMUNE_RECEPTORS_BUILT_FROM_IMMUNOGLOBULIN_SUPERFAMILY_DOMAINS	GOBP_LEUKOCYTE_MEDIATED_IMMUNITY	0.462
+GOBP_ADAPTIVE_IMMUNE_RESPONSE_BASED_ON_SOMATIC_RECOMBINATION_OF_IMMUNE_RECEPTORS_BUILT_FROM_IMMUNOGLOBULIN_SUPERFAMILY_DOMAINS	GOBP_LYMPHOCYTE_MEDIATED_IMMUNITY	0.522
+GOBP_REGULATION_OF_CELL_CELL_ADHESION	GOBP_POSITIVE_REGULATION_OF_LEUKOCYTE_CELL_CELL_ADHESION	0.8
+GOBP_REGULATION_OF_CELL_CELL_ADHESION	GOBP_POSITIVE_REGULATION_OF_CELL_CELL_ADHESION	0.8
+GOBP_REGULATION_OF_CELL_CELL_ADHESION	GOBP_NEGATIVE_REGULATION_OF_CYTOKINE_PRODUCTION	0.345
+GOBP_POSITIVE_REGULATION_OF_LEUKOCYTE_CELL_CELL_ADHESION	GOBP_POSITIVE_REGULATION_OF_CELL_CELL_ADHESION	1.0
+GOBP_MYELOID_CELL_DIFFERENTIATION	GOBP_MYELOID_LEUKOCYTE_DIFFERENTIATION	0.81
+GOBP_LEUKOCYTE_MEDIATED_IMMUNITY	GOBP_LYMPHOCYTE_MEDIATED_IMMUNITY	0.85

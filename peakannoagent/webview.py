@@ -12,7 +12,7 @@ from typing import Callable, Dict, List, Optional
 
 from .explore import explore_data, has_explore
 from .evidence import Evidence
-from .report import _dataset_list, _fmt, _paper_list, md, md_inline, methods_text
+from .report import _dataset_list, _fmt, _paper_list, auto_interpretation, md, md_inline, methods_text
 from .search import Run, _f
 
 def esc(x) -> str:
@@ -391,9 +391,16 @@ class View:
 
     def interpretation(self) -> str:
         secs = self.run.narrative.get("sections") or []
-        if not secs:
-            return '<p class="muted">No interpretation: deterministic run.</p>'
-        return "".join(f'<section class="prose"><h3>{self._mdi(s.get("heading", ""))}</h3>{self._md(s.get("body", ""))}</section>'
+        note = ""
+        if not secs:                                   # run without the agent: rule-based reading
+            secs = auto_interpretation(self.store)
+            if not secs:
+                return '<p class="muted">No results to interpret yet.</p>'
+        if not self.run.config.get("use_llm"):
+            note = ('<p class="muted">Automated, rule-based reading of the results (this run did not use the agent). '
+                    'It explains what the numbers mean in general terms; run with the agent for an interpretation '
+                    'of your biology and for hypotheses.</p>')
+        return note + "".join(f'<section class="prose"><h3>{self._mdi(s.get("heading", ""))}</h3>{self._md(s.get("body", ""))}</section>'
                        for s in secs)
 
     def tool_part(self, tools) -> str:
@@ -433,7 +440,8 @@ class View:
                 count = {"suggestions": len(self.run.narrative.get("hypotheses") or []),
                          "log": len(self.store.trace)}.get(pid)
                 empty = (pid == "suggestions" and not self.run.narrative.get("hypotheses")) or \
-                        (pid == "interpretation" and not self.run.narrative.get("sections"))
+                        (pid == "interpretation" and not self.run.narrative.get("sections")
+                         and not auto_interpretation(self.store))
             else:
                 html_ = self.tool_part(tools) if pid != "literature" else self.literature()
                 count = sum(1 for e in self.store.items.values() if e.tool in tools and e.tool not in HIDDEN)
