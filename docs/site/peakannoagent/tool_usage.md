@@ -1,18 +1,10 @@
-# Tool usage
+# run
+
+The main function. The other subcommands are listed on the [Subcommands](../subcommands_index.md) page.
 
 ```text
 peakanno-agent run --peaks PEAKS --genome GENOME --out OUT [options]
-peakanno-agent web   [--runs-dir runs] [--port 8766] [--open]
-peakanno-agent check [--genome mm10]
-peakanno-agent tools
 ```
-
-| Command | What it does |
-|---|---|
-| `run` | Annotate peaks, find pathways, motifs and regulators, write an HTML report |
-| `web` | Start the web app: submit runs, watch progress, search results, chat |
-| `check` | Check R packages, HOMER, API credentials and network access |
-| `tools` | List the agent's analysis tools (see [Agent tools](../reference/agent_tools.md)) |
 
 ## Required input
 
@@ -35,10 +27,13 @@ chr1    4785526    4786010    peak_002
 |---|---|---|
 | `--prefix` | `run` | Prefix of every output file |
 | `--blacklist` | none | Blacklist BED to remove, e.g. the ENCODE mm10 blacklist |
+| `--reference` | `gencode` | Gene models for annotation: `gencode`, `gencode:<release>`, `refseq` or `ucsc` (see [Gene models](../execution.md)) |
+| `--gtf` | none | Annotate against this GTF file instead (GENCODE, Ensembl, RefSeq or custom) |
+| `--palette` | `chippeakanno` | Figure colours: `chippeakanno` (ChIPpeakAnno's default colours, default), `npg` (Nature Publishing Group), `spectral`, or a Matplotlib colormap name such as `Set2`, `Dark2`, `tab10`, `viridis` or `RdYlBu_r` |
 | `--gmt` | none | Your own gene signatures (GMT) to test next to the public collections |
 | `--rnaseq` | none | Differential-expression table: a gene column, a log2 fold-change column (`log2FoldChange`, `logFC`, `log2FC`, `lfc` or `avg_log2FC`) and an adjusted p-value (`padj`, `adj.P.Val`, `FDR` or `qvalue`) |
 | `--no-llm` | off | Fixed analysis plan and a factual summary; no API key needed |
-| `--offline` | off | No ChIP-Atlas, Europe PMC or GEO calls |
+| `--offline` | off | No ChIP-Atlas, Europe PMC or GEO calls. Gene models and gene sets are still downloaded once if they are not cached |
 
 ## Known biology
 
@@ -90,7 +85,6 @@ TEX_TERMINAL      synthetic    Havcr2  Entpd1    Cd160    Cd244a Tox     Pdcd1  
 | `--model` | `claude-opus-5-5` | Claude model for planning and interpretation |
 | `--effort` | `high` | Reasoning effort: `low`, `medium`, `high`, `xhigh` or `max` |
 | `--max-turns` | 40 | Maximum agent turns |
-| `--rscript` | `Rscript` on `PATH` | Rscript with the Bioconductor packages (or set `PEAKANNOAGENT_RSCRIPT`) |
 | `--chipatlas-wait` | 25 | Minutes the deterministic plan waits for ChIP-Atlas |
 
 ChIP-Atlas jobs run on the DDBJ supercomputer and usually take 5–30 minutes. The agent submits its
@@ -101,7 +95,7 @@ job early and collects the results later.
 | Variable | Description |
 |---|---|
 | `ANTHROPIC_API_KEY` | Claude credentials for agent mode and the chat |
-| `PEAKANNOAGENT_RSCRIPT` | Rscript to use for the R engine |
+| `PEAKANNOAGENT_CACHE` | Folder for downloaded gene models and built references |
 | `PEAKANNOAGENT_SNV` | SimpNetworkViz command, if `snv` is not on `PATH` |
 | `PEAKANNOAGENT_PATHWAYAGENT` | PathwayAgent command, if it is not found automatically |
 
@@ -124,7 +118,7 @@ peakanno-agent run \
 ## Use Claude Code as the agent (MCP)
 
 ```bash
-pip install -e "agent[mcp]"
+pip install -e ".[mcp]"
 claude mcp add peakanno -- python -m peakannoagent.mcp_server
 ```
 

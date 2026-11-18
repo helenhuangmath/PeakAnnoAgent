@@ -1,5 +1,6 @@
 # Resolved Python 3.12 validation environment for 1.0.2 (2026-11-12).
 # Install the project separately with -c constraints-release.txt.
+# numpy and matplotlib (engine dependencies) are not pinned here.
 annotated-types==0.8.0
 anthropic==2.8.0
 anyio==4.16.0

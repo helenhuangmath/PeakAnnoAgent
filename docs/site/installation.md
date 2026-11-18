@@ -1,83 +1,105 @@
-# Installation
+# Install PeakAnnoAgent
 
-PeakAnnoAgent has two parts:
-
-- an **R engine**, which does all the statistics and draws the figures;
-- a **Python agent**, which plans the analysis, calls public resources and writes the report.
+PeakAnnoAgent is one Python package. There is no R or Bioconductor dependency.
 
 ## Requirements
 
-| Component | Version | Needed for |
-|---|---|---|
-| R | ≥ 4.1 with Bioconductor | everything (annotation, enrichment, motifs, figures) |
-| Python | ≥ 3.10 | the command line, report and web app |
-| Claude API key (`ANTHROPIC_API_KEY`) | — | agent mode and the chat; not needed with `--no-llm` |
+| | |
+|---|---|
+| Python | 3.10 or later |
+| Packages | NumPy and Matplotlib, installed automatically |
+| Operating system | macOS and Linux are tested; Windows is not |
+| Disk | About 0.2 MB for the package; 20-40 MB per genome build for the downloaded gene models, plus up to 10 MB per gene-set library |
 
-## 1. Get the code
+## Install from source
 
 ```bash
 git clone https://github.com/helenhuangmath/PeakAnnoAgent.git
 cd PeakAnnoAgent
+pip install -e .                 # annotation, enrichment and the deterministic pipeline
 ```
 
-## 2. Install the R engine
+Optional extras:
 
 ```bash
-Rscript scripts/install_dependencies.R
+pip install -e ".[agent]"        # Claude agent mode (Anthropic SDK)
+pip install -e ".[web]"          # web app (Flask)
+pip install -e ".[mcp]"          # use from Claude Code or Claude Desktop
 ```
 
-This installs ChIPpeakAnno, ChIPseeker, clusterProfiler, ReactomePA, msigdbr, monaLisa, JASPAR2024
-and igraph, plus the TxDb, OrgDb and BSgenome packages for mm10 and hg38.
-
-To install only the R package:
-
-```r
-# install.packages("remotes")
-remotes::install_github("helenhuangmath/PeakAnnoAgent")
-```
-
-## 3. Install the Python agent
+A virtual environment keeps it separate from your other Python packages:
 
 ```bash
-pip install -e "agent[agent]"    # Claude agent mode (Anthropic SDK)
-pip install -e "agent[web]"      # web app (Flask)
-pip install -e "agent[mcp]"      # optional: use from Claude Code / Claude Desktop
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[web,agent]"
 ```
 
-The deterministic mode (`--no-llm`) needs only the Python standard library.
-
-## 4. Check the installation
+## Check the installation
 
 ```bash
-peakanno-agent check --genome mm10
+peakanno-agent check
 ```
 
-`check` reports which R packages, optional tools, API credentials and network services were found.
-Unavailable optional tools are reported as skipped. Missing required analysis dependencies produce a partial or failed outcome.
+It lists the Python packages, whether HOMER and the optional companion tools were found, the cache
+location, your API credentials, and whether the public services can be reached. See
+[check](subcommands/check.md).
 
-:::{tip}
-If your Bioconductor packages live in a different R installation, point the agent at it:
+Then run the bundled example, which needs no API key:
 
 ```bash
-export PEAKANNOAGENT_RSCRIPT=/path/to/Rscript
+peakanno-agent annotate --peaks peakannoagent/examples/example_tex_peaks_mm10.bed \
+  --genome mm10 --out results/anno --prefix tex
 ```
-:::
+
+The first run downloads the mouse GENCODE gene models (about 20 MB) and builds the reference in a
+few seconds. Later runs take about a second.
+
+## Reference data and the cache
+
+Gene models and gene-set libraries are public files that are downloaded the first time they are
+needed, then kept in a cache:
+
+- `~/.cache/peakannoagent` by default (or `$XDG_CACHE_HOME/peakannoagent`);
+- the folder named by the `PEAKANNOAGENT_CACHE` environment variable, if set.
+
+On a machine without internet access, copy the cache folder from another machine, or pass your own
+GTF with `--gtf` and your own gene sets with `--gmt`. `peakanno-agent annotate --no-download`
+refuses to download and uses the cache only.
 
 ## Optional tools
 
-| Tool | Adds | How to install |
+| Tool | Used for | Without it |
 |---|---|---|
-| [HOMER](http://homer.ucsd.edu/homer/) | HOMER known-motif enrichment and annotation | put `findMotifsGenome.pl` on `PATH` |
-| rGREAT | region-based GREAT enrichment | `BiocManager::install("rGREAT")` |
-| [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) | clustered pathway networks with interactive HTML and Cytoscape files | `pip install git+https://github.com/helenhuangmath/SimpNetworkViz` |
-| [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) | cross-tool pathway consensus | clone next to this repository with its `.venv`, or set `PEAKANNOAGENT_PATHWAYAGENT` |
+| `ANTHROPIC_API_KEY` and the Anthropic SDK | Agent mode and the chat in the web app | Use `--no-llm` |
+| [HOMER](http://homer.ucsd.edu/homer/) with its genome package, `findMotifsGenome.pl` on `PATH` | Motif enrichment | The motif step is skipped |
+| [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) | Clustered, interactive pathway networks | The step is skipped; the built-in networks are still drawn |
+| [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) | Cross-tool pathway consensus | The step is skipped |
+
+## Use it from R
+
+A small R package wraps the command line for people who work in R. It runs the Python program and
+returns its tables as data frames, so the Python package must be installed first.
+
+```r
+# install.packages("remotes")
+remotes::install_github("helenhuangmath/PeakAnnoAgent", subdir = "r/PeakAnnoAgent")
+library(PeakAnnoAgent)
+paa_check()
+```
+
+See [R interface](api/r_interface.md).
+
+## Docker
+
+```bash
+docker build -t peakannoagent .
+docker run --rm -v "$PWD:/work" -v peakanno-cache:/cache peakannoagent \
+  annotate --peaks peaks.bed --genome hg38 --out results
+```
 
 ## Building this documentation
 
 ```bash
 pip install -r docs/site/requirements.txt
 sphinx-build -b html docs/site docs/site/_build/html
-open docs/site/_build/html/index.html
 ```
-
-The commands above build the documentation locally. Hosted documentation configuration is managed separately.

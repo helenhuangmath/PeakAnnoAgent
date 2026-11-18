@@ -1,0 +1,580 @@
+{
+ "model": "claude-opus-5-5",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Is Batf supported by both motifs and public ChIP-seq?"
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "type": "text",
+     "text": "Batf is supported twice. Its public ChIP-seq in immune cells ranks 20th for overlap with these peaks [E16], and its target genes overlap the peak-linked promoter genes (93% vs 56% background) [E8]. No Batf motif passes FDR, though [E5], so the evidence is co-binding, not sequence. Tcf7 targets overlap less (89% vs 66%) [E7].\n\nA Batf ChIP-seq or CUT&RUN in the same cells would settle whether these sites are bound directly."
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": "Is Batf supported by both motifs and public ChIP-seq?"
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "type": "text",
+     "text": "Batf is supported twice. Its public ChIP-seq in immune cells ranks 20th for overlap with these peaks [E16], and its target genes overlap the peak-linked promoter genes (93% vs 56% background) [E8]. No Batf motif passes FDR, though [E5], so the evidence is co-binding, not sequence. Tcf7 targets overlap less (89% vs 66%) [E7].\n\nA Batf ChIP-seq or CUT&RUN in the same cells would settle whether these sites are bound directly."
+    }
+   ]
+  }
+ ],
+ "transcript": [
+  {
+   "role": "user",
+   "text": "Is Batf supported by both motifs and public ChIP-seq?",
+   "time": "14:04"
+  },
+  {
+   "role": "assistant",
+   "text": "Batf is supported twice. Its public ChIP-seq in immune cells ranks 20th for overlap with these peaks [E16], and its target genes overlap the peak-linked promoter genes (93% vs 56% background) [E8]. No Batf motif passes FDR, though [E5], so the evidence is co-binding, not sequence. Tcf7 targets overlap less (89% vs 66%) [E7].\n\nA Batf ChIP-seq or CUT&RUN in the same cells would settle whether these sites are bound directly.",
+   "tool_calls": [],
+   "error": null,
+   "unverified_citations": [],
+   "time": "14:04"
+  },
+  {
+   "role": "user",
+   "text": "Is Batf supported by both motifs and public ChIP-seq?",
+   "time": "14:05"
+  },
+  {
+   "role": "assistant",
+   "text": "Batf is supported twice. Its public ChIP-seq in immune cells ranks 20th for overlap with these peaks [E16], and its target genes overlap the peak-linked promoter genes (93% vs 56% background) [E8]. No Batf motif passes FDR, though [E5], so the evidence is co-binding, not sequence. Tcf7 targets overlap less (89% vs 66%) [E7].\n\nA Batf ChIP-seq or CUT&RUN in the same cells would settle whether these sites are bound directly.",
+   "tool_calls": [],
+   "error": null,
+   "unverified_citations": [],
+   "time": "14:05"
+  }
+ ],
+ "references": {
+  "PMID:42830947": {
+   "pmid": "42830947",
+   "id": "PMID:42830947",
+   "title": "Immune-Cell Dynamics in the Tumor Microenvironment: Implications for Cancer Therapy.",
+   "authors": "Guo P, Xie Y, Song R, Yang M, Lin Z, Guan C, Wang Z, Wen J, Chen GL.",
+   "journal": "MedComm",
+   "year": "2026",
+   "doi": "10.1002/mco2.71040",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Immune-cell dynamics within the tumor microenvironment (TME) determine whether immune cells can reach, recognize, and sustain antitumor function against malignant cells under suppressive pressure. These dynamics are shaped by hypoxia, nutrient stress, cytokine and chemokine signaling, stromal architecture, vascular access, and multicellular crosstalk, and are further regulated by transcriptional and epigenetic programs. In this review, we organize TME immunity around four major barriers to effective therapy: failed immune access, defective antigen visibility and priming, failure to sustain effector function, and suppressive tissue remodeling. We use FOSL2/Fra-2, a component of activator protein-1 (AP-1) transcription factor complexes, as an example of how local signals can produce distinct regulatory effects in malignant, immune, and stromal compartments. FOSL2-associated programs have\u2026"
+  },
+  "PMID:42749447": {
+   "pmid": "42749447",
+   "id": "PMID:42749447",
+   "title": "Explainable machine learning and multimodal single cell analysis link NR4A2 to CD8+ T-cell terminal exhaustion and a CD8-adjusted prognostic signature in hepatocellular carcinoma.",
+   "authors": "Faisal S, Sammad A, Ejaz MA, Wang ZB.",
+   "journal": "Journal, genetic engineering & biotechnology",
+   "year": "2026",
+   "doi": "10.1016/j.jgeb.2026.100777",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "BackgroundTerminal exhaustion of CD8+ tumour-infiltrating lymphocytes constrains the benefit of immune-checkpoint blockade in hepatocellular carcinoma (HCC). The orphan nuclear receptor NR4A2 (Nurr1) belongs to a transcription-factor family implicated in murine T-cell exhaustion, yet its behaviour in the human HCC microenvironment has not been characterised across data modalities. We asked whether NR4A2 is specifically coupled to the terminal-exhaustion programme of human HCC CD8+ T cells, and whether that coupling is reflected in chromatin, tissue topography and bulk-tumour outcome data.MethodsWe reanalysed publicly available human HCC datasets spanning four modalities: single-cell RNA sequencing (scRNA-seq; GSE149614, GSE98638, GSE151530, GSE125449), single-cell ATAC sequencing (scATAC-seq; GSE227265), imaging-based spatial transcriptomics (10\u00d7 Xenium human liver-cancer section) and b\u2026"
+  },
+  "PMID:42701195": {
+   "pmid": "42701195",
+   "id": "PMID:42701195",
+   "title": "Chimeric antigen receptor (CAR)-T cell therapy for solid tumors in pediatric patients: current breakthroughs, dilemmas, and strategies.",
+   "authors": "Mai Y, Wang Z, Wang J, Song M, Xiang T, He Y, Chang AH, Zhang Y.",
+   "journal": "Experimental hematology & oncology",
+   "year": "2026",
+   "doi": "10.1186/s40164-026-00822-z",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Chimeric antigen receptor (CAR)-T cell therapy has demonstrated substantial clinical efficacy in pediatric hematologic malignancies; however, its application in pediatric solid tumors remains investigational and is constrained by substantial biological and clinical challenges. Key barriers comprise tumor heterogeneity, antigen escape, T-cell exhaustion, physical barriers and immunosuppressive tumor microenvironment, treatment-related toxicities, and pediatric-specific considerations, including optimal dosing and potential long-term developmental sequelae. Ongoing research focuses on identifying novel target antigens, optimizing CAR architectures, genetically engineering CAR-T cells, and improving delivery strategies to address these barriers. In this review, we summarize recent advances, persistent challenges, and emerging strategies for CAR-T cell therapy in pediatric solid tumors. We\u2026"
+  },
+  "PMID:42699118": {
+   "pmid": "42699118",
+   "id": "PMID:42699118",
+   "title": "Short-chain fatty acids act as metabolic and epigenetic regulators in CAR T cell therapy.",
+   "authors": "Ma MY, Zhou CX, Shi XY, Zhu JM, Duan CW.",
+   "journal": "Molecular therapy. Oncology",
+   "year": "2026",
+   "doi": "10.1016/j.omton.2026.201322",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Chimeric antigen receptor (CAR) T cell therapy has transformed the treatment of hematologic malignancies, but its efficacy in solid tumors remains constrained by poor infiltration, metabolic stress, and limited persistence. Short-chain fatty acids (SCFAs), particularly butyrate and pentanoate, offer a way to influence CAR T metabolism and chromatin state during manufacturing. Butyrate combines class I histone deacetylase inhibition with acetyl-CoA metabolism and AMP-activated protein kinase (AMPK)-associated restraint of mTORC1, whereas pentanoate can reinforce effector programs through mTOR signaling and a distinct TCA-ATP-citrate lyase carbon-routing pathway. Direct CAR T studies and clinical associations now support the biological relevance of both metabolites, although their effects depend on dose, exposure schedule, cell composition, and experimental context. Building on their comp\u2026"
+  },
+  "PMID:42686747": {
+   "pmid": "42686747",
+   "id": "PMID:42686747",
+   "title": "T cell senescence and exhaustion: molecular mechanisms and immune rejuvenation for cancer immunotherapy.",
+   "authors": "van den Broecke L, Van der Vreken A, Watt\u00e9 F, Meeus F, De Veirman K, Breckpot K, De Bruyne E, Menu E.",
+   "journal": "Signal transduction and targeted therapy",
+   "year": "2026",
+   "doi": "10.1038/s41392-026-02923-x",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "T cell exhaustion and T cell senescence constitute distinct yet partially overlapping differentiation states that collectively constrain T cell functionality. T cell exhaustion arises under conditions of chronic antigen exposure and is characterised by a progressive, hierarchical loss of effector capacity, sustained expression of inhibitory receptors, and extensive transcriptional, epigenetic and metabolic reprogramming. By contrast, T cell senescence represents a more stable and terminal state, driven by replicative history, age-associated decline or stress-induced damage, and is defined by durable cell cycle arrest, altered differentiation, metabolic remodelling and acquisition of a pro-inflammatory secretory phenotype. In the context of cancer, dysfunctional T cells contribute to tumour progression, while also representing a major barrier to the success of T cell-based immune therapi\u2026"
+  },
+  "PMID:42233094": {
+   "pmid": "42233094",
+   "id": "PMID:42233094",
+   "title": "The multifaceted landscape of T cell exhaustion in organ transplantation: From molecular mechanisms (epigenetics, transcription, metabolism) to induction strategies.",
+   "authors": "Wang Y, Wu Y, Shen Y, Chen Y, Zhao Y, Zeng X, He K.",
+   "journal": "Genes & diseases",
+   "year": "2026",
+   "doi": "10.1016/j.gendis.2025.101965",
+   "preprint": false,
+   "cited_by": 2,
+   "abstract": "T cell exhaustion is a state of T cell dysfunction resulting from persistent antigenic stimulation, characterized primarily by the high expression of inhibitory receptors, metabolic reprogramming, and epigenetic remodeling. T cell exhaustion is closely associated with immune responses in chronic infections, tumor escape, and organ transplantation. In transplantation immunology, T cell exhaustion plays a dual role: moderate exhaustion can promote immune tolerance and reduce graft rejection, while excessive exhaustion may weaken the defensive capabilities of the immune system, increasing the risk of infection and tumorigenesis. Therefore, effective regulation of T-cell exhaustion has become a crucial issue in the field of immunotherapy. Epigenetic or metabolic interventions may offer novel insights for achieving graft-specific tolerance. Further studies can focus on precise modulation of\u2026"
+  },
+  "PMID:42827658": {
+   "pmid": "42827658",
+   "id": "PMID:42827658",
+   "title": "Cancer Cell Metastasis: From Molecular Mechanisms to Therapeutic Strategies.",
+   "authors": "Zhao Y, Xu W, Wang Y, Huang H, Su Y, Zhou L, Liu J, Guo J.",
+   "journal": "MedComm",
+   "year": "2026",
+   "doi": "10.1002/mco2.71026",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Cancer metastasis is a spatiotemporal dynamic process jointly driven by the intrinsic evolution of cancer cells and continuous microenvironmental selection, rather than a simple linear accumulation of genetic alterations. The metastatic diversity of cancers is driven by heterogeneity in physicochemical properties, cellular composition, and signaling networks among primary tumors, dissemination routes, and target organs. Currently, the stage-dependent and route-dependent molecular mechanisms underlying metastasis and potential pan-cancer therapeutic targets remain incompletely defined. Here, we systematically discuss the genomic, chromosomal, and epigenetic evolution of metastatic tumor cells (MTCs) following their spatiotemporal trajectory from in situ evolution to metastatic colonization. We describe their migration behaviors and interaction patterns within the migratory tumor microenv\u2026"
+  },
+  "PMID:42768041": {
+   "pmid": "42768041",
+   "id": "PMID:42768041",
+   "title": "In vivo effect of anti-PD-1 on HIV-specific CD8+T-cells in men with HIV.",
+   "authors": "Gubser C, Rajdev L, Chiu CY, Li S, Brochut M, King H, Tumpach C, Pascoe RD, Durand CM, Chang JJ, Solomon A, Cao R, Mart\u2026",
+   "journal": "Nature communications",
+   "year": "2026",
+   "doi": "10.1038/s41467-026-77373-8",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "One approach to achieve a cure for HIV infection or allow for people with HIV to safely stop antiretroviral therapy is to enhance HIV-specific immune function by reversing immune exhaustion. Immune checkpoint blockade with anti-PD1 can enhance virus-specific T-cell function ex vivo and in animal models but the effects of anti-PD1 on HIV-specific T-cells in vivo has not been explored. We examine samples from men with HIV and cancer on antiretroviral therapy who receive nivolumab (anti-PD1) every two weeks as part of a prospective clinical trial. We show that a single dose of anti-PD-1 increases HIV-specific CD8\u2009+\u2009T cells in some but not all participants. Using single cell RNAseq of HIV-specific CD8\u2009+\u2009T-cells, we show that anti-PD-1 significantly reshapes the T-cell landscape. Following anti-PD1, we see the emergence of a distinct 'progenitor' like\u00a0central memory cluster characterized by\u2026"
+  },
+  "PMID:42717555": {
+   "pmid": "42717555",
+   "id": "PMID:42717555",
+   "title": "Spatial Omics in High-Grade Gliomas: Mapping Immune-Tumor Niches for Precision Therapy.",
+   "authors": "Shaikh S, Raziq T, Alfares SB, Raslan TT, Abdullah IA, Arora I, Saleh S, Khan MI, Yaqinuddin A.",
+   "journal": "Cancer medicine",
+   "year": "2026",
+   "doi": "10.1002/cam4.72238",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "High-grade gliomas (HGGs), particularly glioblastoma (GBM), remain among the most lethal human cancers despite decades of molecular profiling and therapeutic innovation. A primary reason for treatment failure is that HGG biology is spatial: malignant cell states, immune suppression, metabolic stress, and therapeutic resistance are organized into distinct anatomical and functional niches. Spatial omics technologies now enable high-dimensional mapping of gene expression, protein signaling, immune architecture, and metabolic activity within intact tumor tissue. These approaches reveal how proneural and mesenchymal transcriptional states coexist yet localize to distinct regions, alongside hypoxic, invasive, and stem-enriched niches. Spatial analyses show that key clinical determinants, including O6-methylguanine-DNA methyltransferase (MGMT)-associated temozolomide resistance, radiotherapy t\u2026"
+  },
+  "PMID:42543035": {
+   "pmid": "42543035",
+   "id": "PMID:42543035",
+   "title": "Lactylation in influenza a virus infection: Current evidence, knowledge gaps, and future perspectives.",
+   "authors": "Yan YC, Li Z, He H, Wu M, Yang H, Wei F.",
+   "journal": "Virulence",
+   "year": "2026",
+   "doi": "10.1080/21505594.2026.2712045",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Influenza A virus (IAV) is a major respiratory pathogen causing seasonal epidemics and pandemics, posing serious threats to public health and livestock. The high mutation rate of IAV leads to vaccine mismatches and drug-resistant variants, underscoring the need for novel antiviral strategies. This review examines the role of lactylation in IAV-host interactions, focusing on three core questions: how IAV induces lactylation, how lactylation reshapes antiviral immunity, and how IAV exploits lactylation for immune evasion. Key findings include lactylation of viral vRNP components required for efficient replication and the host deacetylase SIRT1, which suppresses IAV replication by removing these lactyl groups. IAV counteracts this defense by downregulating SIRT1 expression. Lactylation also regulates cGAS-STING, RLR-MAVS, and IFN signaling pathways. The therapeutic potential of targeting l\u2026"
+  },
+  "PMID:41846252": {
+   "pmid": "41846252",
+   "id": "PMID:41846252",
+   "title": "Research progress on the molecular mechanisms of PD-1 and LAG-3 synergy in regulating T cell exhaustion and immunotherapy.",
+   "authors": "Li M, Duan D, Liu C, Xiong Q.",
+   "journal": "Annals of medicine",
+   "year": "2026",
+   "doi": "10.1080/07853890.2026.2643042",
+   "preprint": false,
+   "cited_by": 1,
+   "abstract": "BackgroundPD-1 and LAG-3 are immune checkpoint molecules frequently co-expressed in the tumor microenvironment, where they synergistically drive T-cell exhaustion and immune escape. Dual blockade of these pathways represents a promising strategy to overcome immunotherapy resistance.MethodsThis review systematically synthesizes mechanistic studies on PD-1/LAG-3 synergy and summarizes preclinical and clinical advances in dual blockade therapies, with emphasis on bispecific antibodies and combination trial data.ResultsPD-1 and LAG-3 cooperatively suppress T-cell function via complementary signaling pathways. Combined inhibition substantially restores antitumor immunity. A PD-1/LAG-3 bispecific antibody has been approved for melanoma, with numerous trials ongoing across other malignancies.ConclusionDespite demonstrated efficacy, challenges including variable response rates, resistance mecha\u2026"
+  },
+  "PMID:41823682": {
+   "pmid": "41823682",
+   "id": "PMID:41823682",
+   "title": "Contrasting functions of CD73 and adenosine in CD8+ T-cell exhaustion during antitumor immunity.",
+   "authors": "Saavedra-Almarza J, Gou\u00ebt S, Malgue F, Bascu\u00f1an C, Hern\u00e1ndez-Oliveras A, De la Rosa J, Reyes-Alvarez J, Villaman C, Cor\u2026",
+   "journal": "Oncoimmunology",
+   "year": "2026",
+   "doi": "10.1080/2162402x.2026.2642458",
+   "preprint": false,
+   "cited_by": 1,
+   "abstract": "T-cell exhaustion is a state of functional decline in T cells, driven by chronic antigen exposure and inhibitory signals within the tumor microenvironment. Exhausted CD8+ T cells (Tex) derive from precursor exhausted T cells (Tpex), a self-renewing population responsible for the proliferative burst in anti-PD-1 therapies. Exhausted T cells are exposed to adenosine in the tumor, yet the role of the CD73/adenosine axis and Tpex/Tex differentiation remains unclear. Using an in vitro model for CD8+ T-cell exhaustion, we found that CD73 expression increased during Tpex formation and that its expression was negatively correlated with Tex generation. CD73-deficient OT-I cells (OT-I/CD73KO) showed impaired activation and reduced progression to Tex. Moreover, we demonstrated that CD73 promotes transcriptional expression of the adenosine receptor A2A (A2AR). RNA-seq analysis of exhausted OT-I/CD7\u2026"
+  },
+  "PMID:41742891": {
+   "pmid": "41742891",
+   "id": "PMID:41742891",
+   "title": "Tertiary lymphoid structures guided opportunities and challenges for immunotherapy in early gastroesophageal junction cancer and low rectal cancer.",
+   "authors": "Zou Q, Zhang Y, Xian Z, Fang Z, Zhang J, Shang L, Wang H, Hu B, Chen Z.",
+   "journal": "Human vaccines & immunotherapeutics",
+   "year": "2026",
+   "doi": "10.1080/21645515.2026.2631238",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Early-stage gastroesophageal junction cancer (GEJC) and low rectal cancer (LRC) pose a dilemma: surgery is often curative yet may cause lasting functional loss. Emerging data suggest that early tumors tend to exhibit an immune-active microenvironment with greater tertiary lymphoid structures (TLS) density and maturity, whereas advanced disease is frequently marked by immunosuppressive signaling, vascular and metabolic barriers, and attenuated TLS function. This review synthesizes stage-dependent immune ecology and evaluates how TLS biology may inform immunotherapy in early GEJC and LRC. We highlight opportunities for organ preservation in selected patients and key constraints: few trials in early-stage tumor, uncertain applicability beyond MSI-H or dMMR, limited performance of current biomarkers, challenges in assessing pathologic complete response, and the need for standardized surveil\u2026"
+  },
+  "PMID:41496523": {
+   "pmid": "41496523",
+   "id": "PMID:41496523",
+   "title": "The LXR\u03b2/NF-\u03baB axis reprograms CAR-T cells to resist exhaustion in the tumor microenvironment.",
+   "authors": "Lim M, Jung SE, Koh CH, Jeong H, Moon Y, Seo H.",
+   "journal": "Oncoimmunology",
+   "year": "2026",
+   "doi": "10.1080/2162402x.2025.2611615",
+   "preprint": false,
+   "cited_by": 4,
+   "abstract": "Liver X receptor \u03b2 (LXR\u03b2) is a key transcription factor involved in lipid metabolism and immune regulation, yet its functional role in tumor-infiltrating T cells remains largely unresolved. While LXR\u03b2 has been shown to suppress NF-\u03baB target gene expression, the mechanistic interaction between LXR\u03b2 and NF-\u03baB signaling in the tumor microenvironment (TME) has not been fully established. In this study, we identify LXR\u03b2 as a critical regulator of CAR-T cell differentiation, the metabolic state, and effector function within solid tumors. LXR\u03b2 overexpression altered the transcriptional and phenotypic landscape of CAR-T cells, including the modulation of stem-like TCF1\u207a populations, proliferative capacity (Ki-67), and cytokine production (IFN\u03b3, TNF\u03b1). Through genetic perturbation of NF-\u03baB components, particularly RelB, we further demonstrate that disrupting non-canonical NF-\u03baB signaling enhance\u2026"
+  },
+  "PMID:42561529": {
+   "pmid": "42561529",
+   "id": "PMID:42561529",
+   "title": "Targeting T-cell exhaustion and tumour immune evasion: a review of emerging strategies.",
+   "authors": "Saltis L, Mun LJ.",
+   "journal": "Pathology, research and practice",
+   "year": "2026",
+   "doi": "10.1016/j.prp.2026.156638",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "Adoptive T-cell therapies and immune checkpoint blockade have produced durable remissions in selected malignancies, yet most patients still fail to achieve lasting benefit. Two convergent obstacles underlie much of this failure: T-cell exhaustion and tumour immune evasion. T-cell exhaustion arises from chronic antigen stimulation in the tumour microenvironment (TME) and spans a hierarchy from reversible, stem-like progenitor-exhausted cells to terminally exhausted cells with limited functional recovery, which is a transition epigenetically enforced by transcription factors such as TOX and the NR4A family. In parallel, tumours evade recognition by silencing antigen-presentation pathways, including MHC class I. This review discusses a complementary therapeutic strategy that addresses both obstacles: engineering T cells for greater durability in the TME through knockout of exhaustion-assoc\u2026"
+  },
+  "PMID:42558000": {
+   "pmid": "42558000",
+   "id": "PMID:42558000",
+   "title": "Translational repression of 5' TOP mRNAs in chronically activated CD8+ T cells in vitro.",
+   "authors": "Pledger ES, Ambavaram N, Ferguson L, Cate JHD.",
+   "journal": "RNA biology",
+   "year": "2026",
+   "doi": "10.1080/15476286.2026.2715355",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "T cell exhaustion is a dysfunctional state that arises during chronic infections and cancer, characterized by impaired effector functions and sustained expression of inhibitory receptors. While transcriptional, epigenetic, and metabolic rewiring have been well documented in exhausted T cells, a comprehensive understanding of how translation is regulated in this state remains incomplete. To address this gap, we performed ribosome profiling and RNA sequencing on in vitro chronically activated human CD8+ T cells to globally assess translational control during a model of T cell exhaustion. Our analyses reveal a marked repression of 5' terminal oligopyrimidine (TOP) mRNAs during chronic activation. Unexpectedly, we demonstrate that this translational repression occurs despite evidence of elevated mTOR activity. These findings uncover a previously unknown layer of translational control in exh\u2026"
+  },
+  "PMID:42725401": {
+   "pmid": "42725401",
+   "id": "PMID:42725401",
+   "title": "Interferon regulatory factors orchestrate CD8+ T cell function (Review).",
+   "authors": "Wang FX, Yang CL, Rong SJ, Chen QJ, Yue XT, Sun F.",
+   "journal": "International journal of molecular medicine",
+   "year": "2026",
+   "doi": "10.3892/ijmm.2026.5982",
+   "preprint": false,
+   "cited_by": 0,
+   "abstract": "The fate of CD8+ T cells is dictated by epigenetic remodeling, metabolic rewiring and most critically, the transcriptional reprogramming that integrates diverse extracellular signaling pathways. Transcription factors (TFs) predetermine cell differentiation state and lineage\u2011specifying hub TFs are decisive for CD8+ T cell functional maturation. The present study aimed to summarize the indispensable roles of interferon regulatory factors (IRFs) in CD8+ T cell biology from early thymic development to the acquisition of distinct functional states. Alone or together with other TFs, IRFs are involved in the regulation of CD8+ T cell commitment, effector differentiation, memory maintenance and terminal exhaustion. In clinical practice, IRF family members hold potential as prognostic biomarkers and valuable therapeutic targets in CD8+ T cell\u2011associated immune disorders, such as tumors, transpla\u2026"
+  },
+  "PMID:30778252": {
+   "pmid": "30778252",
+   "id": "PMID:30778252",
+   "title": "Subsets of exhausted CD8+ T cells differentially mediate tumor control and respond to checkpoint blockade.",
+   "authors": "Miller BC, Sen DR, Al Abosy R, Bi K, Virkud YV, LaFleur MW, Yates KB, Lako A, Felt K, Naik GS, Manos M, Gjini E, Kuchro\u2026",
+   "journal": "Nature immunology",
+   "year": "2019",
+   "doi": "10.1038/s41590-019-0312-6",
+   "preprint": false,
+   "cited_by": 1895,
+   "abstract": "T cell dysfunction is a hallmark of many cancers, but the basis for T cell dysfunction and the mechanisms by which antibody blockade of the inhibitory receptor PD-1 (anti-PD-1) reinvigorates T cells are not fully understood. Here we show that such therapy acts on a specific subpopulation of exhausted CD8+ tumor-infiltrating lymphocytes (TILs). Dysfunctional CD8+ TILs possess canonical epigenetic and transcriptional features of exhaustion that mirror those seen in chronic viral infection. Exhausted CD8+ TILs include a subpopulation of 'progenitor exhausted' cells that retain polyfunctionality, persist long term and differentiate into 'terminally exhausted' TILs. Consequently, progenitor exhausted CD8+ TILs are better able to control tumor growth than are terminally exhausted T cells. Progenitor exhausted TILs can respond to anti-PD-1 therapy, but terminally exhausted TILs cannot. Patient\u2026"
+  },
+  "PMID:30388456": {
+   "pmid": "30388456",
+   "id": "PMID:30388456",
+   "title": "Defining T Cell States Associated with Response to Checkpoint Immunotherapy in Melanoma.",
+   "authors": "Sade-Feldman M, Yizhak K, Bjorgaard SL, Ray JP, de Boer CG, Jenkins RW, Lieb DJ, Chen JH, Frederick DT, Barzily-Rokni M\u2026",
+   "journal": "Cell",
+   "year": "2018",
+   "doi": "10.1016/j.cell.2018.10.038",
+   "preprint": false,
+   "cited_by": 1721,
+   "abstract": "Treatment of cancer has been revolutionized by immune checkpoint blockade therapies. Despite the high rate of response in advanced melanoma, the majority of patients succumb to disease. To\u00a0identify factors associated with success or failure of checkpoint therapy, we profiled transcriptomes of 16,291 individual immune cells from 48 tumor samples of melanoma patients treated with checkpoint inhibitors. Two distinct states of CD8+ T\u00a0cells were defined by clustering and associated with patient tumor regression or progression. A single transcription factor, TCF7, was visualized within CD8+ T\u00a0cells in fixed tumor samples and predicted positive clinical outcome in an independent cohort of checkpoint-treated patients. We delineated the\u00a0epigenetic landscape and clonality of these T\u00a0cell states and demonstrated enhanced antitumor immunity by targeting novel combinations of factors in exhausted ce\u2026"
+  },
+  "PMID:31207603": {
+   "pmid": "31207603",
+   "id": "PMID:31207603",
+   "title": "TOX transcriptionally and epigenetically programs CD8+ T cell exhaustion.",
+   "authors": "Khan O, Giles JR, McDonald S, Manne S, Ngiow SF, Patel KP, Werner MT, Huang AC, Alexander KA, Wu JE, Attanasio J, Yan P\u2026",
+   "journal": "Nature",
+   "year": "2019",
+   "doi": "10.1038/s41586-019-1325-x",
+   "preprint": false,
+   "cited_by": 1457,
+   "abstract": "Exhausted CD8+ T (Tex) cells in chronic infections and cancer have limited effector function, high co-expression of inhibitory\u00a0receptors and extensive transcriptional changes compared with effector (Teff) or memory (Tmem) CD8+ T cells. Tex cells are important clinical targets of checkpoint blockade and other immunotherapies. Epigenetically, Tex cells are a distinct immune subset, with a unique chromatin landscape compared with Teff and Tmem cells. However, the mechanisms that govern the transcriptional and epigenetic development of Tex cells remain unknown. Here we identify the HMG-box transcription factor TOX as a central regulator of Tex cells in mice. TOX is largely dispensable for the formation of Teff and Tmem cells, but it is critical for exhaustion: in the absence of TOX, Tex cells do not form. TOX is induced by calcineurin and NFAT2, and operates in a feed-forward loop in which\u2026"
+  },
+  "PMID:31570879": {
+   "pmid": "31570879",
+   "id": "PMID:31570879",
+   "title": "Defining 'T cell exhaustion'.",
+   "authors": "Blank CU, Haining WN, Held W, Hogan PG, Kallies A, Lugli E, Lynn RC, Philip M, Rao A, Restifo NP, Schietinger A, Schuma\u2026",
+   "journal": "Nature reviews. Immunology",
+   "year": "2019",
+   "doi": "10.1038/s41577-019-0221-9",
+   "preprint": false,
+   "cited_by": 1338,
+   "abstract": "'T cell exhaustion' is a broad term that has been used to describe the response of T cells to chronic antigen stimulation, first in the setting of chronic viral infection but more recently in response to tumours. Understanding the features of and pathways to exhaustion has crucial implications for the success of checkpoint blockade and adoptive T cell transfer therapies. In this Viewpoint article, 18 experts in the field tell us what exhaustion means to them, ranging from complete lack of effector function to altered functionality to prevent immunopathology, with potential differences between cancer and chronic infection. Their responses highlight the dichotomy between terminally differentiated exhausted T cells that are TCF1- and the self-renewing TCF1+ population from which they derive. These TCF1+ cells are considered by some to have stem cell-like properties akin to memory T cell po\u2026"
+  },
+  "PMID:32024970": {
+   "pmid": "32024970",
+   "id": "PMID:32024970",
+   "title": "CD8+ T cell states in human cancer: insights from single-cell analysis.",
+   "authors": "van der Leun AM, Thommen DS, Schumacher TN.",
+   "journal": "Nature reviews. Cancer",
+   "year": "2020",
+   "doi": "10.1038/s41568-019-0235-4",
+   "preprint": false,
+   "cited_by": 1244,
+   "abstract": "The T cell infiltrates that are formed in human cancers are a modifier of natural disease progression and also determine the probability of clinical response to cancer immunotherapies. Recent technological advances that allow the single-cell analysis of phenotypic and transcriptional states have revealed a vast heterogeneity of intratumoural T cell states, both within and between patients, and the observation of this heterogeneity makes it critical to understand the relationship between individual T cell states and therapy response. This Review covers our current knowledge of the T cell states that are present in human tumours and the role that different T cell populations have been hypothesized to play within the tumour microenvironment, with a particular focus on CD8+ T cells. The three key models that are discussed herein are as follows: (1) the dysfunction of T cells in human cancer\u2026"
+  },
+  "PMID:32396847": {
+   "pmid": "32396847",
+   "id": "PMID:32396847",
+   "title": "Developmental Relationships of Four Exhausted CD8+ T Cell Subsets Reveals Underlying Transcriptional and Epigenetic Landscape Control Mechanisms.",
+   "authors": "Beltra JC, Manne S, Abdel-Hakeem MS, Kurachi M, Giles JR, Chen Z, Casella V, Ngiow SF, Khan O, Huang YJ, Yan P, Nzingha\u2026",
+   "journal": "Immunity",
+   "year": "2020",
+   "doi": "10.1016/j.immuni.2020.04.014",
+   "preprint": false,
+   "cited_by": 1024,
+   "abstract": "CD8+ T\u00a0cell exhaustion is a major barrier to current anti-cancer immunotherapies. Despite this, the developmental biology of exhausted CD8+ T\u00a0cells (Tex) remains poorly defined, restraining improvement of strategies aimed at \"re-invigorating\" Tex cells. Here, we defined a four-cell-stage developmental framework for Tex cells. Two TCF1+ progenitor subsets were identified, one tissue restricted and quiescent and one more blood accessible, that gradually lost TCF1 as it divided and converted to a third intermediate Tex subset. This intermediate subset re-engaged some effector biology and increased upon PD-L1 blockade but ultimately converted into a fourth, terminally exhausted subset. By using transcriptional and epigenetic analyses, we identified the control mechanisms underlying subset transitions and defined a key interplay between TCF1, T-bet, and Tox in the process. These data reveal\u2026"
+  },
+  "PMID:37332039": {
+   "pmid": "37332039",
+   "id": "PMID:37332039",
+   "title": "T cells in health and disease.",
+   "authors": "Sun L, Su Y, Jiao A, Wang X, Zhang B.",
+   "journal": "Signal transduction and targeted therapy",
+   "year": "2023",
+   "doi": "10.1038/s41392-023-01471-y",
+   "preprint": false,
+   "cited_by": 837,
+   "abstract": "T cells are crucial for immune functions to maintain health and prevent disease. T cell development occurs in a stepwise process in the thymus and mainly generates CD4+ and CD8+ T cell subsets. Upon antigen stimulation, na\u00efve T cells differentiate into CD4+ helper and CD8+ cytotoxic effector and memory cells, mediating direct killing, diverse immune regulatory function, and long-term protection. In response to acute and chronic infections and tumors, T cells adopt distinct differentiation trajectories and develop into a range of heterogeneous populations with various phenotype, differentiation potential, and functionality under precise and elaborate regulations of transcriptional and epigenetic programs. Abnormal T-cell immunity can initiate and promote the pathogenesis of autoimmune diseases. In this review, we summarize the current understanding of T cell development, CD4+ and CD8+ T\u2026"
+  },
+  "PMID:36216928": {
+   "pmid": "36216928",
+   "id": "PMID:36216928",
+   "title": "Clinical implications of T cell exhaustion for cancer immunotherapy.",
+   "authors": "Chow A, Perica K, Klebanoff CA, Wolchok JD.",
+   "journal": "Nature reviews. Clinical oncology",
+   "year": "2022",
+   "doi": "10.1038/s41571-022-00689-z",
+   "preprint": false,
+   "cited_by": 812,
+   "abstract": "Immunotherapy has been a remarkable clinical advancement in the treatment of cancer. T cells are pivotal to the efficacy of current cancer immunotherapies, including immune-checkpoint inhibitors and adoptive cell therapies. However, cancer is associated with T cell exhaustion, a hypofunctional state characterized by progressive loss of T cell effector functions and self-renewal capacity. The 'un-exhausting' of T cells in the tumour microenvironment is commonly regarded as a key mechanism of action for immune-checkpoint inhibitors, and T cell exhaustion is considered a pathway of resistance for cellular immunotherapies. Several elegant studies have provided important insights into the transcriptional and epigenetic programmes that govern T cell exhaustion. In this Review, we highlight recent discoveries related to the immunobiology of T cell exhaustion that offer a more nuanced perspecti\u2026"
+  },
+  "PMID:23080391": {
+   "pmid": "23080391",
+   "id": "PMID:23080391",
+   "title": "Transcriptional control of effector and memory CD8+ T cell differentiation.",
+   "authors": "Kaech SM, Cui W.",
+   "journal": "Nature reviews. Immunology",
+   "year": "2012",
+   "doi": "10.1038/nri3307",
+   "preprint": false,
+   "cited_by": 1353,
+   "abstract": "During an infection, T cells can differentiate into multiple types of effector and memory T cells, which help to mediate pathogen clearance and provide long-term protective immunity. These cells can vary in their phenotype, function and location, and in their long-term fate in terms of their ability to populate the memory T cell pool. Over the past decade, the signalling pathways and transcriptional programmes that regulate the formation of heterogeneous populations of effector and memory CD8(+) T cells have started to be characterized, and this Review discusses the major advances in these areas."
+  },
+  "PMID:26205583": {
+   "pmid": "26205583",
+   "id": "PMID:26205583",
+   "title": "Molecular and cellular insights into T cell exhaustion.",
+   "authors": "Wherry EJ, Kurachi M.",
+   "journal": "Nature reviews. Immunology",
+   "year": "2015",
+   "doi": "10.1038/nri3862",
+   "preprint": false,
+   "cited_by": 3771,
+   "abstract": "In chronic infections and cancer, T cells are exposed to persistent antigen and/or inflammatory signals. This scenario is often associated with the deterioration of T cell function: a state called 'exhaustion'. Exhausted T cells lose robust effector functions, express multiple inhibitory receptors and are defined by an altered transcriptional programme. T cell exhaustion is often associated with inefficient control of persisting infections and tumours, but revitalization of exhausted T cells can reinvigorate immunity. Here, we review recent advances that provide a clearer molecular understanding of T cell exhaustion and reveal new therapeutic targets for persisting infections and cancer."
+  },
+  "PMID:32132681": {
+   "pmid": "32132681",
+   "id": "PMID:32132681",
+   "title": "Defining trained immunity and its role in health and disease.",
+   "authors": "Netea MG, Dom\u00ednguez-Andr\u00e9s J, Barreiro LB, Chavakis T, Divangahi M, Fuchs E, Joosten LAB, van der Meer JWM, Mhlanga MM,\u2026",
+   "journal": "Nature reviews. Immunology",
+   "year": "2020",
+   "doi": "10.1038/s41577-020-0285-6",
+   "preprint": false,
+   "cited_by": 2059,
+   "abstract": "Immune memory is a defining feature of the acquired immune system, but activation of the innate immune system can also result in enhanced responsiveness to subsequent triggers. This process has been termed 'trained immunity', a de facto innate immune memory. Research in the past decade has pointed to the broad benefits of trained immunity for host defence but has also suggested potentially detrimental outcomes in immune-mediated and chronic inflammatory diseases. Here we define 'trained immunity' as a biological process and discuss the innate stimuli and the epigenetic and metabolic reprogramming events that shape the induction of trained immunity."
+  },
+  "PMID:32661059": {
+   "pmid": "32661059",
+   "id": "PMID:32661059",
+   "title": "Impaired type I interferon activity and inflammatory responses in severe COVID-19 patients.",
+   "authors": "Hadjadj J, Yatim N, Barnabei L, Corneau A, Boussier J, Smith N, P\u00e9r\u00e9 H, Charbit B, Bondet V, Chenevier-Gobeaux C, Breil\u2026",
+   "journal": "Science (New York, N.Y.)",
+   "year": "2020",
+   "doi": "10.1126/science.abc6027",
+   "preprint": false,
+   "cited_by": 2582,
+   "abstract": "Coronavirus disease 2019 (COVID-19) is characterized by distinct patterns of disease progression that suggest diverse host immune responses. We performed an integrated immune analysis on a cohort of 50 COVID-19 patients with various disease severity. A distinct phenotype was observed in severe and critical patients, consisting of a highly impaired interferon (IFN) type I response (characterized by no IFN-\u03b2 and low IFN-\u03b1 production and activity), which was associated with a persistent blood viral load and an exacerbated inflammatory response. Inflammation was partially driven by the transcriptional factor nuclear factor-\u03baB and characterized by increased tumor necrosis factor-\u03b1 and interleukin-6 production and signaling. These data suggest that type I IFN deficiency in the blood could be a hallmark of severe COVID-19 and provide a rationale for combined therapeutic approaches."
+  }
+ },
+ "datasets": {
+  "GSE343748": {
+   "accession": "GSE343748",
+   "title": "T cell exhastion is programmed by dynamic 3D genome reorganization [ATAC-seq]",
+   "summary": "CTCF is recognized for its role in facilitating long-range chromatin interactions and 3D genome organization. In CD8+ T cells responding to chronic infection, CTCF undergoes redistribution to activate the exhausted cytotoxic effector (Tex-eff) program while simultaneously utilizing its insulation function to regulate the fate of progenitor exhausted T (Tpex) cells.",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 3,
+   "date": "2026/09/11",
+   "pubmed_ids": [],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE343748"
+  },
+  "GSE343745": {
+   "accession": "GSE343745",
+   "title": "T cell exhastion is programmed by dynamic 3D genome reorganization [CUT&Run]",
+   "summary": "CTCF is recognized for its role in facilitating long-range chromatin interactions and 3D genome organization. In CD8+ T cells responding to chronic infection, CTCF undergoes redistribution to activate the exhausted cytotoxic effector (Tex-eff) program while simultaneously utilizing its insulation function to regulate the fate of precursors to stem-like exhausted T (Tex-prec) cells.",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 1,
+   "date": "2026/09/11",
+   "pubmed_ids": [],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE343745"
+  },
+  "GSE284090": {
+   "accession": "GSE284090",
+   "title": "TEX cell fate and differentiation are shaped by 3D genome reorganization and chromatin architecture integrity [D3]",
+   "summary": "CTCF is recognized for its role in facilitating long-range chromatin interactions and 3D genome organization. In CD8+ T cells responding to chronic infection, CTCF undergoes redistribution to activate the exhausted cytotoxic effector (Tex-eff) program while simultaneously utilizing its insulation function to regulate the fate of precursors to stem-like exhausted T (Tex-prec) cells.",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 18,
+   "date": "2026/06/03",
+   "pubmed_ids": [],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE284090"
+  },
+  "GSE275497": {
+   "accession": "GSE275497",
+   "title": "TEX cell fate and differentiation are shaped by 3D genome reorganization and chromatin architecture integrity  [ATAC-seq]",
+   "summary": "CTCF is recognized for its role in facilitating long-range chromatin interactions and 3D genome organization. In CD8+ T cells responding to chronic infection, CTCF undergoes redistribution to activate the exhausted cytotoxic effector (Tex-eff) program while simultaneously utilizing its insulation function to regulate the fate of precursors to stem-like exhausted T (Tex-prec) cells.",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 6,
+   "date": "2026/06/03",
+   "pubmed_ids": [],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275497"
+  },
+  "GSE300984": {
+   "accession": "GSE300984",
+   "title": "Single-cell multiomics reveals a shared regulatory program in progenitor CD8 T cells and follicular helper CD4 T cell during viral infection",
+   "summary": "We generated a new single-cell multiomic (scRNA-seq + scATAC-seq) dataset of CD4 and CD8 T cells responding to acute and chronic viral infection. To explore potential regulatory functions that might be shared by different populations of T cells, we generated a new single-cell multiomic (scRNA-seq + scATAC-seq) data for CD4 and CD8 T cells responding to acute and chronic viral infection. By integrating this new dataset with a compendium of 285 published bulk ATAC-seq datasets, we were able to id\u2026",
+   "type": "Expression profiling by high throughput sequencing; Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 6,
+   "date": "2026/05/08",
+   "pubmed_ids": [
+    "42248920"
+   ],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE300984"
+  },
+  "GSE310322": {
+   "accession": "GSE310322",
+   "title": "Mapping self-associating chromatin hubs identifies Id proteins as key determinants of exhausted T cell fate",
+   "summary": "This study aims to define how Id2 and Id3 regulate exhausted CD8+ T cell fate. We found that Id2 deletion reduced the Tex-eff population, whereas Id3 ablation in CD4-Cre mice diminished Tpex cells, indicating subset-specific roles for Id2 and Id3. Mechanistically, E2A is a major target of Id2/3, and Runx3 interacts with E2A. Pulldown of Id2/3 recovered both E2A and Runx3, supporting an Id2/3?E2A?Runx3 regulatory complex. To map the genomic occupancy of Id2 and Id3, we expressed 3\u00d7T7-tagged Id2\u2026",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 37,
+   "date": "2026/04/20",
+   "pubmed_ids": [],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE310322"
+  },
+  "GSE288039": {
+   "accession": "GSE288039",
+   "title": "Kr\u00fcppel-like factor 2 programs early exhausted T cell states and restrains antiviral immunity [ATAC-seq]",
+   "summary": "A key challenge in improving T cell-mediated immunotherapies is defining the factors that regulate functional versus exhaustion T cell fates. Through multi-round in vivo CRISPR screens in chronic LCMV Clone 13 infection and transcription factor (TF) benchmarking, we identified KLF2 as a top TF driving CX3CR1\u207a effector-like exhausted cell (Texeff-like) differentiation. Overexpression of KLF2 converted CX3CR1\u207b cells into Texeff-like cells by direct engagement of key loci. Conversely, loss of KLF2\u2026",
+   "type": "Genome binding/occupancy profiling by high throughput sequencing",
+   "organism": "Mus musculus",
+   "n_samples": 12,
+   "date": "2026/04/18",
+   "pubmed_ids": [
+    "42049034"
+   ],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE288039"
+  },
+  "GSE310256": {
+   "accession": "GSE310256",
+   "title": "Mapping self-associating chromatin hubs identifies Id proteins as key determinants of exhausted T cell fate",
+   "summary": "The goal of this study is to determine how transcription cofactors, Id2 and Id3, mediate differential regulation  of exhausted CD8 T cell fate decision and differentiation at the early stage of responses to chronic viral infection.",
+   "type": "Expression profiling by high throughput sequencing; Other",
+   "organism": "Mus musculus",
+   "n_samples": 4,
+   "date": "2026/04/15",
+   "pubmed_ids": [
+    "42409948"
+   ],
+   "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE310256"
+  },
+  "SRX183950": {
+   "antigen": "Ep300",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX183950"
+  },
+  "SRX2399084": {
+   "antigen": "Bcl11b",
+   "cell": "Thymocytes",
+   "url": "https://chip-atlas.org/view?id=SRX2399084"
+  },
+  "SRX037909": {
+   "antigen": "Stat3",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX037909"
+  },
+  "SRX7348146": {
+   "antigen": "Smc1a",
+   "cell": "CD4 CD8 double positive cells",
+   "url": "https://chip-atlas.org/view?id=SRX7348146"
+  },
+  "SRX183953": {
+   "antigen": "Ep300",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX183953"
+  },
+  "SRX172347": {
+   "antigen": "Jund",
+   "cell": "Th17 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX172347"
+  },
+  "SRX2341417": {
+   "antigen": "Foxp3",
+   "cell": "Treg",
+   "url": "https://chip-atlas.org/view?id=SRX2341417"
+  },
+  "SRX183951": {
+   "antigen": "Ep300",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX183951"
+  },
+  "SRX7348144": {
+   "antigen": "Smc1a",
+   "cell": "CD4 CD8 double positive cells",
+   "url": "https://chip-atlas.org/view?id=SRX7348144"
+  },
+  "SRX107338": {
+   "antigen": "Tbx21",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX107338"
+  },
+  "SRX13440924": {
+   "antigen": "Satb1",
+   "cell": "Thymus",
+   "url": "https://chip-atlas.org/view?id=SRX13440924"
+  },
+  "SRX183935": {
+   "antigen": "Ep300",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX183935"
+  },
+  "SRX4510927": {
+   "antigen": "Eomes",
+   "cell": "OT-1",
+   "url": "https://chip-atlas.org/view?id=SRX4510927"
+  },
+  "SRX183934": {
+   "antigen": "Ep300",
+   "cell": "Th1 Cells",
+   "url": "https://chip-atlas.org/view?id=SRX183934"
+  },
+  "SRX20904790": {
+   "antigen": "Rela",
+   "cell": "Dendritic Cells",
+   "url": "https://chip-atlas.org/view?id=SRX20904790"
+  }
+ }
+}

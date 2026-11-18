@@ -3,7 +3,7 @@
 **PeakAnnoAgent is an AI agent that turns a ChIP-seq, ATAC-seq, CUT&RUN or CUT&Tag peak file into an
 evidence-linked biological report: annotation, pathways, motifs, regulators and literature in one run.**
 
-**Web page:** start it with `peakanno-agent web --port 8766 --open`, then open
+**Web page:** start it with `peakanno-agent web --open`, then open
 [http://127.0.0.1:8766](http://127.0.0.1:8766) to upload peaks and run the analysis in your browser
 ([details](#run-it-in-your-browser)).
 
@@ -13,7 +13,7 @@ You give it three things:
 - a reference genome;
 - what you already know about the biology.
 
-It runs a full Bioconductor workflow and searches public data and the literature. It then writes an
+It annotates the peaks, runs pathway and motif enrichment, and searches public data and the literature. It then writes an
 HTML report with testable hypotheses, in which **every statement links to the result it came from**.
 
 You can run it in four ways:
@@ -21,7 +21,7 @@ You can run it in four ways:
 - as a **web app**, where you upload peaks, watch the agent work, then search the results and ask Claude about them;
 - as an **LLM agent** from the command line, where Claude plans the analysis and interprets the results;
 - as a **fixed, deterministic pipeline** that needs no API key;
-- as a plain **R package**.
+- as a **fast annotator** only (`peakanno-agent annotate`), from the command line, Python or R.
 
 <p align="left">
   <img src="docs/figures/report.png" width="760" alt="PeakAnnoAgent HTML report">
@@ -33,7 +33,7 @@ PeakAnnoAgent runs on your own computer; the web app is a local page, not a host
 with one command, then open the run page:
 
 ```bash
-peakanno-agent web --port 8766 --open
+peakanno-agent web --open
 ```
 
 **Run page: [http://127.0.0.1:8766](http://127.0.0.1:8766)** (works while the command above is running)
@@ -62,67 +62,65 @@ Then open the same run page. `ANTHROPIC_API_KEY` is only needed for agent mode a
 
 | | What it does | Built on |
 |---|---|---|
-| **Peak QC** | Duplicates, non-standard contigs, blacklist removal, width and chromosome checks | data.table |
-| **Annotation** | Nearest gene, bidirectional promoters, genomic-region distribution, TSS profiles | ChIPpeakAnno, ChIPseeker, rGREAT, HOMER |
-| **Pathways** | GO, KEGG, Reactome, MSigDB (Hallmark, ImmuneSigDB, …) and your own GMT signatures, against a genome background | clusterProfiler, ReactomePA, msigdbr |
-| **Pathway networks** | Enrichment maps with pathway modules, gene–pathway networks with hub genes, Cytoscape-ready tables; EnrichmentMap/AutoAnnotate-style clustered networks with interactive HTML | igraph, ggplot2, [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) |
-| **Pathway consensus** | The same gene lists through several independent engines (local ORA, and with network access Enrichr, g:Profiler, Reactome, STRING, clusterProfiler, fgsea), combined into consensus themes with tiers and key driver genes | [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) |
-| **Motifs** | Known-motif enrichment against a GC-matched background, genome-wide or distal-only | monaLisa + JASPAR 2024, HOMER |
+| **Peak QC** | Duplicates, non-standard contigs, blacklist removal, width and chromosome checks | built in |
+| **Annotation** | About a second for 100,000 peaks, against GENCODE, RefSeq, UCSC or any GTF: genomic feature per peak, nearest gene, bidirectional and alternative promoters; feature pie chart, feature bar, distance-to-TSS, upset, region distribution, TSS profile and chromosome coverage figures | built in |
+| **Pathways** | GO, KEGG, Reactome, WikiPathways, Hallmark, ImmuneSigDB, cell types, TF targets and your own GMT signatures, against a genome background | built in; gene sets from MSigDB and Enrichr |
+| **Pathway networks** | Enrichment maps with pathway modules, gene–pathway networks with hub genes, Cytoscape-ready tables; EnrichmentMap/AutoAnnotate-style clustered networks with interactive HTML | built in, [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) |
+| **Pathway consensus** | The same gene lists through several independent engines, combined into consensus themes with tiers and key driver genes | [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent) |
+| **Motifs** | Known-motif enrichment, genome-wide or distal-only (optional) | HOMER |
 | **Regulators** | Co-binding with every public ChIP-seq/ATAC-seq experiment, and overlap with known TF targets | ChIP-Atlas |
 | **Your biology** | Positive-control genes and TFs, RNA-seq integration, assay-aware settings | — |
 | **Context** | Related papers and public datasets | Europe PMC, NCBI GEO |
-| **Report** | Self-contained HTML: summary, hypotheses with next experiments, figures, tables, igv.js browser, Methods with package versions | — |
+| **Report** | Self-contained HTML: summary, hypotheses with next experiments, figures, tables, igv.js browser, Methods | — |
 
 All figures follow Nature's artwork guidelines. Each is a vector PDF with editable Helvetica text,
 ready for Illustrator.
 
 ## Installation
 
-Built R and Python packages are available in the [v1.0.2 release](https://github.com/helenhuangmath/PeakAnnoAgent/releases/tag/v1.0.2). See [package installation and publishing](docs/package_distribution.md) for direct installation, local builds, PyPI and CRAN instructions.
-
-PeakAnnoAgent has two parts:
-
-- an **R engine**, which does all the statistics and draws the figures;
-- a **Python agent**, which plans the analysis, calls public resources and writes the report.
+PeakAnnoAgent is one Python package. It needs Python 3.10 or later, NumPy and Matplotlib; there is no
+R or Bioconductor dependency.
 
 ```bash
 git clone https://github.com/helenhuangmath/PeakAnnoAgent.git
 cd PeakAnnoAgent
+pip install -e .                 # annotation, enrichment, the deterministic pipeline
+pip install -e ".[agent]"        # Claude agent mode (Anthropic SDK)
+pip install -e ".[web]"          # web app (Flask)
+pip install -e ".[mcp]"          # optional: use from Claude Code / Claude Desktop
 
-# 1. R engine: Bioconductor packages for annotation, enrichment and motifs
-Rscript scripts/install_dependencies.R
-
-# 2. Python agent
-pip install -e "agent[agent]"    # Claude agent mode (Anthropic SDK)
-pip install -e "agent[web]"      # web app (Flask)
-pip install -e "agent[mcp]"      # optional: use from Claude Code / Claude Desktop
-
-# 3. Check that everything is found
-peakanno-agent check --genome mm10
+peakanno-agent check             # what was found
 ```
 
-To install only the R package:
+Gene models and gene-set libraries are downloaded the first time they are used (20-40 MB per genome
+build) and cached in `~/.cache/peakannoagent`; set `PEAKANNOAGENT_CACHE` to move the cache.
+
+<details>
+<summary><b>Optional tools</b></summary>
+
+- **Claude API access** for agent mode and the chat. Set `ANTHROPIC_API_KEY`.
+- [HOMER](http://homer.ucsd.edu/homer/) with its genome package, and `findMotifsGenome.pl` on `PATH`,
+  for motif enrichment. Without it the motif step is skipped.
+- [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) (`pip install git+https://github.com/helenhuangmath/SimpNetworkViz`), for the clustered pathway networks.
+- [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent), cloned next to this repository with its `.venv` set up, or `PEAKANNOAGENT_PATHWAYAGENT` pointing at its command, for the cross-tool pathway consensus.
+- Steps whose tool is missing are reported as skipped; `peakanno-agent check` shows what was found.
+
+</details>
+
+<details>
+<summary><b>Calling it from R</b></summary>
+
+A small R package in [r/PeakAnnoAgent](r/PeakAnnoAgent) wraps the command line, for people who
+work in R. It runs the Python program and returns its tables as data frames; it does no analysis
+itself and has no Bioconductor dependency.
 
 ```r
 # install.packages("remotes")
-remotes::install_github("helenhuangmath/PeakAnnoAgent")
+remotes::install_github("helenhuangmath/PeakAnnoAgent", subdir = "r/PeakAnnoAgent")
+library(PeakAnnoAgent)
+res <- annotate_peaks("peaks.bed", genome = "hg38", reference = "gencode")
+head(res$annotation)
 ```
-
-<details>
-<summary><b>Requirements and optional tools</b></summary>
-
-- **R ≥ 4.1** with Bioconductor. `install_dependencies.R` installs:
-  - ChIPpeakAnno, ChIPseeker, clusterProfiler, ReactomePA, msigdbr, monaLisa, JASPAR2024 and igraph;
-  - the TxDb, OrgDb and BSgenome packages for mm10 and hg38.
-- **Python ≥ 3.10**. With `--no-llm`, the Python core uses only the standard library; the R analysis dependencies are still required.
-- **Claude API access** for agent mode. Set `ANTHROPIC_API_KEY`.
-- **Optional:**
-  - [HOMER](http://homer.ucsd.edu/homer/), with `findMotifsGenome.pl` on `PATH`;
-  - `rGREAT`, for region-based enrichment;
-  - [SimpNetworkViz](https://github.com/helenhuangmath/SimpNetworkViz) (`pip install git+https://github.com/helenhuangmath/SimpNetworkViz`), for the clustered pathway networks;
-  - [PathwayAgent](https://github.com/helenhuangmath/PathwayAgent), cloned next to this repository with its `.venv` set up, or `PEAKANNOAGENT_PATHWAYAGENT` pointing at its command, for the cross-tool pathway consensus.
-  - Steps whose tool is missing are reported as skipped; `peakanno-agent check` shows what was found.
-- If your Bioconductor packages live in a different R installation, set `PEAKANNOAGENT_RSCRIPT=/path/to/Rscript`.
 
 </details>
 
@@ -133,10 +131,10 @@ on mm10. It comes with known biology, exhaustion gene signatures and an RNA-seq 
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_tex_peaks_mm10.bed --genome mm10 \
-  --biology-file examples/data/example_tex_biology.json \
-  --gmt examples/data/example_tex_signatures.gmt \
-  --rnaseq examples/data/example_tex_rnaseq_de.tsv \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
   --out results/tex --prefix tex
 
 open results/tex/tex_report.html
@@ -167,10 +165,10 @@ You can give the same fields as a JSON file (`--biology-file`) or as free-text n
 ### Use the web app
 
 ```bash
-peakanno-agent web --port 8766 --open          # http://127.0.0.1:8766, runs are written to ./runs
+peakanno-agent web --open          # http://127.0.0.1:8766, runs are written to ./runs
 ```
 
-The home page has Run your analysis, Examples and Runs tabs. The analysis form has three steps: your peaks, what you know, how to run. The run page shows the
+The home page is a three-step form: your peaks, what you know, how to run. The run page shows the
 analysis in separate parts, with a sidebar to move between them:
 
 | Part | What it shows |
@@ -200,7 +198,9 @@ them), and a link to download the BED file:
 | H3K4me3 ChIP-seq, mouse bone-marrow macrophages | mm10 | 800 strongest | ENCODE ENCSR916IRY, file ENCFF813FPW (replicated peaks) |
 
 The ENCODE sets are real data with a known answer (the CTCF motif should dominate; H3K4me3 should sit
-on promoters), so they are a good check that the installation works. Run an example locally to explore the run page, search and chat.
+on promoters), so they are a good check that the installation works. The two demo results under
+`docs/demo/` are listed automatically, so the run page, search and chat can be explored before R or an
+API key is set up.
 
 Finished runs from the command line can be opened in the app too (*Open an existing result folder*).
 
@@ -233,28 +233,128 @@ Finished runs from the command line can be opened in the app too (*Open an exist
 | **Offline**: no ChIP-Atlas, Europe PMC or GEO calls | add `--offline` | nothing |
 | **Claude Code / Desktop as the agent** | `claude mcp add peakanno -- python -m peakannoagent.mcp_server` | MCP |
 
-### Use the R engine directly
+### Annotate only
 
-Every agent tool is also an R function:
+`annotate` runs just the annotation: no agent, no enrichment, no report. It takes about a second once
+the gene models are cached.
 
-```r
-library(PeakAnnoAgent)
-
-anno <- run_agent_tool("annotate_peaks", list(
-  peaks = "peaks.bed", genome = "mm10", out_dir = "results/r", prefix = "tex"))
-
-enr <- run_agent_tool("enrich_pathways", list(
-  gene_sets = anno$gene_sets, universe = anno$universe, genome = "mm10",
-  methods = c("go_bp", "msigdb_H"), out_dir = "results/r", prefix = "tex"))
-
-mot <- run_agent_tool("find_motifs", list(
-  peaks = "peaks.bed", genome = "mm10", out_dir = "results/r", prefix = "tex"))
-
-enr$pathway_modules$go_bp     # pathway modules from the enrichment map
+```bash
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results/anno
 ```
 
-Individual steps also run from the command line (`Rscript scripts/peak_agent.R --help`); see the
-[R command-line reference](docs/r_cli.md).
+It writes the per-peak table, the feature and region distributions, the gene sets, and eight figures
+(see [Example output](#example-output)), and prints the feature breakdown.
+
+### Gene models
+
+Gene models are parsed once, cached, and then peaks are annotated with array lookups. Choose the gene
+models per run, for `run` and `annotate` alike:
+
+```bash
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results                           # GENCODE v46 basic (default)
+peakanno-agent annotate --peaks peaks.bed --genome mm10 --out results --reference gencode:vM25  # a chosen release
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results --reference refseq        # NCBI RefSeq
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results --reference ucsc          # UCSC knownGene
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results --gtf my_annotation.gtf.gz
+peakanno-agent annotate --peaks peaks.bed --genome hg38 --out results --palette spectral        # figure colours (default: chippeakanno)
+```
+
+The web form has the same choice under **Gene annotation**. Peaks are annotated against
+protein-coding genes by default; `--gene-types all` includes lncRNAs and pseudogenes.
+
+### Use it from Python
+
+```python
+from peakannoagent import build_reference, read_peak_file, annotate_peaks, run_annotation
+
+ref   = build_reference("hg38", "gencode")
+peaks = read_peak_file("peaks.bed")
+table = annotate_peaks(peaks, ref)                       # dict of columns, one row per peak
+res   = run_annotation(peaks, "results/py", "run", genome="hg38", reference=ref)   # tables + figures
+```
+
+## Demo: with and without the agent
+
+> The two demo reports below were generated with version 1.0.2, when the analysis ran in R. The
+> report layout is the same today; annotation file names, the motif backend and the Methods text
+> differ. Run the example yourself to see current output.
+
+The same 351 example peaks were run twice: once with Claude as the agent, and once with `--no-llm`.
+Historical example runs are bundled under [docs/demo/](docs/demo/), so you can explore the reports without
+running anything. These pre-1.0.2 outputs illustrate the interface; re-run them with 1.0.2 before using
+quantitative annotation or overlap results.
+
+| | With agent | Without agent (`--no-llm`) |
+|---|---|---|
+| **Report** | [open in browser](https://raw.githack.com/helenhuangmath/PeakAnnoAgent/main/docs/demo/with_agent/tex_report.html) · [file](docs/demo/with_agent/tex_report.html) | [open in browser](https://raw.githack.com/helenhuangmath/PeakAnnoAgent/main/docs/demo/without_agent/tex_report.html) · [file](docs/demo/without_agent/tex_report.html) |
+| **Evidence** | [tex_evidence.json](docs/demo/with_agent/tex_evidence.json) | [tex_evidence.json](docs/demo/without_agent/tex_evidence.json) · [tex_manifest.json](docs/demo/without_agent/tex_manifest.json) |
+| **Figures and tables** | [results/](docs/demo/with_agent/results/) | [results/](docs/demo/without_agent/results/) |
+| **Needs** | `ANTHROPIC_API_KEY` | nothing |
+| **Plan** | Claude chooses steps and settings from the known biology (22 steps) | Fixed plan with default settings (12 steps) |
+| **Promoter window** | −1000/+500 bp, chosen for sharp ATAC peaks | −2000/+500 bp default |
+| **Gene sets** | GO BP, Hallmark, **ImmuneSigDB** (CD8 T-cell system) and the user's exhaustion signatures, promoter vs distal | GO BP, **KEGG**, Hallmark and the user's signatures, all/promoter/distal |
+| **Motifs** | Distal-only scan first (79 % of peaks are distal), then all peaks | All peaks, then distal |
+| **Regulators** | ChIP-Atlas co-binding restricted to immune (Blood) experiments; Tcf7 and Batf target-gene overlap tests | ChIP-Atlas co-binding, all cell classes |
+| **Literature** | Nine targeted queries (TOX, NR4A, TCF1, BATF, exhaustion chromatin), re-queried by citations when the first pass returned only reviews | One generic query built from the biology fields |
+| **Summary** | Titled narrative: what the peaks are, pathways, candidate regulators, caveats | Automated bullet list of key statistics |
+| **Hypotheses** | Three, each with evidence IDs and a proposed next experiment | None |
+| **Statistics** | Identical: computed by the R engine in both modes | Identical |
+
+### With agent
+
+```bash
+peakanno-agent run \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
+  --out results/demo_agent --prefix tex
+```
+
+<p align="left">
+  <a href="docs/demo/with_agent/tex_report.html"><img src="docs/figures/demo/with_agent_report.png" width="760" alt="Report written by the agent: title, summary and hypotheses"></a>
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><a href="docs/demo/with_agent/results/tex_enrich1_enrichment_msigdb_C7-IMMUNESIGDB_dotplot.pdf"><img src="docs/figures/demo/with_agent_immunesigdb_dotplot.png" alt="ImmuneSigDB dot plot"></a><br>
+      <sub><b>ImmuneSigDB.</b> The agent added this immune-specific collection because the cell type is CD8 T cells, and compared promoter with distal peaks.</sub></td>
+    <td width="50%"><a href="docs/demo/with_agent/results/tex_enrich1_enrichment_custom_dotplot.pdf"><img src="docs/figures/demo/with_agent_signatures_dotplot.png" alt="Exhaustion signature dot plot"></a><br>
+      <sub><b>User signatures.</b> Terminal exhaustion is strongest at promoters; progenitor and effector-like signatures appear in both groups.</sub></td>
+  </tr>
+</table>
+
+### Without agent
+
+```bash
+peakanno-agent run \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
+  --out results/demo_no_agent --prefix tex --no-llm
+```
+
+<p align="left">
+  <a href="docs/demo/without_agent/tex_report.html"><img src="docs/figures/demo/without_agent_report.png" width="760" alt="Deterministic report: automated factual summary, no hypotheses"></a>
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><a href="docs/demo/without_agent/results/tex_enrich1_enrichment_kegg_dotplot.pdf"><img src="docs/figures/demo/without_agent_kegg_dotplot.png" alt="KEGG dot plot"></a><br>
+      <sub><b>KEGG.</b> The fixed plan runs the default GO, KEGG and Hallmark collections for all, promoter and distal peaks.</sub></td>
+    <td width="50%"><a href="docs/demo/without_agent/results/tex_enrich1_enrichment_custom_dotplot.pdf"><img src="docs/figures/demo/without_agent_signatures_dotplot.png" alt="Exhaustion signature dot plot"></a><br>
+      <sub><b>User signatures.</b> Same statistics as the agent run: the enrichment is computed by the R engine in both modes.</sub></td>
+  </tr>
+</table>
+
+The pathway enrichment maps from the two runs differ only in module labels and layout
+([with agent](docs/figures/demo/with_agent_enrichment_map.png),
+[without agent](docs/figures/demo/without_agent_enrichment_map.png)); the underlying GO terms are the same.
+
+> The browser links above point to the `main` branch and work once the demo folder is merged. On a
+> clone, open the `tex_report.html` files directly; each report is self-contained and links its tables
+> relative to its own folder.
 
 ## Example output
 
@@ -263,15 +363,21 @@ These figures come from the bundled example, analysed by the agent. The pathway 
 <table>
   <tr>
     <td width="50%"><img src="docs/figures/enrichment_map.png" alt="Pathway enrichment map"><br>
-      <sub><b>Pathway enrichment map.</b> GO terms are linked by shared genes and grouped into labelled modules (M1–M5), each laid out on its own as in Cytoscape AutoAnnotate.</sub></td>
+      <sub><b>Pathway enrichment map.</b> GO terms are linked by shared genes and grouped into labelled modules (M1–M5), each in its own outline.</sub></td>
     <td width="50%"><img src="docs/figures/gene_pathway_network.png" alt="Gene-pathway network"><br>
       <sub><b>Gene–pathway network.</b> Module-lead pathways and their genes; genes shared by several pathways are hubs.</sub></td>
   </tr>
   <tr>
-    <td><img src="docs/figures/dotplot.png" alt="ImmuneSigDB dot plot"><br>
-      <sub><b>Signature enrichment</b> (MSigDB ImmuneSigDB) in promoter vs distal peaks.</sub></td>
+    <td><img src="docs/figures/dotplot.png" alt="Signature dot plot"><br>
+      <sub><b>Signature enrichment</b> (your own gene signatures) in promoter vs distal peaks.</sub></td>
     <td><img src="docs/figures/region_distribution.png" alt="Genomic region distribution"><br>
-      <sub><b>Genomic distribution</b> of peaks (ChIPpeakAnno).</sub></td>
+      <sub><b>Genomic distribution</b> of peaks.</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/figures/feature_pie.png" alt="Feature-type pie chart"><br>
+      <sub><b>Feature types</b> of peaks: the share of peaks at promoters, UTRs, exons, introns, downstream and distal intergenic regions.</sub></td>
+    <td><img src="docs/figures/feature_upset.png" alt="Feature overlap upset plot"><br>
+      <sub><b>Feature overlaps.</b> Peaks by the combination of feature types they overlap.</sub></td>
   </tr>
 </table>
 
@@ -291,19 +397,22 @@ Each run writes:
            peaks + genome + known biology
                           │
                 ┌─────────▼─────────┐        Claude plans the analysis, chooses
-                │  Python agent     │◄──────  settings, and interprets results
-                │  (agent/)         │        (or a fixed plan with --no-llm)
+                │  agent            │◄──────  settings, and interprets results
+                │                   │        (or a fixed plan with --no-llm)
                 └──┬──────────┬─────┘
-       JSON bridge │          │ HTTPS
+        in-process │          │ HTTPS
      ┌─────────────▼───┐   ┌──▼──────────────────────────────┐
-     │ R engine (R/)   │   │ ChIP-Atlas · Europe PMC · GEO    │
-     │ QC, ChIPpeakAnno│   └─────────────────────────────────┘
+     │ analysis engine │   │ ChIP-Atlas · Europe PMC · GEO    │
+     │ QC, annotation, │   └─────────────────────────────────┘
      │ enrichment,     │
      │ networks, motifs│
      └────────┬────────┘
               ▼
    evidence store (E1, E2, …) ──► HTML report with checked citations
 ```
+
+Everything is in one Python package: `peakannoagent.engine` does the analysis, and the rest plans,
+calls public resources and writes the report.
 
 **Why you can trust the report**
 
@@ -318,20 +427,18 @@ Each run writes:
 
 ## Supported genomes
 
-`mm10`, `mm39`, `hg38` and `hg19` (`mouse` and `human` also work). You can use another annotation
-database by setting `--txdb` and `--orgdb` in the R command line.
+`mm10`, `mm39`, `hg38` and `hg19` (`mouse` and `human` also work), with GENCODE, RefSeq, UCSC or
+your own GTF gene models.
 
 ## Documentation
 
-- [Tutorial website](docs/site/): installation, tool usage, outputs and five step-by-step tutorials
-  (Sphinx, Read the Docs theme). Build it with
-  `pip install -r docs/site/requirements.txt && sphinx-build -b html docs/site docs/site/_build/html`;
-  Build it locally with the instructions in the documentation installation guide
-- [Agent guide](agent/README.md): modes, outputs, guardrails, MCP setup
+- [Documentation website](https://helenhuangmath.github.io/PeakAnnoAgent/) (source in [docs/site](docs/site/)):
+  installation, gene models, subcommands, file formats, tutorials, Q & A and the API reference. Build it
+  locally with `pip install -r docs/site/requirements.txt && sphinx-build -b html docs/site docs/site/_build/html`
+- [Demo runs](docs/demo/): complete outputs of the example with and without the agent
 - [Methods](docs/methods.md): statistical methods and the reporting standard
 - [Agent design](docs/agent_design.md): architecture and tool contracts
-- [R command-line reference](docs/r_cli.md): every R step as a standalone command
-- [Vignette](vignettes/peak-annotation-workflow.Rmd): R workflow walkthrough
+- [R interface](r/PeakAnnoAgent): calling the program from R
 
 ## Run completion and reproducibility
 
@@ -343,17 +450,25 @@ Unavailable optional tools are recorded as skipped.
 BED and `Chr/Start/End` TSV inputs use **zero-based, half-open** coordinates. Version 1.0.2 corrects
 coordinate conversion and blacklist boundaries; re-run older analyses before quantitative use.
 Manifests record input SHA-256 hashes and software versions. Use `peakanno-agent check --offline`
-to verify local dependencies. See the [release guide](docs/release_1.0.2.md) for release details and local environment setup.
+to verify local dependencies. See the [release guide](docs/release_1.0.2.md) for clean package,
+container and full biological checks.
+
+## Testing
+
+```bash
+python -m unittest discover -s tests            # engine, agent and web app
+python scripts/smoke_install.py                 # an installed wheel, away from the checkout
+```
 
 ## License and contact
 
-PeakAnnoAgent is released under the [MIT License](LICENSE.md), © 2026 Hua Huang.
+PeakAnnoAgent is released under the [MIT License](LICENSE), © 2026 Hua Huang.
 
 **Author and maintainer:** Hua Huang, University of Pennsylvania.
 Contact: [helenhuang.math@gmail.com](mailto:helenhuang.math@gmail.com). Bug reports and feature
 requests: [GitHub issues](https://github.com/helenhuangmath/PeakAnnoAgent/issues).
-Current release: **v1.0.2** (see [CHANGELOG.md](CHANGELOG.md) and the [release validation guide](docs/release_1.0.2.md)).
+Version prepared: **1.1.0** (see [CHANGELOG.md](CHANGELOG.md)).
 
-PeakAnnoAgent depends on many open-source Bioconductor and CRAN packages, and on public resources
-(ChIP-Atlas, Europe PMC, NCBI GEO, JASPAR, MSigDB). Each has its own license and terms of use. MSigDB
+PeakAnnoAgent uses public resources (GENCODE, UCSC, NCBI RefSeq, MSigDB, Enrichr, ChIP-Atlas,
+Europe PMC, NCBI GEO). Each has its own license and terms of use. MSigDB
 gene sets in particular are under their own license from the Broad Institute and UC San Diego.

@@ -1,42 +1,83 @@
-# Methods Supported by the Framework
+# Methods
 
-This repository separates analysis methods into interchangeable backends.
+How each analysis step works. The Methods section of every report states the same, with the gene
+models and gene-set versions used in that run.
+
+## Peak QC
+
+Peaks are read as zero-based, half-open intervals. QC counts duplicated intervals, peaks on
+non-standard contigs and peaks that overlap a blacklist, reports the width distribution and peaks
+per chromosome, and writes a cleaned peak set (standard chromosomes, no duplicates, no blacklisted
+peaks) that later steps use.
+
+## Gene models
+
+| `reference` | Gene models |
+|---|---|
+| `gencode` (default) | GENCODE basic: hg38 v46, hg19 v46lift37, mm39 vM35, mm10 vM25 |
+| `gencode:<release>` | a chosen GENCODE release |
+| `refseq` | NCBI RefSeq (UCSC ncbiRefSeq GTF) |
+| `ucsc` | UCSC knownGene (UCSC knownGene GTF) |
+| `gtf = <file or URL>` | any GTF with `gene_id` and `transcript_id` |
+
+The GTF is parsed once into sorted arrays of transcription start sites, exons, introns, UTRs (the
+exonic parts outside each transcript's coding range) and transcript ends, and cached. Peaks are
+annotated against protein-coding genes unless `gene_types` is `all`. When a GTF carries no gene
+types, genes with a coding sequence are called protein-coding.
 
 ## Peak annotation
 
-- `chipseeker`: local R/Bioconductor annotation with `ChIPseeker`, `TxDb.*`, and `org.*.eg.db`.
-- `nearest`: lightweight nearest-gene assignment using `TxDb` genes and `GenomicRanges::distanceToNearest`.
-- `chipeakanno`: annotation using `ChIPpeakAnno::annotatePeakInBatch`.
-- `annotatr`: region annotation using the `annotatr` annotation catalog.
-- `rgreat`: submits regions to GREAT through `rGREAT`.
-- `homer`: calls HOMER `annotatePeaks.pl` from the shell. HOMER must already be installed and available in `PATH`.
-- `webexport`: writes clean BED files for web tools.
+- **Feature.** Each peak gets the first that applies of: promoter (the peak overlaps the window
+  from `promoter_upstream` bp upstream to `promoter_downstream` bp downstream of any TSS), 5' UTR,
+  3' UTR, exon (first or other), intron (first or other), downstream (within 300 bp past a
+  transcript end), distal intergenic.
+- **Nearest gene.** The gene of the TSS nearest to the peak centre, with the signed distance
+  (negative upstream of the gene).
+- **Promoter genes.** Every gene with a TSS whose promoter window the peak overlaps.
+- **Region class.** `promoter`; `distal` if the nearest TSS is within `distal_max_distance`
+  (100 kb); otherwise `distal_far`, which is not linked to a gene.
+- **Gene sets.** `promoter` (promoter genes), `distal` (nearest genes of distal peaks) and `all`
+  (their union), with the annotated genes of the same gene models as the background.
+
+Nearest-gene links are associations and do not establish enhancer targets.
 
 ## Pathway enrichment
 
-- `clusterprofiler`: local GO enrichment with an explicit universe, recommended for publishable analyses when your tested background is known.
-- `kegg`: KEGG ORA through `clusterProfiler::enrichKEGG`.
-- `reactome`: Reactome pathway ORA through `ReactomePA::enrichPathway`.
-- `msigdb`: MSigDB enrichment through `msigdbr` and `clusterProfiler::enricher`.
-- `enrichr`: API-backed enrichment across GO, KEGG, Reactome, WikiPathways, MSigDB Hallmark, and TRRUST libraries.
-- `gprofiler`: API-backed enrichment through `gprofiler2`.
-- `webgestalt`: API-backed ORA through `WebGestaltR`.
-- `metascape`: exports grouped gene lists in a Metascape-friendly table for upload or downstream API automation.
-- `david`: uses `RDAVIDWebService` when installed and `DAVID_EMAIL` is configured.
-- `export`: writes long and wide gene-list tables for manual upload tools.
+Each gene set is tested for over-representation in each gene-set library with the hypergeometric
+test, and p-values are adjusted with the Benjamini-Hochberg method within each library and gene
+set. For the public libraries the background is the annotated genes that occur in the library, and
+sets of 10-500 genes are tested; for your own GMT the background is all annotated genes and sets
+of 3 genes or more are tested. Gene symbols are matched without regard to case.
 
-## Recommended reporting standard
+| Method | Source |
+|---|---|
+| `go_bp`, `go_mf`, `go_cc`, `hallmark`, `reactome`, `wikipathways`, `tf_targets`, `cell_types` | MSigDB 2024.1, human and mouse collections |
+| `immunesigdb` | MSigDB 2024.1 C7 ImmuneSigDB (human; matched to mouse genes by symbol) |
+| `kegg` | MSigDB KEGG Medicus (human), Enrichr KEGG 2019 (mouse) |
+| `custom` | your GMT file |
 
-For manuscripts, run at least one local method with an explicit universe, such as `clusterprofiler`, and use API methods as complementary evidence. Save the exact input gene sets, background gene universe, package versions, and generated enrichment tables with every figure.
+## Pathway networks
 
-Figures follow Nature's artwork guidelines (`R/figures.R`). Every figure is written as a vector PDF with Helvetica text that stays editable, and with no Dingbats glyphs. Text is black, axes are thin and L-shaped, and there are no gridlines. ggplot figures use an 18 pt base font, and gene symbols are set in italics. Bar plots are dark grey. Significance colours run from light to dark red (#990000), with Penn Blue (#011F5B) for reference lines. A PNG copy of each figure is embedded in the HTML report, which links each one to its PDF.
+- **Enrichment map.** The 30 most significant terms are nodes. Two terms are linked when the
+  Jaccard index of their hit genes is at least 0.25, keeping each term's three strongest links.
+  Modules are found by greedy modularity clustering and named after their most significant term.
+- **Gene-pathway network.** The lead term of each of the top five modules, linked to its genes;
+  genes in two or more of those terms are reported as hubs.
 
-## Agent analyses (agent/ + R engine)
+## Motif enrichment
 
-- `peak_qc`: standard chromosomes, duplicates, width summary, optional blacklist removal; writes a cleaned BED.
-- `annotate_peaks`: ChIPpeakAnno `annotatePeakInBatch` (nearest gene by TSS, plus all genes whose TSS window overlaps the peak), `assignChromosomeRegion`, `binOverFeature`; builds promoter / distal / all gene sets and a genome background.
-- `enrich_pathways`: clusterProfiler ORA (GO, KEGG, ReactomePA, any MSigDB collection) against the genome background; user GMT signatures use a hypergeometric test against the same full background.
-- `find_motifs`: HOMER `findMotifsGenome.pl` (known motifs) when installed, otherwise monaLisa with JASPAR CORE vertebrate PWMs vs a GC-matched random genomic background.
-- `chipatlas_*`: ChIP-Atlas Enrichment Analysis (overlap with all public ChIP/ATAC experiments vs permuted background) and ChIP-Atlas target-gene tables.
-- `integrate_rnaseq`, `check_expectations`: hypergeometric tests of DE genes vs peak-linked genes; positive-control recovery of expected genes and TFs.
-- `search_literature`, `search_geo`: Europe PMC and NCBI GEO searches; retrieved PMIDs/accessions are the only citations the report accepts.
+Known-motif enrichment uses HOMER `findMotifsGenome.pl` on 200 bp windows centred on the peaks
+(at most 5,000 peaks), when HOMER and its genome package are installed. Otherwise the step is
+skipped.
+
+## Public data and literature
+
+Co-binding with public ChIP-seq and ATAC-seq experiments uses ChIP-Atlas Enrichment Analysis
+(random-permutation background, Fisher's exact test, Benjamini-Hochberg correction). Papers come
+from Europe PMC and datasets from NCBI GEO.
+
+## Reporting standard
+
+Every tool result has an evidence ID. The report cites only those IDs and the PMIDs and accessions
+retrieved in the run; any other citation is struck through. Failed and skipped steps are shown with
+their reason.

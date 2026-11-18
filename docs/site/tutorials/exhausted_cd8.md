@@ -18,7 +18,7 @@ The example is synthetic. It contains 351 ATAC-seq peaks (mm10) placed around ge
 stimulated, exhausted-like CD8 T cells:
 
 ```text
-examples/data/
+peakannoagent/examples/
 ├── example_tex_peaks_mm10.bed        # 351 peaks
 ├── example_tex_biology.json          # what we know about the experiment
 ├── example_tex_signatures.gmt        # progenitor / terminal / effector-like exhaustion signatures
@@ -43,10 +43,10 @@ The biology file tells PeakAnnoAgent what to expect:
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_tex_peaks_mm10.bed --genome mm10 \
-  --biology-file examples/data/example_tex_biology.json \
-  --gmt examples/data/example_tex_signatures.gmt \
-  --rnaseq examples/data/example_tex_rnaseq_de.tsv \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
   --out results/tex --prefix tex
 ```
 
@@ -54,10 +54,10 @@ peakanno-agent run \
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_tex_peaks_mm10.bed --genome mm10 \
-  --biology-file examples/data/example_tex_biology.json \
-  --gmt examples/data/example_tex_signatures.gmt \
-  --rnaseq examples/data/example_tex_rnaseq_de.tsv \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
   --out results/tex_fixed --prefix tex --no-llm --offline
 ```
 
@@ -68,7 +68,8 @@ open results/tex/tex_report.html
 ```
 
 :::{tip}
-Generate either example locally with the commands above, then open its HTML report to follow along.
+Both runs are already committed under `docs/demo/` (`with_agent/` and `without_agent/`). You can open
+`docs/demo/with_agent/tex_report.html` and follow along without running anything.
 :::
 
 ### What the agent changes
@@ -88,7 +89,7 @@ settings:
 
 **Peak QC (E1).** All 351 peaks pass QC: no duplicates, no non-standard contigs, median width 350 bp.
 
-**Annotation (E2).** ChIPpeakAnno assigns each peak to its nearest gene and classifies it:
+**Annotation (E2).** Each peak is assigned to its nearest gene and classified:
 
 | Class | Peaks |
 |---|---|

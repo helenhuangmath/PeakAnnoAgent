@@ -1,0 +1,87 @@
+# Bioconda recipe for PeakAnnoAgent.
+# Submit as bioconda-recipes/recipes/peakannoagent/meta.yaml.
+#
+# sha256 is the checksum of the GitHub release tarball; it exists
+# only once the release tag is published. After publishing a release, run
+#   packaging/bioconda/update_sha256.sh
+# which downloads the tarball, computes the checksum and writes it below.
+{% set name = "peakannoagent" %}
+{% set version = "1.1.0" %}
+{% set python_min = "3.11" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/helenhuangmath/PeakAnnoAgent/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: REPLACE_WITH_RELEASE_TARBALL_SHA256
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vvv
+  entry_points:
+    - peakanno-agent = peakannoagent.cli:main
+  run_exports:
+    - {{ pin_subpackage(name, max_pin="x") }}
+
+requirements:
+  host:
+    - python {{ python_min }}
+    - pip
+    - setuptools >=77,<85
+  run:
+    - python >={{ python_min }}
+    # analysis engine
+    - numpy >=1.23
+    - matplotlib-base >=3.6
+    # Claude agent mode (anthropic) and the web app (flask)
+    - anthropic >=2.8,<3
+    - flask >=3.0,<4
+    # Optional, installed separately when needed (skipped steps are reported, not failed):
+    #   homer (motif enrichment), mcp
+  run_constrained:
+    - mcp >=2.0,<3
+
+test:
+  requires:
+    - python {{ python_min }}
+  imports:
+    - peakannoagent
+    - peakannoagent.cli
+    - peakannoagent.engine
+    - peakannoagent.tools
+  commands:
+    - peakanno-agent --help
+    - peakanno-agent --version
+    - peakanno-agent tools
+    - peakanno-agent check --offline
+    - python -c "from peakannoagent import __version__; assert __version__ == '{{ version }}', __version__"
+
+about:
+  home: https://github.com/helenhuangmath/PeakAnnoAgent
+  dev_url: https://github.com/helenhuangmath/PeakAnnoAgent
+  doc_url: https://helenhuangmath.github.io/PeakAnnoAgent/
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: "Fast annotation of genomic peaks against a choice of gene models, pathway and motif enrichment, and an optional LLM agent that writes an evidence-linked HTML report."
+  description: |
+    PeakAnnoAgent annotates and interprets genomic peak sets from ChIP-seq, ATAC-seq, CUT&RUN and
+    CUT&Tag. Given a peak file and a reference genome (mm10, mm39, hg38 or hg19), it annotates every
+    peak against GENCODE, RefSeq, UCSC or any GTF gene models in about a second, tests the linked
+    genes for pathway enrichment (MSigDB, KEGG and custom GMT signatures), draws pathway networks,
+    runs known-motif enrichment with HOMER when it is installed, queries ChIP-Atlas, Europe PMC and
+    GEO, and writes a self-contained HTML report in which every statement links to the result it
+    came from.
+
+    It runs as a command-line annotator (peakanno-agent annotate), as a fixed pipeline that needs
+    no API key (peakanno-agent run --no-llm), as a Claude agent (peakanno-agent run, needs
+    ANTHROPIC_API_KEY), or as a local web app (peakanno-agent web). It is a pure Python package.
+
+    Author and maintainer: Hua Huang, University of Pennsylvania.
+
+extra:
+  recipe-maintainers:
+    - helenhuangmath

@@ -9,12 +9,12 @@ ROOT = Path(__file__).resolve().parents[2]
 project = "PeakAnnoAgent"
 author = "Hua Huang"
 copyright = "2026, Hua Huang"
-_desc = (ROOT / "DESCRIPTION").read_text()
-release = re.search(r"^Version:\s*(\S+)", _desc, re.M).group(1)
+release = re.search(r'^version\s*=\s*"([^"]+)"', (ROOT / "pyproject.toml").read_text(), re.M).group(1)
 version = release
 
 extensions = ["myst_parser"]
-myst_enable_extensions = ["colon_fence", "deflist", "attrs_inline"]
+myst_enable_extensions = ["colon_fence", "deflist", "attrs_inline", "substitution"]
+myst_substitutions = {"release": release}
 myst_heading_anchors = 3
 source_suffix = {".md": "markdown"}
 master_doc = "index"
@@ -22,7 +22,8 @@ exclude_patterns = ["_build", "requirements.txt"]
 suppress_warnings = ["myst.xref_missing", "myst.header"]
 
 html_theme = "sphinx_rtd_theme"
-html_title = f"PeakAnnoAgent {release}"
+html_title = f"PeakAnnoAgent {release} documentation"
+html_baseurl = "https://helenhuangmath.github.io/PeakAnnoAgent/"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 html_theme_options = {
@@ -40,11 +41,11 @@ html_context = {
 
 
 # Regenerate reference/agent_tools.md from the agent's tool definitions, so the page follows
-# agent/peakannoagent/tools.py. The committed copy is kept if the package cannot be imported.
+# peakannoagent/tools.py. The committed copy is kept if the package cannot be imported.
 def _write_agent_tools():
     import sys
 
-    sys.path.insert(0, str(ROOT / "agent"))
+    sys.path.insert(0, str(ROOT))
     try:
         from peakannoagent.tools import TOOLS
     except Exception as exc:  # pragma: no cover - docs build only
@@ -55,7 +56,7 @@ def _write_agent_tools():
         "These are the tools the agent calls. In agent mode, Claude chooses which ones to run and with which",
         "settings. With `--no-llm`, a fixed plan runs them in order. Tools marked *network* contact a",
         "public service and are skipped with `--offline`. `peakanno-agent tools` prints the same list.\n",
-        "Every tool runs in the R engine or calls a public API. Its result is stored with an evidence ID",
+        "Every tool runs in the analysis engine or calls a public API. Its result is stored with an evidence ID",
         "(`E1`, `E2`, …), which the report cites.\n",
     ]
     for t in TOOLS.values():

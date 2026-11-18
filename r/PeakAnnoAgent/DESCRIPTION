@@ -1,0 +1,20 @@
+Package: PeakAnnoAgent
+Title: R Interface to the PeakAnnoAgent Peak Annotation Program
+Version: 1.1.0
+Authors@R: person("Hua", "Huang", role = c("aut", "cre"),
+    email = "helenhuang.math@gmail.com")
+Description: A thin R interface to the 'peakannoagent' Python program, which
+    annotates genomic peaks (ChIP-seq, ATAC-seq, CUT&Tag) against a choice of
+    gene models and runs pathway and motif enrichment. The functions call the
+    'peakanno-agent' command and return its tables as data frames. The Python
+    program must be installed separately ('pip install peakannoagent').
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends:
+    R (>= 4.1)
+Imports:
+    jsonlite,
+    utils
+SystemRequirements: Python (>= 3.10) with the 'peakannoagent' package
+URL: https://github.com/helenhuangmath/PeakAnnoAgent
+BugReports: https://github.com/helenhuangmath/PeakAnnoAgent/issues
