@@ -1,0 +1,2585 @@
+{
+  "evidence": {
+    "E1": {
+      "id": "E1",
+      "tool": "peak_qc",
+      "title": "Peak QC",
+      "status": "ok",
+      "params": {},
+      "summary": {
+        "n_peaks": 351,
+        "n_clean_peaks": 351,
+        "width": {
+          "min": 300,
+          "q25": 350,
+          "median": 350,
+          "q75": 350,
+          "max": 400
+        },
+        "n_duplicated": 0,
+        "n_nonstandard_chrom": 0,
+        "n_blacklisted": 0,
+        "top_chromosomes": [
+          {
+            "Chr": "chr11",
+            "N": 45,
+            "Pct": 12.82
+          },
+          {
+            "Chr": "chr1",
+            "N": 40,
+            "Pct": 11.4
+          },
+          {
+            "Chr": "chr10",
+            "N": 30,
+            "Pct": 8.55
+          },
+          {
+            "Chr": "chr6",
+            "N": 28,
+            "Pct": 7.98
+          },
+          {
+            "Chr": "chr9",
+            "N": 27,
+            "Pct": 7.69
+          }
+        ],
+        "clean_peaks": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_qc_clean_peaks.bed"
+      },
+      "tables": {
+        "chromosomes": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_qc_chromosomes.tsv"
+      },
+      "figures": {
+        "width": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_qc_peak_width.png",
+        "chromosomes": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_qc_chromosomes.png"
+      },
+      "error": null,
+      "warnings": [],
+      "rationale": "Baseline QC and cleaning before annotation.",
+      "elapsed_sec": 0.2,
+      "versions": {}
+    },
+    "E2": {
+      "id": "E2",
+      "tool": "annotate_peaks",
+      "title": "ChIPpeakAnno annotation",
+      "status": "ok",
+      "params": {},
+      "summary": {
+        "n_peaks": 351,
+        "region_class_counts": {
+          "distal": 270,
+          "promoter": 78,
+          "distal_far": 3
+        },
+        "region_distribution_pct": {
+          "Promoters": 31.05,
+          "immediateDownstream": 5.41,
+          "fiveUTRs": 0.28,
+          "threeUTRs": 0.57,
+          "Exons": 4.84,
+          "Introns": 23.65,
+          "Intergenic.Region": 34.19
+        },
+        "median_abs_distance_to_tss": 13247,
+        "gene_set_sizes": {
+          "promoter": 76,
+          "distal": 173,
+          "all": 193
+        },
+        "example_promoter_genes": [
+          "Stat4",
+          "Ctla4",
+          "Ikzf2",
+          "Pdcd1",
+          "Il10",
+          "Rgs16",
+          "Sell",
+          "Cd244a",
+          "Myb",
+          "Taar9",
+          "Prdm1",
+          "Prf1",
+          "Egr2",
+          "Dusp6",
+          "Ifng",
+          "Havcr2",
+          "Tcf7",
+          "Ccl5",
+          "Ccl3",
+          "Ccl4",
+          "Mir8103",
+          "Tbx21",
+          "Ccr7",
+          "Stat3",
+          "Socs3",
+          "Id2",
+          "Fos",
+          "Batf",
+          "Irf4",
+          "Gzmk",
+          "Gzmb",
+          "Ptger4",
+          "Il7r",
+          "Il2rb",
+          "Nr4a1",
+          "Socs1",
+          "Bcl6",
+          "Tigit",
+          "Tnf",
+          "Egr1"
+        ],
+        "promoter_window": {
+          "upstream": 2000,
+          "downstream": 500
+        },
+        "gene_sets": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_peak_gene_sets.tsv",
+        "universe": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_gene_universe.tsv"
+      },
+      "tables": {
+        "peak_genes": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_chippeakanno_peak_genes.tsv",
+        "region_distribution": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_chippeakanno_region_distribution.tsv"
+      },
+      "figures": {
+        "region_distribution": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_chippeakanno_region_distribution.png",
+        "tss_profile": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_chippeakanno_tss_profile.png",
+        "tss_distance": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_chippeakanno_tss_distance.png"
+      },
+      "error": null,
+      "warnings": [],
+      "rationale": "Default ChIPpeakAnno workflow (-2000/+500 bp promoter window).",
+      "elapsed_sec": 20.5,
+      "versions": {
+        "ChIPpeakAnno": "3.36.1",
+        "GenomicRanges": "1.54.1",
+        "TxDb.Mmusculus.UCSC.mm10.knownGene": "3.10.0",
+        "org.Mm.eg.db": "3.18.0"
+      }
+    },
+    "E3": {
+      "id": "E3",
+      "tool": "chipatlas_submit",
+      "title": "ChIP-Atlas submission (TFs and others, All cell types)",
+      "status": "ok",
+      "params": {
+        "antigen_class": "TFs and others"
+      },
+      "summary": {
+        "request_id": "wabi_chipatlas_2026-1012-0706-42-6-012434",
+        "antigen_class": "TFs and others",
+        "cell_class": "All cell types",
+        "regions": "all",
+        "note": "Job queued on the DDBJ supercomputer (typically 5-30 min). Continue with other analyses and call chipatlas_collect later."
+      },
+      "tables": {},
+      "figures": {},
+      "error": null,
+      "warnings": [],
+      "rationale": "Find public TF ChIP-seq that overlaps these peaks.",
+      "elapsed_sec": 1.1,
+      "versions": {}
+    },
+    "E4": {
+      "id": "E4",
+      "tool": "enrich_pathways",
+      "title": "Pathway enrichment (go_bp, kegg, msigdb_H, custom)",
+      "status": "ok",
+      "params": {
+        "methods": [
+          "go_bp",
+          "kegg",
+          "msigdb_H",
+          "custom"
+        ],
+        "groups": [
+          "promoter",
+          "distal",
+          "all"
+        ]
+      },
+      "summary": {
+        "methods": [
+          "go_bp",
+          "kegg",
+          "msigdb_H",
+          "custom"
+        ],
+        "groups": {
+          "promoter": 76,
+          "distal": 173,
+          "all": 193
+        },
+        "universe_size": 24511,
+        "n_significant": [
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "N": 799
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "N": 397
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "N": 584
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "N": 56
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "N": 31
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "N": 42
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "N": 6
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "N": 5
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "N": 6
+          },
+          {
+            "method": "custom",
+            "group": "promoter",
+            "N": 3
+          },
+          {
+            "method": "custom",
+            "group": "distal",
+            "N": 3
+          },
+          {
+            "method": "custom",
+            "group": "all",
+            "N": 3
+          }
+        ],
+        "top_terms": [
+          {
+            "method": "custom",
+            "group": "all",
+            "term": "TEX_TERMINAL",
+            "padj": 1.62e-23,
+            "count": 11,
+            "genes": "Pdcd1;Cd244a;Cd160;Tox;Lag3;Cx3cr1;Prdm1;Havcr2;Gzmb;Tigit;Entpd1"
+          },
+          {
+            "method": "custom",
+            "group": "all",
+            "term": "TEX_EFFECTOR_LIKE",
+            "padj": 1.92e-17,
+            "count": 8,
+            "genes": "Zeb2;S1pr1;Klrg1;Klf2;Cx3cr1;Prf1;Tbx21;Gzmb"
+          },
+          {
+            "method": "custom",
+            "group": "all",
+            "term": "TEX_PROGENITOR",
+            "padj": 1.14e-16,
+            "count": 8,
+            "genes": "Sell;Lef1;Bach2;Id3;Cxcr5;Myb;Tcf7;Ccr7"
+          },
+          {
+            "method": "custom",
+            "group": "distal",
+            "term": "TEX_EFFECTOR_LIKE",
+            "padj": 1.57e-17,
+            "count": 8,
+            "genes": "Prf1;Tbx21;Gzmb;Zeb2;S1pr1;Klrg1;Klf2;Cx3cr1"
+          },
+          {
+            "method": "custom",
+            "group": "distal",
+            "term": "TEX_PROGENITOR",
+            "padj": 7.02e-17,
+            "count": 8,
+            "genes": "Sell;Myb;Tcf7;Ccr7;Lef1;Bach2;Id3;Cxcr5"
+          },
+          {
+            "method": "custom",
+            "group": "distal",
+            "term": "TEX_TERMINAL",
+            "padj": 2.49e-13,
+            "count": 7,
+            "genes": "Pdcd1;Prdm1;Gzmb;Tigit;Entpd1;Tox;Cx3cr1"
+          },
+          {
+            "method": "custom",
+            "group": "promoter",
+            "term": "TEX_TERMINAL",
+            "padj": 3.58e-28,
+            "count": 11,
+            "genes": "Pdcd1;Cd244a;Cd160;Tox;Lag3;Cx3cr1;Prdm1;Havcr2;Gzmb;Tigit;Entpd1"
+          },
+          {
+            "method": "custom",
+            "group": "promoter",
+            "term": "TEX_EFFECTOR_LIKE",
+            "padj": 8.76e-21,
+            "count": 8,
+            "genes": "Zeb2;S1pr1;Klrg1;Klf2;Cx3cr1;Prf1;Tbx21;Gzmb"
+          },
+          {
+            "method": "custom",
+            "group": "promoter",
+            "term": "TEX_PROGENITOR",
+            "padj": 5.24e-20,
+            "count": 8,
+            "genes": "Sell;Lef1;Bach2;Id3;Cxcr5;Myb;Tcf7;Ccr7"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "lymphocyte differentiation",
+            "padj": 3.88e-17,
+            "count": 32,
+            "genes": "Stat4;Ctla4;Il10;Il2ra;Il21;Lef1;Tox;Runx3;Cd8a;Lag3;Eomes;Myb"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "T cell differentiation",
+            "padj": 2.58e-16,
+            "count": 27,
+            "genes": "Stat4;Ctla4;Il2ra;Il21;Lef1;Tox;Runx3;Cd8a;Lag3;Eomes;Myb;Prdm1"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "leukocyte cell-cell adhesion",
+            "padj": 2.14e-15,
+            "count": 29,
+            "genes": "Ctla4;Sell;Cd244a;Il2ra;Il21;Cd160;Lef1;Nr4a3;Runx3;Lag3;Cx3cr1;Ifng"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "alpha-beta T cell activation",
+            "padj": 3.19e-15,
+            "count": 22,
+            "genes": "Stat4;Cd244a;Il2ra;Il21;Cd160;Lef1;Tox;Runx3;Eomes;Myb;Prdm1;Ifng"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "regulation of leukocyte differentiation",
+            "padj": 6.76e-15,
+            "count": 26,
+            "genes": "Ctla4;Il10;Il2ra;Il21;Lef1;Tox;Runx3;Lag3;Prdm1;Ifng;Tcf7;Ccl5"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "regulation of leukocyte cell-cell adhesion",
+            "padj": 9.9e-15,
+            "count": 27,
+            "genes": "Ctla4;Cd244a;Il2ra;Il21;Cd160;Lef1;Nr4a3;Runx3;Lag3;Ifng;Havcr2;Ccl5"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "regulation of hemopoiesis",
+            "padj": 9.9e-15,
+            "count": 28,
+            "genes": "Ctla4;Il10;Il2ra;Il21;Lef1;Tox;Runx3;Lag3;Myb;Prdm1;Ifng;Tcf7"
+          },
+          {
+            "method": "go_bp",
+            "group": "all",
+            "term": "alpha-beta T cell differentiation",
+            "padj": 1.34e-14,
+            "count": 18,
+            "genes": "Stat4;Il21;Lef1;Tox;Runx3;Eomes;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "lymphocyte differentiation",
+            "padj": 1.13e-16,
+            "count": 30,
+            "genes": "Stat4;Ctla4;Il10;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7;Smarce1;Stat5a;Stat3"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "T cell differentiation",
+            "padj": 1.89e-15,
+            "count": 25,
+            "genes": "Stat4;Ctla4;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7;Smarce1;Stat5a;Stat3;Irf4"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "alpha-beta T cell differentiation",
+            "padj": 9.04e-14,
+            "count": 17,
+            "genes": "Stat4;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7;Stat3;Irf4;Ptger4;Socs1;Bcl6"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "regulation of lymphocyte differentiation",
+            "padj": 9.15e-14,
+            "count": 20,
+            "genes": "Ctla4;Il10;Prdm1;Ifng;Tcf7;Tbx21;Ccr7;Smarce1;Stat5a;Id2;Il7r;Socs1"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "regulation of leukocyte differentiation",
+            "padj": 4.91e-13,
+            "count": 23,
+            "genes": "Ctla4;Il10;Prdm1;Ifng;Tcf7;Ccl9;Ccl3;Tbx21;Ccr7;Smarce1;Stat5a;Id2"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "regulation of hemopoiesis",
+            "padj": 4.91e-13,
+            "count": 25,
+            "genes": "Ctla4;Il10;Myb;Prdm1;Ifng;Tcf7;Ccl9;Ccl3;Tbx21;Ccr7;Smarce1;Stat5a"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "alpha-beta T cell activation",
+            "padj": 5.84e-13,
+            "count": 19,
+            "genes": "Stat4;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7;Stat3;Irf4;Ptger4;Socs1;Bcl6"
+          },
+          {
+            "method": "go_bp",
+            "group": "distal",
+            "term": "CD4-positive, alpha-beta T cell differentiation",
+            "padj": 3.18e-12,
+            "count": 14,
+            "genes": "Stat4;Myb;Ifng;Tbx21;Ccr7;Stat3;Irf4;Ptger4;Socs1;Bcl6;Il21;Lef1"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "lymphocyte differentiation",
+            "padj": 6.68e-23,
+            "count": 27,
+            "genes": "Stat4;Ctla4;Il10;Il2ra;Il21;Lef1;Tox;Runx3;Cd8a;Lag3;Eomes;Myb"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "T cell differentiation",
+            "padj": 1.26e-22,
+            "count": 24,
+            "genes": "Stat4;Ctla4;Il2ra;Il21;Lef1;Tox;Runx3;Cd8a;Lag3;Eomes;Myb;Prdm1"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "alpha-beta T cell activation",
+            "padj": 2.79e-22,
+            "count": 21,
+            "genes": "Stat4;Cd244a;Il2ra;Il21;Cd160;Lef1;Tox;Runx3;Eomes;Myb;Prdm1;Ifng"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "adaptive immune response",
+            "padj": 1.22e-21,
+            "count": 26,
+            "genes": "Stat4;Ctla4;Pdcd1;Cd244a;Cd160;Lef1;Bach2;Cd8b1;Cd8a;Lag3;Eomes;Cx3cr1"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "alpha-beta T cell differentiation",
+            "padj": 1.41e-21,
+            "count": 18,
+            "genes": "Stat4;Il21;Lef1;Tox;Runx3;Eomes;Myb;Prdm1;Ifng;Tcf7;Tbx21;Ccr7"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "CD4-positive, alpha-beta T cell activation",
+            "padj": 3.47e-20,
+            "count": 17,
+            "genes": "Stat4;Il2ra;Il21;Cd160;Lef1;Tox;Runx3;Myb;Ifng;Tbx21;Ccr7;Stat3"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "regulation of hemopoiesis",
+            "padj": 7.32e-19,
+            "count": 23,
+            "genes": "Ctla4;Il10;Il2ra;Il21;Lef1;Tox;Runx3;Lag3;Myb;Prdm1;Ifng;Tcf7"
+          },
+          {
+            "method": "go_bp",
+            "group": "promoter",
+            "term": "CD4-positive, alpha-beta T cell differentiation",
+            "padj": 8.66e-19,
+            "count": 15,
+            "genes": "Stat4;Il21;Lef1;Tox;Runx3;Myb;Ifng;Tbx21;Ccr7;Stat3;Batf;Irf4"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Viral protein interaction with cytokine and cytokine receptor",
+            "padj": 5.04e-08,
+            "count": 12,
+            "genes": "Il10;Il2ra;Cxcr5;Cx3cr1;Ccl5;Ccl3;Ccl4;Ccr7;Il2rb;Tnf;Ccl9;Ccl6"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Th17 cell differentiation",
+            "padj": 2.86e-06,
+            "count": 11,
+            "genes": "Il2ra;Nfatc2;Il21;Ifng;Tbx21;Stat3;Fos;Irf4;Il2rb;Nfatc1;Stat5a"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Th1 and Th2 cell differentiation",
+            "padj": 3.32e-06,
+            "count": 10,
+            "genes": "Stat4;Il2ra;Nfatc2;Runx3;Ifng;Tbx21;Fos;Il2rb;Nfatc1;Stat5a"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "JAK-STAT signaling pathway",
+            "padj": 3.32e-06,
+            "count": 13,
+            "genes": "Stat4;Il10;Il2ra;Il21;Cish;Ifng;Stat3;Socs3;Il7r;Il2rb;Socs1;Stat5a"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "T cell receptor signaling pathway",
+            "padj": 4.63e-06,
+            "count": 11,
+            "genes": "Ctla4;Pdcd1;Il10;Nfatc2;Cd8b1;Cd8a;Ifng;Fos;Tnf;Nfatc1;Icos"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Cytokine-cytokine receptor interaction",
+            "padj": 4.71e-06,
+            "count": 16,
+            "genes": "Il10;Il2ra;Il21;Cxcr5;Cx3cr1;Ifng;Ccl5;Ccl3;Ccl4;Ccr7;Il7r;Il2rb"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Inflammatory bowel disease",
+            "padj": 1.4e-05,
+            "count": 8,
+            "genes": "Stat4;Il10;Il21;Ifng;Tbx21;Stat3;Tnf;Nfatc1"
+          },
+          {
+            "method": "kegg",
+            "group": "all",
+            "term": "Cell adhesion molecule (CAM) interaction",
+            "padj": 0.000883,
+            "count": 10,
+            "genes": "Ctla4;Pdcd1;Sell;Cd8b1;Cd8a;Tigit;Icos;Sele;Cldn9;H2-D1"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Th17 cell differentiation",
+            "padj": 1.59e-06,
+            "count": 11,
+            "genes": "Ifng;Tbx21;Stat5a;Stat3;Fos;Irf4;Il2rb;Nfatc1;Il2ra;Nfatc2;Il21"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Th1 and Th2 cell differentiation",
+            "padj": 1.79e-06,
+            "count": 10,
+            "genes": "Stat4;Ifng;Tbx21;Stat5a;Fos;Il2rb;Nfatc1;Il2ra;Nfatc2;Runx3"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "JAK-STAT signaling pathway",
+            "padj": 9.24e-06,
+            "count": 12,
+            "genes": "Stat4;Il10;Ifng;Stat5a;Stat3;Socs3;Il7r;Il2rb;Socs1;Il2ra;Il15ra;Il21"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Viral protein interaction with cytokine and cytokine receptor",
+            "padj": 1.1e-05,
+            "count": 9,
+            "genes": "Il10;Ccl9;Ccl6;Ccl3;Ccr7;Il2rb;Il2ra;Cxcr5;Cx3cr1"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "T cell receptor signaling pathway",
+            "padj": 1.41e-05,
+            "count": 10,
+            "genes": "Ctla4;Icos;Pdcd1;Il10;Ifng;Fos;Nfatc1;Nfatc2;Cd8b1;Cd8a"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Inflammatory bowel disease",
+            "padj": 9.66e-05,
+            "count": 7,
+            "genes": "Stat4;Il10;Ifng;Tbx21;Stat3;Nfatc1;Il21"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Cytokine-cytokine receptor interaction",
+            "padj": 0.000168,
+            "count": 13,
+            "genes": "Il10;Ifng;Ccl9;Ccl6;Ccl3;Ccr7;Il7r;Il2rb;Il2ra;Il15ra;Il21;Cxcr5"
+          },
+          {
+            "method": "kegg",
+            "group": "distal",
+            "term": "Cell adhesion molecule (CAM) interaction",
+            "padj": 0.000302,
+            "count": 10,
+            "genes": "Ctla4;Icos;Pdcd1;Sele;Sell;Tigit;Cldn9;H2-D1;Cd8b1;Cd8a"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "Viral protein interaction with cytokine and cytokine receptor",
+            "padj": 1.06e-08,
+            "count": 10,
+            "genes": "Il10;Il2ra;Cxcr5;Cx3cr1;Ccl5;Ccl3;Ccl4;Ccr7;Il2rb;Tnf"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "Th17 cell differentiation",
+            "padj": 3.53e-08,
+            "count": 10,
+            "genes": "Il2ra;Nfatc2;Il21;Ifng;Tbx21;Stat3;Fos;Irf4;Il2rb;Nfatc1"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "T cell receptor signaling pathway",
+            "padj": 7.43e-08,
+            "count": 10,
+            "genes": "Ctla4;Pdcd1;Il10;Nfatc2;Cd8b1;Cd8a;Ifng;Fos;Tnf;Nfatc1"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "Th1 and Th2 cell differentiation",
+            "padj": 7.43e-08,
+            "count": 9,
+            "genes": "Stat4;Il2ra;Nfatc2;Runx3;Ifng;Tbx21;Fos;Il2rb;Nfatc1"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "Inflammatory bowel disease",
+            "padj": 7.64e-08,
+            "count": 8,
+            "genes": "Stat4;Il10;Il21;Ifng;Tbx21;Stat3;Tnf;Nfatc1"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "JAK-STAT signaling pathway",
+            "padj": 9.4e-08,
+            "count": 11,
+            "genes": "Stat4;Il10;Il2ra;Il21;Cish;Ifng;Stat3;Socs3;Il7r;Il2rb;Socs1"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "Cytokine-cytokine receptor interaction",
+            "padj": 1.85e-07,
+            "count": 13,
+            "genes": "Il10;Il2ra;Il21;Cxcr5;Cx3cr1;Ifng;Ccl5;Ccl3;Ccl4;Ccr7;Il7r;Il2rb"
+          },
+          {
+            "method": "kegg",
+            "group": "promoter",
+            "term": "PD-L1 expression and PD-1 checkpoint pathway in cancer",
+            "padj": 1.5e-05,
+            "count": 7,
+            "genes": "Pdcd1;Nfatc2;Ifng;Stat3;Fos;Batf;Nfatc1"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
+            "padj": 2.59e-08,
+            "count": 19,
+            "genes": "Nr4a2;Nr4a3;Cd69;Klf2;Junb;Egr2;Ccl5;Ccl4;Socs3;Id2;Fos;Ptger4"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_ALLOGRAFT_REJECTION",
+            "padj": 2.29e-05,
+            "count": 15,
+            "genes": "Stat4;Il10;Il2ra;Cd8b1;Cd8a;Prf1;Ifng;Ccl5;Ccl4;Irf4;Gzmb;Il2rb"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_IL2_STAT5_SIGNALING",
+            "padj": 9.31e-05,
+            "count": 14,
+            "genes": "Ctla4;Ikzf2;Il10;Rgs16;Sell;Il2ra;Cish;Eomes;Batf;Irf4;Il2rb;Socs1"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_INFLAMMATORY_RESPONSE",
+            "padj": 0.00169,
+            "count": 12,
+            "genes": "Il10;Rgs16;Sell;Cd69;Ccl5;Ccr7;Ptger4;Il7r;Il2rb;Sele;Il15ra;Ptafr"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_INTERFERON_GAMMA_RESPONSE",
+            "padj": 0.0212,
+            "count": 10,
+            "genes": "Stat4;Cd69;Ccl5;Stat3;Socs3;Irf4;Il2rb;Socs1;H2-D1;Il15ra"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "all",
+            "term": "HALLMARK_IL6_JAK_STAT3_SIGNALING",
+            "padj": 0.0275,
+            "count": 6,
+            "genes": "Il2ra;Stat3;Socs3;Socs1;Tnf;Il15ra"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "term": "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
+            "padj": 8.86e-06,
+            "count": 15,
+            "genes": "Egr2;Stat5a;Socs3;Id2;Fos;Ptger4;Il7r;Nr4a1;Bcl6;Egr1;Il15ra;Nr4a2"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "term": "HALLMARK_ALLOGRAFT_REJECTION",
+            "padj": 0.000792,
+            "count": 12,
+            "genes": "Stat4;Il10;Prf1;Ifng;Irf4;Gzmb;Il2rb;Socs1;Il2ra;Cd8b1;Cd8a;Thy1"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "term": "HALLMARK_IL2_STAT5_SIGNALING",
+            "padj": 0.00274,
+            "count": 11,
+            "genes": "Ctla4;Icos;Ikzf2;Il10;Sell;Irf4;Il2rb;Socs1;Il2ra;Dcps;Eomes"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "term": "HALLMARK_INFLAMMATORY_RESPONSE",
+            "padj": 0.0094,
+            "count": 10,
+            "genes": "Il10;Sele;Sell;Ccr7;Ptger4;Il7r;Il2rb;Il15ra;Ptafr;Cd69"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "distal",
+            "term": "HALLMARK_INTERFERON_GAMMA_RESPONSE",
+            "padj": 0.0301,
+            "count": 9,
+            "genes": "Stat4;Stat3;Socs3;Irf4;Il2rb;Socs1;H2-D1;Il15ra;Cd69"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
+            "padj": 3.7e-10,
+            "count": 17,
+            "genes": "Nr4a2;Nr4a3;Cd69;Klf2;Junb;Egr2;Ccl5;Ccl4;Socs3;Id2;Fos;Ptger4"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_ALLOGRAFT_REJECTION",
+            "padj": 2.11e-07,
+            "count": 14,
+            "genes": "Stat4;Il10;Il2ra;Cd8b1;Cd8a;Prf1;Ifng;Ccl5;Ccl4;Irf4;Gzmb;Il2rb"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_IL2_STAT5_SIGNALING",
+            "padj": 1.09e-05,
+            "count": 12,
+            "genes": "Ctla4;Ikzf2;Il10;Rgs16;Sell;Il2ra;Cish;Eomes;Batf;Irf4;Il2rb;Socs1"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_INFLAMMATORY_RESPONSE",
+            "padj": 0.00215,
+            "count": 9,
+            "genes": "Il10;Rgs16;Sell;Cd69;Ccl5;Ccr7;Ptger4;Il7r;Il2rb"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_INTERFERON_GAMMA_RESPONSE",
+            "padj": 0.00884,
+            "count": 8,
+            "genes": "Stat4;Cd69;Ccl5;Stat3;Socs3;Irf4;Il2rb;Socs1"
+          },
+          {
+            "method": "msigdb_H",
+            "group": "promoter",
+            "term": "HALLMARK_IL6_JAK_STAT3_SIGNALING",
+            "padj": 0.0124,
+            "count": 5,
+            "genes": "Il2ra;Stat3;Socs3;Socs1;Tnf"
+          }
+        ],
+        "pathway_modules": {
+          "go_bp": [
+            {
+              "module": 1,
+              "lead_term": "lymphocyte differentiation",
+              "n_terms": 8,
+              "best_padj": 6.68e-23,
+              "other_terms": "regulation of hemopoiesis; regulation of leukocyte differentiation; regulation of lymphocyte differentiation"
+            },
+            {
+              "module": 2,
+              "lead_term": "T cell differentiation",
+              "n_terms": 5,
+              "best_padj": 1.26e-22,
+              "other_terms": "alpha-beta T cell activation; alpha-beta T cell differentiation; CD4-positive, alpha-beta T cell activation"
+            },
+            {
+              "module": 3,
+              "lead_term": "adaptive immune response",
+              "n_terms": 6,
+              "best_padj": 1.22e-21,
+              "other_terms": "lymphocyte activation involved in immune response; leukocyte activation involved in immune response; cell activation involved in immune response"
+            },
+            {
+              "module": 4,
+              "lead_term": "alpha-beta T cell differentiation involved in immune response",
+              "n_terms": 5,
+              "best_padj": 6.55e-17,
+              "other_terms": "alpha-beta T cell activation involved in immune response; T cell differentiation involved in immune response; CD4-positive, alpha-beta T cell differentiation involved in immune response"
+            },
+            {
+              "module": 5,
+              "lead_term": "leukocyte cell-cell adhesion",
+              "n_terms": 6,
+              "best_padj": 1.68e-16,
+              "other_terms": "regulation of T cell activation; positive regulation of cell activation; regulation of leukocyte cell-cell adhesion"
+            }
+          ],
+          "kegg": [
+            {
+              "module": 1,
+              "lead_term": "Viral protein interaction with cytokine and cytokine receptor",
+              "n_terms": 3,
+              "best_padj": 1.06e-08,
+              "other_terms": "Cytokine-cytokine receptor interaction; Chemokine signaling pathway"
+            },
+            {
+              "module": 2,
+              "lead_term": "Th17 cell differentiation",
+              "n_terms": 6,
+              "best_padj": 3.53e-08,
+              "other_terms": "Th1 and Th2 cell differentiation; Inflammatory bowel disease; Hepatitis B"
+            },
+            {
+              "module": 3,
+              "lead_term": "T cell receptor signaling pathway",
+              "n_terms": 11,
+              "best_padj": 7.43e-08,
+              "other_terms": "JAK-STAT signaling pathway; PD-L1 expression and PD-1 checkpoint pathway in cancer; Osteoclast differentiation"
+            },
+            {
+              "module": 4,
+              "lead_term": "Natural killer cell mediated cytotoxicity",
+              "n_terms": 4,
+              "best_padj": 7.33e-05,
+              "other_terms": "Allograft rejection; Graft-versus-host disease; Type I diabetes mellitus"
+            },
+            {
+              "module": 5,
+              "lead_term": "Rheumatoid arthritis",
+              "n_terms": 5,
+              "best_padj": 0.000162,
+              "other_terms": "Chagas disease; Human cytomegalovirus infection; Lipid and atherosclerosis"
+            },
+            {
+              "module": 6,
+              "lead_term": "FoxO signaling pathway",
+              "n_terms": 1,
+              "best_padj": 0.000896,
+              "other_terms": ""
+            }
+          ],
+          "msigdb_H": [
+            {
+              "module": 1,
+              "lead_term": "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
+              "n_terms": 1,
+              "best_padj": 3.7e-10,
+              "other_terms": ""
+            },
+            {
+              "module": 2,
+              "lead_term": "HALLMARK_ALLOGRAFT_REJECTION",
+              "n_terms": 3,
+              "best_padj": 2.11e-07,
+              "other_terms": "HALLMARK_INTERFERON_GAMMA_RESPONSE; HALLMARK_IL6_JAK_STAT3_SIGNALING"
+            },
+            {
+              "module": 3,
+              "lead_term": "HALLMARK_IL2_STAT5_SIGNALING",
+              "n_terms": 1,
+              "best_padj": 1.09e-05,
+              "other_terms": ""
+            },
+            {
+              "module": 4,
+              "lead_term": "HALLMARK_INFLAMMATORY_RESPONSE",
+              "n_terms": 1,
+              "best_padj": 0.00169,
+              "other_terms": ""
+            }
+          ],
+          "custom": [
+            {
+              "module": 1,
+              "lead_term": "TEX_TERMINAL",
+              "n_terms": 1,
+              "best_padj": 3.58e-28,
+              "other_terms": ""
+            },
+            {
+              "module": 2,
+              "lead_term": "TEX_EFFECTOR_LIKE",
+              "n_terms": 1,
+              "best_padj": 8.76e-21,
+              "other_terms": ""
+            },
+            {
+              "module": 3,
+              "lead_term": "TEX_PROGENITOR",
+              "n_terms": 1,
+              "best_padj": 5.24e-20,
+              "other_terms": ""
+            }
+          ]
+        },
+        "hub_genes": {
+          "go_bp": [
+            {
+              "gene": "Bcl6",
+              "n_pathways": 5
+            },
+            {
+              "gene": "Ccr7",
+              "n_pathways": 5
+            },
+            {
+              "gene": "Ifng",
+              "n_pathways": 5
+            },
+            {
+              "gene": "Lef1",
+              "n_pathways": 5
+            },
+            {
+              "gene": "Tbx21",
+              "n_pathways": 5
+            },
+            {
+              "gene": "Batf",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Ctla4",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Eomes",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Il21",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Il7r",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Irf4",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Lag3",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Stat3",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Stat4",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Cd8a",
+              "n_pathways": 3
+            }
+          ],
+          "kegg": [
+            {
+              "gene": "Ifng",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Tnf",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Fos",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Nfatc1",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Nfatc2",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Ccl3",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Ccl5",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Ctla4",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Il10",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Il2ra",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Il2rb",
+              "n_pathways": 2
+            }
+          ],
+          "msigdb_H": [
+            {
+              "gene": "Ccl5",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Il2rb",
+              "n_pathways": 4
+            },
+            {
+              "gene": "Cd69",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Il10",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Il15ra",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Irf4",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Socs1",
+              "n_pathways": 3
+            },
+            {
+              "gene": "Ccl4",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Il2ra",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Il7r",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Ptger4",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Rgs16",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Sell",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Socs3",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Stat4",
+              "n_pathways": 2
+            }
+          ],
+          "custom": [
+            {
+              "gene": "Cx3cr1",
+              "n_pathways": 2
+            },
+            {
+              "gene": "Gzmb",
+              "n_pathways": 2
+            }
+          ]
+        }
+      },
+      "tables": {
+        "enrichment": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_enrichment.tsv",
+        "network_nodes_go_bp": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_go_bp_nodes.tsv",
+        "network_edges_go_bp": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_go_bp_edges.tsv",
+        "network_nodes_kegg": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_kegg_nodes.tsv",
+        "network_edges_kegg": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_kegg_edges.tsv",
+        "network_nodes_msigdb_H": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_msigdb_H_nodes.tsv",
+        "network_edges_msigdb_H": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_msigdb_H_edges.tsv",
+        "network_nodes_custom": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_custom_nodes.tsv",
+        "network_edges_custom": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_enrich1_network_custom_edges.tsv"
+      },
+      "figures": {
+        "go_bp": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_enrichment_go_bp_dotplot.png",
+        "kegg": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_enrichment_kegg_dotplot.png",
+        "msigdb_H": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_enrichment_msigdb_H_dotplot.png",
+        "custom": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_enrichment_custom_dotplot.png",
+        "map_go_bp": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_network_go_bp.png",
+        "cnet_go_bp": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_cnet_go_bp.png",
+        "map_kegg": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_network_kegg.png",
+        "cnet_kegg": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_cnet_kegg.png",
+        "map_msigdb_H": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_network_msigdb_H.png",
+        "cnet_msigdb_H": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_cnet_msigdb_H.png",
+        "map_custom": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_network_custom.png",
+        "cnet_custom": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/.preview/tex_enrich1_cnet_custom.png"
+      },
+      "error": null,
+      "warnings": [],
+      "rationale": "Standard GO/KEGG/Hallmark ORA on peak-linked genes.",
+      "elapsed_sec": 69.8,
+      "versions": {
+        "clusterProfiler": "4.10.1",
+        "msigdbr": "10.0.2",
+        "ReactomePA": "1.46.0",
+        "igraph": "2.0.3",
+        "ggrepel": "0.9.6",
+        "org.Mm.eg.db": "3.18.0"
+      }
+    },
+    "E5": {
+      "id": "E5",
+      "tool": "great_enrichment",
+      "title": "GREAT region enrichment (GO:BP)",
+      "status": "error",
+      "params": {
+        "gene_sets": "GO:BP"
+      },
+      "summary": {},
+      "tables": {},
+      "figures": {},
+      "error": "Package 'rGREAT' is required. Install it before running this method.",
+      "warnings": [],
+      "rationale": "Region-based enrichment for distal peaks.",
+      "elapsed_sec": 0.0,
+      "versions": {}
+    },
+    "E6": {
+      "id": "E6",
+      "tool": "find_motifs",
+      "title": "Known-motif enrichment (all peaks)",
+      "status": "ok",
+      "params": {
+        "regions": "all"
+      },
+      "summary": {
+        "backend": "monaLisa",
+        "database": "JASPAR2020",
+        "n_sequences": 351,
+        "window_bp": 200,
+        "n_significant": 0,
+        "top_motifs": [],
+        "top_nominal": [
+          {
+            "tf": "STAT3",
+            "log2_enrichment": 0.799,
+            "pvalue": 0.00189392518182706,
+            "padj": 0.46489462169473
+          },
+          {
+            "tf": "Foxd3",
+            "log2_enrichment": 0.638,
+            "pvalue": 0.00190168697961159,
+            "padj": 0.46489462169473
+          },
+          {
+            "tf": "SP1",
+            "log2_enrichment": 1.155,
+            "pvalue": 0.00199621978791354,
+            "padj": 0.46489462169473
+          },
+          {
+            "tf": "SP4",
+            "log2_enrichment": 1.019,
+            "pvalue": 0.00310217410011818,
+            "padj": 0.46489462169473
+          },
+          {
+            "tf": "MEIS1(var.2)",
+            "log2_enrichment": 0.985,
+            "pvalue": 0.0031159156950049,
+            "padj": 0.46489462169473
+          },
+          {
+            "tf": "REL",
+            "log2_enrichment": 0.948,
+            "pvalue": 0.00402026198009072,
+            "padj": 0.499852572857947
+          },
+          {
+            "tf": "Klf1",
+            "log2_enrichment": 0.752,
+            "pvalue": 0.00603374627809761,
+            "padj": 0.643024960494403
+          },
+          {
+            "tf": "E2F6",
+            "log2_enrichment": 0.771,
+            "pvalue": 0.00739801777171365,
+            "padj": 0.689865157212297
+          },
+          {
+            "tf": "Stat5b",
+            "log2_enrichment": 0.717,
+            "pvalue": 0.0125694141041079,
+            "padj": 0.878162339931519
+          },
+          {
+            "tf": "RBPJ",
+            "log2_enrichment": 0.506,
+            "pvalue": 0.013233430101448,
+            "padj": 0.878162339931519
+          }
+        ]
+      },
+      "tables": {
+        "motifs": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_all_motifs_monalisa.tsv"
+      },
+      "figures": {},
+      "error": null,
+      "warnings": [
+        "No motif passed the adjusted p-value cutoff; top_nominal lists the best motifs by raw p-value (not significant)."
+      ],
+      "rationale": "Known-motif enrichment at peak centres.",
+      "elapsed_sec": 54.8,
+      "versions": {
+        "monaLisa": "1.8.1",
+        "TFBSTools": "1.38.0",
+        "JASPAR2020": "0.99.10",
+        "BSgenome.Mmusculus.UCSC.mm10": "1.4.3"
+      }
+    },
+    "E7": {
+      "id": "E7",
+      "tool": "find_motifs",
+      "title": "Known-motif enrichment (distal peaks)",
+      "status": "ok",
+      "params": {
+        "regions": "distal"
+      },
+      "summary": {
+        "backend": "monaLisa",
+        "database": "JASPAR2020",
+        "n_sequences": 273,
+        "window_bp": 200,
+        "n_significant": 0,
+        "top_motifs": [],
+        "top_nominal": [
+          {
+            "tf": "STAT1::STAT2",
+            "log2_enrichment": 0.919,
+            "pvalue": 0.00169010295136955,
+            "padj": 0.788063676809694
+          },
+          {
+            "tf": "HESX1",
+            "log2_enrichment": 0.913,
+            "pvalue": 0.00211277125150052,
+            "padj": 0.788063676809694
+          },
+          {
+            "tf": "ZNF740",
+            "log2_enrichment": 0.959,
+            "pvalue": 0.00531969981424027,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "MZF1(var.2)",
+            "log2_enrichment": 0.873,
+            "pvalue": 0.00573364682585499,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "KLF4",
+            "log2_enrichment": 0.694,
+            "pvalue": 0.00968810479006782,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "MAFK",
+            "log2_enrichment": 0.836,
+            "pvalue": 0.0126869351483419,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "Nr2e1",
+            "log2_enrichment": 0.736,
+            "pvalue": 0.0130927500970123,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "MYF5",
+            "log2_enrichment": 0.747,
+            "pvalue": 0.0150002730963706,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "IRF1",
+            "log2_enrichment": 0.595,
+            "pvalue": 0.0172474926714952,
+            "padj": 0.888411534892027
+          },
+          {
+            "tf": "TCF7L2",
+            "log2_enrichment": 0.631,
+            "pvalue": 0.0184351589334642,
+            "padj": 0.888411534892027
+          }
+        ]
+      },
+      "tables": {
+        "motifs": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_distal_motifs_monalisa.tsv"
+      },
+      "figures": {},
+      "error": null,
+      "warnings": [
+        "No motif passed the adjusted p-value cutoff; top_nominal lists the best motifs by raw p-value (not significant)."
+      ],
+      "rationale": "Enhancer motifs without promoter GC bias.",
+      "elapsed_sec": 52.6,
+      "versions": {
+        "monaLisa": "1.8.1",
+        "TFBSTools": "1.38.0",
+        "JASPAR2020": "0.99.10",
+        "BSgenome.Mmusculus.UCSC.mm10": "1.4.3"
+      }
+    },
+    "E8": {
+      "id": "E8",
+      "tool": "integrate_rnaseq",
+      "title": "Peak-RNA-seq integration",
+      "status": "ok",
+      "params": {},
+      "summary": {
+        "n_tested_genes": 47,
+        "n_up": 17,
+        "n_down": 10,
+        "thresholds": {
+          "padj": 0.05,
+          "abs_log2fc": 0.5
+        },
+        "up_any_peak": {
+          "n_de": 17,
+          "n_with_peak": 17,
+          "pct_with_peak": 100.0,
+          "background_pct": 59.6,
+          "fold": 1.68,
+          "pvalue": 7.833892874950848e-06
+        },
+        "down_any_peak": {
+          "n_de": 10,
+          "n_with_peak": 10,
+          "pct_with_peak": 100.0,
+          "background_pct": 59.6,
+          "fold": 1.68,
+          "pvalue": 0.0025343647795706046
+        },
+        "up_promoter_peak": {
+          "n_de": 17,
+          "n_with_peak": 17,
+          "pct_with_peak": 100.0,
+          "background_pct": 57.4,
+          "fold": 1.74,
+          "pvalue": 3.0776007723021725e-06
+        },
+        "down_promoter_peak": {
+          "n_de": 10,
+          "n_with_peak": 10,
+          "pct_with_peak": 100.0,
+          "background_pct": 57.4,
+          "fold": 1.74,
+          "pvalue": 0.0016292345011525524
+        },
+        "top_bound_de_genes": [
+          "Bach2(down,distal;promoter)",
+          "Ctla4(up,distal;promoter)",
+          "Klf2(down,distal;promoter)",
+          "Tigit(up,distal;promoter)",
+          "Pdcd1(up,distal;promoter)",
+          "Prdm1(up,distal;promoter)",
+          "Tox(up,distal;promoter)",
+          "Cd244a(up,promoter)",
+          "Gzmb(up,distal;promoter)",
+          "Ccr7(down,distal;promoter)",
+          "Rgs16(up,promoter)",
+          "Cish(up,promoter)",
+          "Havcr2(up,promoter)",
+          "Lag3(up,promoter)",
+          "Cd160(up,promoter)",
+          "Il7r(down,distal;promoter)",
+          "Irf4(up,distal;promoter)",
+          "Tcf7(down,distal;promoter)",
+          "Nr4a2(up,distal;promoter)",
+          "Myb(down,distal;promoter)",
+          "S1pr1(down,distal;promoter)",
+          "Il10(up,distal;promoter)",
+          "Id3(down,distal;promoter)",
+          "Batf(up,promoter)",
+          "Lef1(down,distal;promoter)",
+          "Sell(down,distal;promoter)",
+          "Entpd1(up,distal;promoter)"
+        ]
+      },
+      "tables": {
+        "rnaseq_integration": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_rnaseq_integration.tsv"
+      },
+      "figures": {},
+      "error": null,
+      "warnings": [],
+      "rationale": "Link binding to expression changes.",
+      "elapsed_sec": 0.0,
+      "versions": {}
+    },
+    "E9": {
+      "id": "E9",
+      "tool": "chipatlas_collect",
+      "title": "ChIP-Atlas co-binding enrichment",
+      "status": "ok",
+      "params": {
+        "wait_minutes": 50.0
+      },
+      "summary": {
+        "request_id": "wabi_chipatlas_2026-1012-0706-42-6-012434",
+        "ready": true,
+        "n_experiments_tested": 13999,
+        "antigen_class": "TFs and others",
+        "cell_class": "All cell types",
+        "regions": "all",
+        "top_antigens": [
+          {
+            "antigen": "Bcl11b",
+            "best_log10_q": -9.08,
+            "best_fold_enrichment": 18.0,
+            "best_experiment": "SRX2399084",
+            "best_cell": "Thymocytes",
+            "n_significant_experiments": 25,
+            "n_experiments": 32,
+            "cells": [
+              "CD4 CD8 double negative cells",
+              "CD4+ T cells",
+              "CD8+ T cells",
+              "Thymocytes",
+              "Thymus"
+            ]
+          },
+          {
+            "antigen": "Smc1a",
+            "best_log10_q": -8.98,
+            "best_fold_enrichment": 24.5,
+            "best_experiment": "SRX7348146",
+            "best_cell": "CD4 CD8 double positive cells",
+            "n_significant_experiments": 35,
+            "n_experiments": 150,
+            "cells": [
+              "CD4 CD8 double positive cells",
+              "Cerebellum",
+              "Dendritic Cells",
+              "ES cells",
+              "MEF",
+              "NIH/3T3"
+            ]
+          },
+          {
+            "antigen": "Eomes",
+            "best_log10_q": -8.98,
+            "best_fold_enrichment": 24.5,
+            "best_experiment": "SRX4510927",
+            "best_cell": "OT-1",
+            "n_significant_experiments": 5,
+            "n_experiments": 18,
+            "cells": [
+              "Natural killer cells",
+              "OT-1"
+            ]
+          },
+          {
+            "antigen": "Ep300",
+            "best_log10_q": -8.88,
+            "best_fold_enrichment": 23.5,
+            "best_experiment": "SRX183956",
+            "best_cell": "Th1 Cells",
+            "n_significant_experiments": 88,
+            "n_experiments": 240,
+            "cells": [
+              "As4.1",
+              "AtT-20",
+              "B cells",
+              "Brown preadipocytes",
+              "CD4+ T cells",
+              "CD8+ T cells"
+            ]
+          },
+          {
+            "antigen": "Nipbl",
+            "best_log10_q": -8.88,
+            "best_fold_enrichment": 44.0,
+            "best_experiment": "SRX8694064",
+            "best_cell": "T cells",
+            "n_significant_experiments": 60,
+            "n_experiments": 97,
+            "cells": [
+              "B cells",
+              "CD4 CD8 double positive cells",
+              "CH12",
+              "CH12F3",
+              "Neutrophils",
+              "P19"
+            ]
+          },
+          {
+            "antigen": "Ikzf3",
+            "best_log10_q": -8.88,
+            "best_fold_enrichment": 23.5,
+            "best_experiment": "SRX10166889",
+            "best_cell": "Thymocytes",
+            "n_significant_experiments": 8,
+            "n_experiments": 10,
+            "cells": [
+              "Thymocytes"
+            ]
+          },
+          {
+            "antigen": "Relb",
+            "best_log10_q": -8.88,
+            "best_fold_enrichment": 24.0,
+            "best_experiment": "SRX20904786",
+            "best_cell": "Dendritic Cells",
+            "n_significant_experiments": 2,
+            "n_experiments": 3,
+            "cells": [
+              "Dendritic Cells"
+            ]
+          },
+          {
+            "antigen": "Rela",
+            "best_log10_q": -8.71,
+            "best_fold_enrichment": 23.0,
+            "best_experiment": "SRX20904790",
+            "best_cell": "Dendritic Cells",
+            "n_significant_experiments": 73,
+            "n_experiments": 184,
+            "cells": [
+              "Bone Marrow Cells",
+              "Cerebral Cortex",
+              "Dendritic Cells",
+              "Fibro-inflammatory progenitors",
+              "MEF",
+              "Macrophages"
+            ]
+          },
+          {
+            "antigen": "Smarca4",
+            "best_log10_q": -8.57,
+            "best_fold_enrichment": 42.0,
+            "best_experiment": "SRX1815508",
+            "best_cell": "B cells",
+            "n_significant_experiments": 36,
+            "n_experiments": 172,
+            "cells": [
+              "Acute myeloid leukemia",
+              "Adipocytes",
+              "B cells",
+              "Brown preadipocytes",
+              "ES cells",
+              "Embryonic liver"
+            ]
+          },
+          {
+            "antigen": "Satb1",
+            "best_log10_q": -8.4,
+            "best_fold_enrichment": 41.0,
+            "best_experiment": "SRX13440924",
+            "best_cell": "Thymus",
+            "n_significant_experiments": 10,
+            "n_experiments": 23,
+            "cells": [
+              "CD4+ T cells",
+              "Thymocytes",
+              "Thymus"
+            ]
+          },
+          {
+            "antigen": "Stat3",
+            "best_log10_q": -8.33,
+            "best_fold_enrichment": 15.67,
+            "best_experiment": "SRX037909",
+            "best_cell": "Th1 Cells",
+            "n_significant_experiments": 22,
+            "n_experiments": 82,
+            "cells": [
+              "CD4+ T cells",
+              "ES cells",
+              "Mammary glands",
+              "Th1 Cells",
+              "Th17 Cells"
+            ]
+          },
+          {
+            "antigen": "Foxp3",
+            "best_log10_q": -7.89,
+            "best_fold_enrichment": 39.0,
+            "best_experiment": "SRX2341417",
+            "best_cell": "Treg",
+            "n_significant_experiments": 25,
+            "n_experiments": 62,
+            "cells": [
+              "CD4+ T cells",
+              "Treg",
+              "nTreg"
+            ]
+          },
+          {
+            "antigen": "Kdm1a",
+            "best_log10_q": -7.83,
+            "best_fold_enrichment": 21.0,
+            "best_experiment": "SRX3660771",
+            "best_cell": "CD4 CD8 double negative cells",
+            "n_significant_experiments": 16,
+            "n_experiments": 62,
+            "cells": [
+              "Bone Marrow Cells",
+              "CD4 CD8 double negative cells",
+              "ES cells",
+              "EpiLC",
+              "EpiSC",
+              "Hematopoietic progenitors"
+            ]
+          },
+          {
+            "antigen": "Hdac2",
+            "best_log10_q": -7.83,
+            "best_fold_enrichment": 15.0,
+            "best_experiment": "SRX3660760",
+            "best_cell": "CD4 CD8 double negative cells",
+            "n_significant_experiments": 12,
+            "n_experiments": 39,
+            "cells": [
+              "3T3-L1",
+              "B cells",
+              "Bone Marrow Cells",
+              "CD4 CD8 double negative cells",
+              "Scid.adh.2c2"
+            ]
+          },
+          {
+            "antigen": "Ets1",
+            "best_log10_q": -7.71,
+            "best_fold_enrichment": 1000.0,
+            "best_experiment": "SRX188794",
+            "best_cell": "CH12",
+            "n_significant_experiments": 14,
+            "n_experiments": 26,
+            "cells": [
+              "B cells",
+              "CD4+ T cells",
+              "CH12",
+              "MEL",
+              "Scid.adh.2c2",
+              "Th2 Cells"
+            ]
+          },
+          {
+            "antigen": "Tbx21",
+            "best_log10_q": -7.71,
+            "best_fold_enrichment": 38.0,
+            "best_experiment": "SRX107338",
+            "best_cell": "Th1 Cells",
+            "n_significant_experiments": 11,
+            "n_experiments": 22,
+            "cells": [
+              "CD8+ T cells",
+              "Natural killer cells",
+              "Th1 Cells"
+            ]
+          },
+          {
+            "antigen": "Kdm6b",
+            "best_log10_q": -7.71,
+            "best_fold_enrichment": 38.0,
+            "best_experiment": "SRX621429",
+            "best_cell": "CD4+ T cells",
+            "n_significant_experiments": 2,
+            "n_experiments": 9,
+            "cells": [
+              "CD4+ T cells"
+            ]
+          },
+          {
+            "antigen": "Stat5a",
+            "best_log10_q": -7.67,
+            "best_fold_enrichment": 11.75,
+            "best_experiment": "SRX037910",
+            "best_cell": "Th1 Cells",
+            "n_significant_experiments": 18,
+            "n_experiments": 198,
+            "cells": [
+              "CD4+ T cells",
+              "CD8+ T cells",
+              "Leukemia",
+              "Mammary glands",
+              "Monocytes",
+              "Natural killer cells"
+            ]
+          },
+          {
+            "antigen": "Runx3",
+            "best_log10_q": -7.36,
+            "best_fold_enrichment": 20.0,
+            "best_experiment": "SRX7554475",
+            "best_cell": "CD8+ T cells",
+            "n_significant_experiments": 11,
+            "n_experiments": 32,
+            "cells": [
+              "CD8+ T cells",
+              "ILC2",
+              "Natural killer cells",
+              "T progenitor cells"
+            ]
+          },
+          {
+            "antigen": "Cbfb",
+            "best_log10_q": -7.36,
+            "best_fold_enrichment": 14.33,
+            "best_experiment": "SRX2389672",
+            "best_cell": "Thymocytes",
+            "n_significant_experiments": 8,
+            "n_experiments": 17,
+            "cells": [
+              "CD4+ T cells",
+              "CD8+ T cells",
+              "Embryonic liver",
+              "L8057",
+              "Thymocytes"
+            ]
+          },
+          {
+            "antigen": "Kdm2b",
+            "best_log10_q": -7.16,
+            "best_fold_enrichment": 36.0,
+            "best_experiment": "SRX22719877",
+            "best_cell": "Leukemia",
+            "n_significant_experiments": 20,
+            "n_experiments": 34,
+            "cells": [
+              "ES cells",
+              "Leukemia"
+            ]
+          },
+          {
+            "antigen": "Stat4",
+            "best_log10_q": -7.11,
+            "best_fold_enrichment": 19.5,
+            "best_experiment": "SRX7726479",
+            "best_cell": "Natural killer cells",
+            "n_significant_experiments": 7,
+            "n_experiments": 12,
+            "cells": [
+              "Natural killer cells",
+              "Th1 Cells"
+            ]
+          },
+          {
+            "antigen": "GFP",
+            "best_log10_q": -7.04,
+            "best_fold_enrichment": 4.53,
+            "best_experiment": "SRX390112",
+            "best_cell": "ES cells",
+            "n_significant_experiments": 48,
+            "n_experiments": 149,
+            "cells": [
+              "C127",
+              "ES cells"
+            ]
+          },
+          {
+            "antigen": "Rad21",
+            "best_log10_q": -6.94,
+            "best_fold_enrichment": 8.17,
+            "best_experiment": "SRX3753624",
+            "best_cell": "B cells",
+            "n_significant_experiments": 46,
+            "n_experiments": 413,
+            "cells": [
+              "B cells",
+              "CH12",
+              "ES cells",
+              "Embryonic head",
+              "Erythroid Cells",
+              "Liver"
+            ]
+          },
+          {
+            "antigen": "Tfap4",
+            "best_log10_q": -6.94,
+            "best_fold_enrichment": 35.0,
+            "best_experiment": "SRX554972",
+            "best_cell": "CD8+ T cells",
+            "n_significant_experiments": 1,
+            "n_experiments": 3,
+            "cells": [
+              "CD8+ T cells"
+            ]
+          }
+        ],
+        "top_experiments": [
+          {
+            "experiment": "SRX2399084",
+            "antigen": "Bcl11b",
+            "cell": "Thymocytes",
+            "log10_q": -9.08185,
+            "fold_enrichment": 18.0,
+            "overlaps_user": "54/351"
+          },
+          {
+            "experiment": "SRX4510927",
+            "antigen": "Eomes",
+            "cell": "OT-1",
+            "log10_q": -8.98201,
+            "fold_enrichment": 24.5,
+            "overlaps_user": "49/351"
+          },
+          {
+            "experiment": "SRX7348146",
+            "antigen": "Smc1a",
+            "cell": "CD4 CD8 double positive cells",
+            "log10_q": -8.98201,
+            "fold_enrichment": 24.5,
+            "overlaps_user": "49/351"
+          },
+          {
+            "experiment": "SRX20904786",
+            "antigen": "Relb",
+            "cell": "Dendritic Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 24.0,
+            "overlaps_user": "48/351"
+          },
+          {
+            "experiment": "SRX8694064",
+            "antigen": "Nipbl",
+            "cell": "T cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 44.0,
+            "overlaps_user": "44/351"
+          },
+          {
+            "experiment": "SRX10166889",
+            "antigen": "Ikzf3",
+            "cell": "Thymocytes",
+            "log10_q": -8.87854,
+            "fold_enrichment": 23.5,
+            "overlaps_user": "47/351"
+          },
+          {
+            "experiment": "SRX183956",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 23.5,
+            "overlaps_user": "47/351"
+          },
+          {
+            "experiment": "SRX183960",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 23.5,
+            "overlaps_user": "47/351"
+          },
+          {
+            "experiment": "SRX183947",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 16.6667,
+            "overlaps_user": "50/351"
+          },
+          {
+            "experiment": "SRX183950",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 16.6667,
+            "overlaps_user": "50/351"
+          },
+          {
+            "experiment": "SRX183957",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.87854,
+            "fold_enrichment": 16.6667,
+            "overlaps_user": "50/351"
+          },
+          {
+            "experiment": "SRX183934",
+            "antigen": "Ep300",
+            "cell": "Th1 Cells",
+            "log10_q": -8.70698,
+            "fold_enrichment": 23.0,
+            "overlaps_user": "46/351"
+          },
+          {
+            "experiment": "SRX20904790",
+            "antigen": "Rela",
+            "cell": "Dendritic Cells",
+            "log10_q": -8.70698,
+            "fold_enrichment": 23.0,
+            "overlaps_user": "46/351"
+          },
+          {
+            "experiment": "SRX7348143",
+            "antigen": "Smc1a",
+            "cell": "CD4 CD8 double positive cells",
+            "log10_q": -8.70698,
+            "fold_enrichment": 23.0,
+            "overlaps_user": "46/351"
+          },
+          {
+            "experiment": "SRX1815508",
+            "antigen": "Smarca4",
+            "cell": "B cells",
+            "log10_q": -8.57069,
+            "fold_enrichment": 42.0,
+            "overlaps_user": "42/351"
+          }
+        ]
+      },
+      "tables": {
+        "chipatlas": "/private/tmp/claude-502/-Users-hhua-Desktop-Berger-Wherry-Lab-0-Projects-0-HH-Projects-GitHub-PeakAnnoAgent-PeakAnnoAgent/fa77be4b-70a1-4335-8ad6-77895623933c/scratchpad/noagent12/results/tex_chipatlas_012434.tsv"
+      },
+      "figures": {},
+      "error": null,
+      "warnings": [],
+      "rationale": "Collect public co-binding results.",
+      "elapsed_sec": 531.4,
+      "versions": {}
+    },
+    "E10": {
+      "id": "E10",
+      "tool": "check_expectations",
+      "title": "Positive-control check",
+      "status": "ok",
+      "params": {},
+      "summary": {
+        "genes": [
+          {
+            "gene": "Tox",
+            "bound": true,
+            "n_peaks": 4,
+            "classes": [
+              "distal",
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          },
+          {
+            "gene": "Pdcd1",
+            "bound": true,
+            "n_peaks": 6,
+            "classes": [
+              "distal",
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          },
+          {
+            "gene": "Havcr2",
+            "bound": true,
+            "n_peaks": 2,
+            "classes": [
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          },
+          {
+            "gene": "Entpd1",
+            "bound": true,
+            "n_peaks": 4,
+            "classes": [
+              "distal",
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          },
+          {
+            "gene": "Tcf7",
+            "bound": true,
+            "n_peaks": 4,
+            "classes": [
+              "distal",
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          },
+          {
+            "gene": "Cd160",
+            "bound": true,
+            "n_peaks": 2,
+            "classes": [
+              "promoter"
+            ],
+            "min_abs_distance": 0
+          }
+        ],
+        "tfs": [
+          {
+            "tf": "Nfatc1",
+            "motif_rank": null,
+            "motif_significant": false,
+            "n_significant_motifs": 0,
+            "chipatlas_rank": null
+          },
+          {
+            "tf": "Nr4a1",
+            "motif_rank": null,
+            "motif_significant": false,
+            "n_significant_motifs": 0,
+            "chipatlas_rank": null
+          },
+          {
+            "tf": "Batf",
+            "motif_rank": null,
+            "motif_significant": false,
+            "n_significant_motifs": 0,
+            "chipatlas_rank": null
+          },
+          {
+            "tf": "Tcf7",
+            "motif_rank": null,
+            "motif_significant": false,
+            "n_significant_motifs": 0,
+            "chipatlas_rank": null
+          }
+        ],
+        "genes_recovered": "6/6",
+        "tfs_recovered": "0/4"
+      },
+      "tables": {},
+      "figures": {},
+      "error": null,
+      "warnings": [
+        "None of the expected TFs were recovered by motifs or public-data overlap."
+      ],
+      "rationale": "Positive controls from the user's known biology.",
+      "elapsed_sec": 0.0,
+      "versions": {}
+    },
+    "E11": {
+      "id": "E11",
+      "tool": "search_literature",
+      "title": "Literature: TITLE_ABS:(\"CD8 T cells\") AND TITLE_ABS:(Nfatc1 OR Nr4a1 OR Batf OR Tcf7)",
+      "status": "ok",
+      "params": {
+        "query": "TITLE_ABS:(\"CD8 T cells\") AND TITLE_ABS:(Nfatc1 OR Nr4a1 OR Batf OR Tcf7)",
+        "max_results": 8
+      },
+      "summary": {
+        "query": "TITLE_ABS:(\"CD8 T cells\") AND TITLE_ABS:(Nfatc1 OR Nr4a1 OR Batf OR Tcf7)",
+        "papers": [
+          {
+            "pmid": "20890291",
+            "id": "PMID:20890291",
+            "title": "Transcriptional analysis of HIV-specific CD8+ T cells shows that PD-1 inhibits T cell function by upregulating BATF.",
+            "authors": "Quigley M, Pereyra F, Nilsson B, Porichis F, Fonseca C, Eichbaum Q, Julg B, Jesneck JL, Brosnahan K, Imam S, Russell K,\u2026",
+            "journal": "Nature medicine",
+            "year": "2010",
+            "doi": "10.1038/nm.2232",
+            "preprint": false,
+            "cited_by": 448,
+            "abstract": "CD8(+) T cells in chronic viral infections such as HIV develop functional defects including loss of interleukin-2 (IL-2) secretion and decreased proliferative potential that are collectively termed 'exhaustion'. Exhausted T cells express increased amounts of multiple inhibitory receptors, such as programmed death-1 (PD-1), that contribute to impaired virus-specific T cell function. Although reversing PD-1 inhibition is therefore an attractive therapeutic strategy, the cellular mechanisms by which PD-1 ligation results in T cell inhibition are not fully understood. PD-1 is thought to limit T cell activation by attenuating T cell receptor (TCR) signaling. It is not known whether PD-1 also acts by upregulating genes in exhausted T cells that impair their function. Here we analyzed gene expression profiles from HIV-specific CD8(+) T cells in individuals with HIV and show that PD-1 coordinat\u2026"
+          },
+          {
+            "pmid": "36068198",
+            "id": "PMID:36068198",
+            "title": "Lactate increases stemness of CD8\u2009+\u2009T cells to augment anti-tumor immunity.",
+            "authors": "Feng Q, Liu Z, Yu X, Huang T, Huang T, Chen J, Wang J, Wilhelm J, Li S, Song J, Li W, Sun Z, Sumer BD, Li B, Fu YX, Gao\u2026",
+            "journal": "Nature communications",
+            "year": "2022",
+            "doi": "10.1038/s41467-022-32521-8",
+            "preprint": false,
+            "cited_by": 374,
+            "abstract": "Lactate is a key metabolite produced from glycolytic metabolism of glucose molecules, yet it also serves as a primary carbon fuel source for many cell types. In the tumor-immune microenvironment, effect of lactate on cancer and immune cells can be highly complex and hard to decipher, which is further confounded by acidic protons, a co-product of glycolysis. Here we show that lactate is able to increase stemness of CD8+ T cells and augments anti-tumor immunity. Subcutaneous administration of sodium\u00a0lactate but not glucose to mice bearing transplanted MC38 tumors results in CD8+ T cell-dependent tumor growth inhibition. Single cell transcriptomics analysis reveals increased proportion of stem-like TCF-1-expressing CD8+ T cells among intra-tumoral CD3+ cells, a phenotype validated by in vitro lactate treatment of T cells. Mechanistically, lactate inhibits histone deacetylase activity, whic\u2026"
+          },
+          {
+            "pmid": "18802087",
+            "id": "PMID:18802087",
+            "title": "NFATc1 regulates PD-1 expression upon T cell activation.",
+            "authors": "Oestreich KJ, Yoon H, Ahmed R, Boss JM.",
+            "journal": "Journal of immunology (Baltimore, Md. : 1950)",
+            "year": "2008",
+            "doi": "10.4049/jimmunol.181.7.4832",
+            "preprint": false,
+            "cited_by": 347,
+            "abstract": "PD-1 is a transmembrane protein involved in the regulation of immunological tolerance. Multiple studies have reported an association between high levels of PD-1 expressed on T cell surfaces and exhaustion in lymphocyte populations when challenged by chronic viral infections, such as HIV. By using model systems consisting of murine EL4 cells, which constitutively express PD-1, and primary murine CD8 T cells that express PD-1 upon T cell stimulation, we have identified two tissue-specific hypersensitive sites at the 5' CR of the PD-1 locus. Gene reporter assays in CD8 T cells have shown that one of these sites has robust transcriptional activity in response to cell stimulation. Cell treatment with the calcineurin inhibitor cyclosporine A or a NFAT-specific inhibitor led to a sharp reduction in PD-1 expression in the constitutive and inducible systems. Furthermore, analysis of this region\u2026"
+          },
+          {
+            "pmid": "24584090",
+            "id": "PMID:24584090",
+            "title": "The transcription factor BATF operates as an essential differentiation checkpoint in early effector CD8+ T cells.",
+            "authors": "Kurachi M, Barnitz RA, Yosef N, Odorizzi PM, DiIorio MA, Lemieux ME, Yates K, Godec J, Klatt MG, Regev A, Wherry EJ, Ha\u2026",
+            "journal": "Nature immunology",
+            "year": "2014",
+            "doi": "10.1038/ni.2834",
+            "preprint": false,
+            "cited_by": 340,
+            "abstract": "The transcription factor BATF is required for the differentiation of interleukin 17 (IL-17)-producing helper T cells (TH17 cells) and follicular helper T cells (TFH cells). Here we identified a fundamental role for BATF in regulating the differentiation of effector of CD8(+) T cells. BATF-deficient CD8(+) T cells showed profound defects in effector population expansion and underwent proliferative and metabolic catastrophe early after encountering antigen. BATF, together with the transcription factors IRF4 and Jun proteins, bound to and promoted early expression of genes encoding lineage-specific transcription-factors (T-bet and Blimp-1) and cytokine receptors while paradoxically repressing genes encoding effector molecules (IFN-\u03b3 and granzyme B). Thus, BATF amplifies T cell antigen receptor (TCR)-dependent expression of transcription factors and augments the propagation of inflammatory\u2026"
+          },
+          {
+            "pmid": "34471285",
+            "id": "PMID:34471285",
+            "title": "Functional HPV-specific PD-1+ stem-like CD8 T cells in head and neck cancer.",
+            "authors": "Eberhardt CS, Kissick HT, Patel MR, Cardenas MA, Prokhnevska N, Obeng RC, Nasti TH, Griffith CC, Im SJ, Wang X, Shin DM\u2026",
+            "journal": "Nature",
+            "year": "2021",
+            "doi": "10.1038/s41586-021-03862-z",
+            "preprint": false,
+            "cited_by": 311,
+            "abstract": "T cells are important in tumour immunity but a better understanding is needed of the differentiation of antigen-specific T cells in human cancer1,2. Here we studied CD8 T cells in patients with human papillomavirus (HPV)-positive head and neck cancer and identified several epitopes derived from HPV E2, E5 and E6 proteins that allowed us to analyse virus-specific CD8 T cells using major histocompatibility complex (MHC) class I tetramers. HPV-specific CD8 T cells expressed PD-1 and were detectable in the tumour at levels that ranged from 0.1% to 10% of tumour-infiltrating CD8 T lymphocytes (TILs) for a given epitope. Single-cell RNA-sequencing analyses of tetramer-sorted HPV-specific PD-1+ CD8 TILs revealed three transcriptionally distinct subsets. One subset expressed TCF7 and other genes associated with PD-1+ stem-like CD8 T cells that are critical for maintaining T cell responses in co\u2026"
+          },
+          {
+            "pmid": "31783783",
+            "id": "PMID:31783783",
+            "title": "PD1Hi CD8+ T cells correlate with exhausted signature and poor clinical outcome in hepatocellular carcinoma.",
+            "authors": "Ma J, Zheng B, Goswami S, Meng L, Zhang D, Cao C, Li T, Zhu F, Ma L, Zhang Z, Zhang S, Duan M, Chen Q, Gao Q, Zhang X.",
+            "journal": "Journal for immunotherapy of cancer",
+            "year": "2019",
+            "doi": "10.1186/s40425-019-0814-7",
+            "preprint": false,
+            "cited_by": 280,
+            "abstract": "BackgroundCD8+ T cells differentiate into exhausted status within tumors, including hepatocellular carcinoma (HCC), which constitutes a solid barrier to effective anti-tumor immunity. A detailed characterization of exhausted T cells and their prognostic value in HCC is lacking.MethodsWe collected fresh tumor tissues with adjacent non-tumor liver tissues and blood specimens of 56 HCC patients, as well as archived samples from two independent cohorts of HCC patients (n\u2009=\u2009358 and n\u2009=\u2009254), who underwent surgical resection. Flow cytometry and multiplex immunostaining were used to characterize CD8+ T cells. Patient prognosis was evaluated by Kaplan-Meier analysis and Cox regression analysis.ResultsCD8+ T cells were classified into three distinct subpopulations: PD1Hi, PD1Int and PD1-. PD1Hi CD8+ T cells were significantly enriched in tumor compared to adjacent non-tumor liver tissues. PD1Hi\u2026"
+          },
+          {
+            "pmid": "27939672",
+            "id": "PMID:27939672",
+            "title": "Dynamic Changes in Chromatin Accessibility Occur in CD8+ T Cells Responding to Viral Infection.",
+            "authors": "Scott-Browne JP, L\u00f3pez-Moyado IF, Trifari S, Wong V, Chavez L, Rao A, Pereira RM.",
+            "journal": "Immunity",
+            "year": "2016",
+            "doi": "10.1016/j.immuni.2016.10.028",
+            "preprint": false,
+            "cited_by": 279,
+            "abstract": "In response to acute infection, naive CD8+ T\u00a0cells expand, differentiate into effector cells, and then contract to a long-lived pool of memory cells after pathogen clearance. During chronic infections or in tumors, CD8+ T\u00a0cells acquire an \"exhausted\" phenotype. Here we present genome-wide comparisons of chromatin accessibility and gene expression from endogenous CD8+ T\u00a0cells responding to acute and chronic viral infection using ATAC-seq and RNA-seq techniques. Acquisition of effector, memory, or exhausted phenotypes was associated with stable changes in chromatin accessibility away from the naive T\u00a0cell state. Regions differentially accessible between functional subsets in\u00a0vivo were enriched for binding sites of transcription factors known to regulate these subsets, including E2A, BATF, IRF4, T-bet, and TCF1. Exhaustion-specific accessible regions were enriched for consensus binding sit\u2026"
+          },
+          {
+            "pmid": "27550452",
+            "id": "PMID:27550452",
+            "title": "Abscopal Effects of Radiotherapy Are Enhanced by Combined Immunostimulatory mAbs and Are Dependent on CD8 T Cells and Crosspriming.",
+            "authors": "Rodriguez-Ruiz ME, Rodriguez I, Garasa S, Barbes B, Solorzano JL, Perez-Gracia JL, Labiano S, Sanmamed MF, Azpilikueta\u2026",
+            "journal": "Cancer research",
+            "year": "2016",
+            "doi": "10.1158/0008-5472.can-16-0549",
+            "preprint": false,
+            "cited_by": 213,
+            "abstract": "Preclinical and clinical evidence indicate that the proimmune effects of radiotherapy can be synergistically augmented with immunostimulatory mAbs to act both on irradiated tumor lesions and on distant, nonirradiated tumor sites. The combination of radiotherapy with immunostimulatory anti-PD1 and anti-CD137 mAbs was conducive to favorable effects on distant nonirradiated tumor lesions as observed in transplanted MC38 (colorectal cancer), B16OVA (melanoma), and 4T1 (breast cancer) models. The therapeutic activity was crucially performed by CD8 T cells, as found in selective depletion experiments. Moreover, the integrities of BATF-3-dependent dendritic cells specialized in crosspresentation/crosspriming of antigens to CD8+ T cells and of the type I IFN system were absolute requirements for the antitumor effects to occur. The irradiation regimen induced immune infiltrate changes in the irr\u2026"
+          }
+        ],
+        "note": "Cite papers as [PMID:n]. Only claims supported by these abstracts may be cited."
+      },
+      "tables": {},
+      "figures": {},
+      "error": null,
+      "warnings": [],
+      "rationale": "Most-cited papers on these factors in this cell type.",
+      "elapsed_sec": 0.9,
+      "versions": {}
+    },
+    "E12": {
+      "id": "E12",
+      "tool": "search_geo",
+      "title": "GEO datasets: Nfatc1 CD8 T cells ATAC-seq",
+      "status": "ok",
+      "params": {
+        "query": "Nfatc1 CD8 T cells ATAC-seq",
+        "max_results": 8
+      },
+      "summary": {
+        "query": "Nfatc1 CD8 T cells ATAC-seq",
+        "datasets": [
+          {
+            "accession": "GSE166718",
+            "title": "Hierarchical interactions between chromatin remodeling transcription factors define the epigenetic landscape of antiviral T cells",
+            "summary": "T cell activation induces rapid proliferative expansion and the acquisitions of specialized effector functions that enable protection against invading pathogens.  While a multitude of transcription factors (TFs) have been implicated in the regulation of T cell activation, it remains largely unclear how their functions are organized and integrated at the genomic level. Here, we leveraged naturally occurring TF binding site polymorphisms in wild derived inbred mice to identify the most critical \u201c\u2026",
+            "type": "Expression profiling by high throughput sequencing; Genome binding/occupancy profiling by high throughput sequencing",
+            "organism": "Mus musculus",
+            "n_samples": 84,
+            "date": "2021/12/13",
+            "pubmed_ids": [
+              "34937932"
+            ],
+            "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE166718"
+          }
+        ],
+        "note": "Cite datasets by accession, e.g. [GSE12345]."
+      },
+      "tables": {},
+      "figures": {},
+      "error": null,
+      "warnings": [],
+      "rationale": "Comparable public datasets.",
+      "elapsed_sec": 0.5,
+      "versions": {}
+    }
+  },
+  "references": {
+    "PMID:20890291": {
+      "pmid": "20890291",
+      "id": "PMID:20890291",
+      "title": "Transcriptional analysis of HIV-specific CD8+ T cells shows that PD-1 inhibits T cell function by upregulating BATF.",
+      "authors": "Quigley M, Pereyra F, Nilsson B, Porichis F, Fonseca C, Eichbaum Q, Julg B, Jesneck JL, Brosnahan K, Imam S, Russell K,\u2026",
+      "journal": "Nature medicine",
+      "year": "2010",
+      "doi": "10.1038/nm.2232",
+      "preprint": false,
+      "cited_by": 448,
+      "abstract": "CD8(+) T cells in chronic viral infections such as HIV develop functional defects including loss of interleukin-2 (IL-2) secretion and decreased proliferative potential that are collectively termed 'exhaustion'. Exhausted T cells express increased amounts of multiple inhibitory receptors, such as programmed death-1 (PD-1), that contribute to impaired virus-specific T cell function. Although reversing PD-1 inhibition is therefore an attractive therapeutic strategy, the cellular mechanisms by which PD-1 ligation results in T cell inhibition are not fully understood. PD-1 is thought to limit T cell activation by attenuating T cell receptor (TCR) signaling. It is not known whether PD-1 also acts by upregulating genes in exhausted T cells that impair their function. Here we analyzed gene expression profiles from HIV-specific CD8(+) T cells in individuals with HIV and show that PD-1 coordinat\u2026"
+    },
+    "PMID:36068198": {
+      "pmid": "36068198",
+      "id": "PMID:36068198",
+      "title": "Lactate increases stemness of CD8\u2009+\u2009T cells to augment anti-tumor immunity.",
+      "authors": "Feng Q, Liu Z, Yu X, Huang T, Huang T, Chen J, Wang J, Wilhelm J, Li S, Song J, Li W, Sun Z, Sumer BD, Li B, Fu YX, Gao\u2026",
+      "journal": "Nature communications",
+      "year": "2022",
+      "doi": "10.1038/s41467-022-32521-8",
+      "preprint": false,
+      "cited_by": 374,
+      "abstract": "Lactate is a key metabolite produced from glycolytic metabolism of glucose molecules, yet it also serves as a primary carbon fuel source for many cell types. In the tumor-immune microenvironment, effect of lactate on cancer and immune cells can be highly complex and hard to decipher, which is further confounded by acidic protons, a co-product of glycolysis. Here we show that lactate is able to increase stemness of CD8+ T cells and augments anti-tumor immunity. Subcutaneous administration of sodium\u00a0lactate but not glucose to mice bearing transplanted MC38 tumors results in CD8+ T cell-dependent tumor growth inhibition. Single cell transcriptomics analysis reveals increased proportion of stem-like TCF-1-expressing CD8+ T cells among intra-tumoral CD3+ cells, a phenotype validated by in vitro lactate treatment of T cells. Mechanistically, lactate inhibits histone deacetylase activity, whic\u2026"
+    },
+    "PMID:18802087": {
+      "pmid": "18802087",
+      "id": "PMID:18802087",
+      "title": "NFATc1 regulates PD-1 expression upon T cell activation.",
+      "authors": "Oestreich KJ, Yoon H, Ahmed R, Boss JM.",
+      "journal": "Journal of immunology (Baltimore, Md. : 1950)",
+      "year": "2008",
+      "doi": "10.4049/jimmunol.181.7.4832",
+      "preprint": false,
+      "cited_by": 347,
+      "abstract": "PD-1 is a transmembrane protein involved in the regulation of immunological tolerance. Multiple studies have reported an association between high levels of PD-1 expressed on T cell surfaces and exhaustion in lymphocyte populations when challenged by chronic viral infections, such as HIV. By using model systems consisting of murine EL4 cells, which constitutively express PD-1, and primary murine CD8 T cells that express PD-1 upon T cell stimulation, we have identified two tissue-specific hypersensitive sites at the 5' CR of the PD-1 locus. Gene reporter assays in CD8 T cells have shown that one of these sites has robust transcriptional activity in response to cell stimulation. Cell treatment with the calcineurin inhibitor cyclosporine A or a NFAT-specific inhibitor led to a sharp reduction in PD-1 expression in the constitutive and inducible systems. Furthermore, analysis of this region\u2026"
+    },
+    "PMID:24584090": {
+      "pmid": "24584090",
+      "id": "PMID:24584090",
+      "title": "The transcription factor BATF operates as an essential differentiation checkpoint in early effector CD8+ T cells.",
+      "authors": "Kurachi M, Barnitz RA, Yosef N, Odorizzi PM, DiIorio MA, Lemieux ME, Yates K, Godec J, Klatt MG, Regev A, Wherry EJ, Ha\u2026",
+      "journal": "Nature immunology",
+      "year": "2014",
+      "doi": "10.1038/ni.2834",
+      "preprint": false,
+      "cited_by": 340,
+      "abstract": "The transcription factor BATF is required for the differentiation of interleukin 17 (IL-17)-producing helper T cells (TH17 cells) and follicular helper T cells (TFH cells). Here we identified a fundamental role for BATF in regulating the differentiation of effector of CD8(+) T cells. BATF-deficient CD8(+) T cells showed profound defects in effector population expansion and underwent proliferative and metabolic catastrophe early after encountering antigen. BATF, together with the transcription factors IRF4 and Jun proteins, bound to and promoted early expression of genes encoding lineage-specific transcription-factors (T-bet and Blimp-1) and cytokine receptors while paradoxically repressing genes encoding effector molecules (IFN-\u03b3 and granzyme B). Thus, BATF amplifies T cell antigen receptor (TCR)-dependent expression of transcription factors and augments the propagation of inflammatory\u2026"
+    },
+    "PMID:34471285": {
+      "pmid": "34471285",
+      "id": "PMID:34471285",
+      "title": "Functional HPV-specific PD-1+ stem-like CD8 T cells in head and neck cancer.",
+      "authors": "Eberhardt CS, Kissick HT, Patel MR, Cardenas MA, Prokhnevska N, Obeng RC, Nasti TH, Griffith CC, Im SJ, Wang X, Shin DM\u2026",
+      "journal": "Nature",
+      "year": "2021",
+      "doi": "10.1038/s41586-021-03862-z",
+      "preprint": false,
+      "cited_by": 311,
+      "abstract": "T cells are important in tumour immunity but a better understanding is needed of the differentiation of antigen-specific T cells in human cancer1,2. Here we studied CD8 T cells in patients with human papillomavirus (HPV)-positive head and neck cancer and identified several epitopes derived from HPV E2, E5 and E6 proteins that allowed us to analyse virus-specific CD8 T cells using major histocompatibility complex (MHC) class I tetramers. HPV-specific CD8 T cells expressed PD-1 and were detectable in the tumour at levels that ranged from 0.1% to 10% of tumour-infiltrating CD8 T lymphocytes (TILs) for a given epitope. Single-cell RNA-sequencing analyses of tetramer-sorted HPV-specific PD-1+ CD8 TILs revealed three transcriptionally distinct subsets. One subset expressed TCF7 and other genes associated with PD-1+ stem-like CD8 T cells that are critical for maintaining T cell responses in co\u2026"
+    },
+    "PMID:31783783": {
+      "pmid": "31783783",
+      "id": "PMID:31783783",
+      "title": "PD1Hi CD8+ T cells correlate with exhausted signature and poor clinical outcome in hepatocellular carcinoma.",
+      "authors": "Ma J, Zheng B, Goswami S, Meng L, Zhang D, Cao C, Li T, Zhu F, Ma L, Zhang Z, Zhang S, Duan M, Chen Q, Gao Q, Zhang X.",
+      "journal": "Journal for immunotherapy of cancer",
+      "year": "2019",
+      "doi": "10.1186/s40425-019-0814-7",
+      "preprint": false,
+      "cited_by": 280,
+      "abstract": "BackgroundCD8+ T cells differentiate into exhausted status within tumors, including hepatocellular carcinoma (HCC), which constitutes a solid barrier to effective anti-tumor immunity. A detailed characterization of exhausted T cells and their prognostic value in HCC is lacking.MethodsWe collected fresh tumor tissues with adjacent non-tumor liver tissues and blood specimens of 56 HCC patients, as well as archived samples from two independent cohorts of HCC patients (n\u2009=\u2009358 and n\u2009=\u2009254), who underwent surgical resection. Flow cytometry and multiplex immunostaining were used to characterize CD8+ T cells. Patient prognosis was evaluated by Kaplan-Meier analysis and Cox regression analysis.ResultsCD8+ T cells were classified into three distinct subpopulations: PD1Hi, PD1Int and PD1-. PD1Hi CD8+ T cells were significantly enriched in tumor compared to adjacent non-tumor liver tissues. PD1Hi\u2026"
+    },
+    "PMID:27939672": {
+      "pmid": "27939672",
+      "id": "PMID:27939672",
+      "title": "Dynamic Changes in Chromatin Accessibility Occur in CD8+ T Cells Responding to Viral Infection.",
+      "authors": "Scott-Browne JP, L\u00f3pez-Moyado IF, Trifari S, Wong V, Chavez L, Rao A, Pereira RM.",
+      "journal": "Immunity",
+      "year": "2016",
+      "doi": "10.1016/j.immuni.2016.10.028",
+      "preprint": false,
+      "cited_by": 279,
+      "abstract": "In response to acute infection, naive CD8+ T\u00a0cells expand, differentiate into effector cells, and then contract to a long-lived pool of memory cells after pathogen clearance. During chronic infections or in tumors, CD8+ T\u00a0cells acquire an \"exhausted\" phenotype. Here we present genome-wide comparisons of chromatin accessibility and gene expression from endogenous CD8+ T\u00a0cells responding to acute and chronic viral infection using ATAC-seq and RNA-seq techniques. Acquisition of effector, memory, or exhausted phenotypes was associated with stable changes in chromatin accessibility away from the naive T\u00a0cell state. Regions differentially accessible between functional subsets in\u00a0vivo were enriched for binding sites of transcription factors known to regulate these subsets, including E2A, BATF, IRF4, T-bet, and TCF1. Exhaustion-specific accessible regions were enriched for consensus binding sit\u2026"
+    },
+    "PMID:27550452": {
+      "pmid": "27550452",
+      "id": "PMID:27550452",
+      "title": "Abscopal Effects of Radiotherapy Are Enhanced by Combined Immunostimulatory mAbs and Are Dependent on CD8 T Cells and Crosspriming.",
+      "authors": "Rodriguez-Ruiz ME, Rodriguez I, Garasa S, Barbes B, Solorzano JL, Perez-Gracia JL, Labiano S, Sanmamed MF, Azpilikueta\u2026",
+      "journal": "Cancer research",
+      "year": "2016",
+      "doi": "10.1158/0008-5472.can-16-0549",
+      "preprint": false,
+      "cited_by": 213,
+      "abstract": "Preclinical and clinical evidence indicate that the proimmune effects of radiotherapy can be synergistically augmented with immunostimulatory mAbs to act both on irradiated tumor lesions and on distant, nonirradiated tumor sites. The combination of radiotherapy with immunostimulatory anti-PD1 and anti-CD137 mAbs was conducive to favorable effects on distant nonirradiated tumor lesions as observed in transplanted MC38 (colorectal cancer), B16OVA (melanoma), and 4T1 (breast cancer) models. The therapeutic activity was crucially performed by CD8 T cells, as found in selective depletion experiments. Moreover, the integrities of BATF-3-dependent dendritic cells specialized in crosspresentation/crosspriming of antigens to CD8+ T cells and of the type I IFN system were absolute requirements for the antitumor effects to occur. The irradiation regimen induced immune infiltrate changes in the irr\u2026"
+    }
+  },
+  "datasets": {
+    "SRX2399084": {
+      "antigen": "Bcl11b",
+      "cell": "Thymocytes",
+      "url": "https://chip-atlas.org/view?id=SRX2399084"
+    },
+    "SRX4510927": {
+      "antigen": "Eomes",
+      "cell": "OT-1",
+      "url": "https://chip-atlas.org/view?id=SRX4510927"
+    },
+    "SRX7348146": {
+      "antigen": "Smc1a",
+      "cell": "CD4 CD8 double positive cells",
+      "url": "https://chip-atlas.org/view?id=SRX7348146"
+    },
+    "SRX20904786": {
+      "antigen": "Relb",
+      "cell": "Dendritic Cells",
+      "url": "https://chip-atlas.org/view?id=SRX20904786"
+    },
+    "SRX8694064": {
+      "antigen": "Nipbl",
+      "cell": "T cells",
+      "url": "https://chip-atlas.org/view?id=SRX8694064"
+    },
+    "SRX10166889": {
+      "antigen": "Ikzf3",
+      "cell": "Thymocytes",
+      "url": "https://chip-atlas.org/view?id=SRX10166889"
+    },
+    "SRX183956": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183956"
+    },
+    "SRX183960": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183960"
+    },
+    "SRX183947": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183947"
+    },
+    "SRX183950": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183950"
+    },
+    "SRX183957": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183957"
+    },
+    "SRX183934": {
+      "antigen": "Ep300",
+      "cell": "Th1 Cells",
+      "url": "https://chip-atlas.org/view?id=SRX183934"
+    },
+    "SRX20904790": {
+      "antigen": "Rela",
+      "cell": "Dendritic Cells",
+      "url": "https://chip-atlas.org/view?id=SRX20904790"
+    },
+    "SRX7348143": {
+      "antigen": "Smc1a",
+      "cell": "CD4 CD8 double positive cells",
+      "url": "https://chip-atlas.org/view?id=SRX7348143"
+    },
+    "SRX1815508": {
+      "antigen": "Smarca4",
+      "cell": "B cells",
+      "url": "https://chip-atlas.org/view?id=SRX1815508"
+    },
+    "GSE166718": {
+      "accession": "GSE166718",
+      "title": "Hierarchical interactions between chromatin remodeling transcription factors define the epigenetic landscape of antiviral T cells",
+      "summary": "T cell activation induces rapid proliferative expansion and the acquisitions of specialized effector functions that enable protection against invading pathogens.  While a multitude of transcription factors (TFs) have been implicated in the regulation of T cell activation, it remains largely unclear how their functions are organized and integrated at the genomic level. Here, we leveraged naturally occurring TF binding site polymorphisms in wild derived inbred mice to identify the most critical \u201c\u2026",
+      "type": "Expression profiling by high throughput sequencing; Genome binding/occupancy profiling by high throughput sequencing",
+      "organism": "Mus musculus",
+      "n_samples": 84,
+      "date": "2021/12/13",
+      "pubmed_ids": [
+        "34937932"
+      ],
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE166718"
+    }
+  },
+  "trace": [
+    {
+      "evidence": "E1",
+      "tool": "peak_qc",
+      "status": "ok",
+      "rationale": "Baseline QC and cleaning before annotation.",
+      "time": "18:06:20"
+    },
+    {
+      "evidence": "E2",
+      "tool": "annotate_peaks",
+      "status": "ok",
+      "rationale": "Default ChIPpeakAnno workflow (-2000/+500 bp promoter window).",
+      "time": "18:06:41"
+    },
+    {
+      "evidence": "E3",
+      "tool": "chipatlas_submit",
+      "status": "ok",
+      "rationale": "Find public TF ChIP-seq that overlaps these peaks.",
+      "time": "18:06:42"
+    },
+    {
+      "evidence": "E4",
+      "tool": "enrich_pathways",
+      "status": "ok",
+      "rationale": "Standard GO/KEGG/Hallmark ORA on peak-linked genes.",
+      "time": "18:07:52"
+    },
+    {
+      "evidence": "E5",
+      "tool": "great_enrichment",
+      "status": "error",
+      "rationale": "Region-based enrichment for distal peaks.",
+      "time": "18:07:52"
+    },
+    {
+      "evidence": "E6",
+      "tool": "find_motifs",
+      "status": "ok",
+      "rationale": "Known-motif enrichment at peak centres.",
+      "time": "18:08:48"
+    },
+    {
+      "evidence": "E7",
+      "tool": "find_motifs",
+      "status": "ok",
+      "rationale": "Enhancer motifs without promoter GC bias.",
+      "time": "18:09:41"
+    },
+    {
+      "evidence": "E8",
+      "tool": "integrate_rnaseq",
+      "status": "ok",
+      "rationale": "Link binding to expression changes.",
+      "time": "18:09:41"
+    },
+    {
+      "evidence": "E9",
+      "tool": "chipatlas_collect",
+      "status": "ok",
+      "rationale": "Collect public co-binding results.",
+      "time": "18:18:32"
+    },
+    {
+      "evidence": "E10",
+      "tool": "check_expectations",
+      "status": "ok",
+      "rationale": "Positive controls from the user's known biology.",
+      "time": "18:18:32"
+    },
+    {
+      "evidence": "E11",
+      "tool": "search_literature",
+      "status": "ok",
+      "rationale": "Most-cited papers on these factors in this cell type.",
+      "time": "18:18:33"
+    },
+    {
+      "evidence": "E12",
+      "tool": "search_geo",
+      "status": "ok",
+      "rationale": "Comparable public datasets.",
+      "time": "18:18:34"
+    }
+  ]
+}

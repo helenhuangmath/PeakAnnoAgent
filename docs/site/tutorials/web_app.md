@@ -7,7 +7,7 @@ and ask Claude questions about it.
 
 ```bash
 pip install -e "agent[web]"
-peakanno-agent web --port 8766 --open          # http://127.0.0.1:8766, runs are written to ./runs
+peakanno-agent web --open          # http://127.0.0.1:8766, runs are written to ./runs
 ```
 
 | Option | Default | Description |
@@ -15,7 +15,6 @@ peakanno-agent web --port 8766 --open          # http://127.0.0.1:8766, runs are
 | `--runs-dir` | `./runs` | Where runs are written |
 | `--host`, `--port` | `127.0.0.1`, `8766` | Address to listen on |
 | `--model` | `claude-opus-5-5` | Model for agent runs and the chat |
-| `--rscript` | `Rscript` on `PATH` | Rscript with the Bioconductor packages |
 | `--open` | off | Open the browser |
 
 :::{warning}
@@ -29,13 +28,13 @@ The home page is a three-step form: **your peaks**, **what you know**, **how to 
 a BED file, or pick one of the four examples. **Run** starts an example in one click. **Edit first**
 fills the form with it so you can change it.
 
-```{image} ../../figures/web/home_tabs.png
-:alt: Home page with Run your analysis, Examples and Runs tabs
+```{image} ../../figures/web/home.png
+:alt: Home page with the three-step form
 ```
 
-Run one of the bundled example peak sets locally to explore a finished report.
-
-The home page separates **Run your analysis**, **Examples** and **Runs** into tabs. Use Examples to start from bundled peak sets, or Runs to reopen previous results.
+The two demo runs in `docs/demo/` are listed automatically, so you can explore a finished run before R or
+an API key is set up. *Open an existing result folder* adds any folder written by
+`peakanno-agent run`.
 
 ## 2. Watch the run
 

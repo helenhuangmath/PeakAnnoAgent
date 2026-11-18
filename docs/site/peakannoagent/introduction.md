@@ -3,26 +3,26 @@
 ## Method
 
 PeakAnnoAgent turns a set of genomic peaks into a biological interpretation that can be checked line by
-line. An **R engine** runs the statistics: peak QC, annotation with ChIPpeakAnno, over-representation
-analysis with clusterProfiler, pathway networks, known-motif enrichment with monaLisa or HOMER. A
-**Python agent** decides which analyses to run and with which settings, given what you already know
+line. An **analysis engine** runs the statistics: peak QC, fast annotation against the gene models you
+choose, over-representation analysis, pathway networks, and known-motif enrichment with HOMER. An
+**agent** decides which analyses to run and with which settings, given what you already know
 about the experiment. It queries ChIP-Atlas, Europe PMC and NCBI GEO, and then writes the report.
 
 In agent mode, Claude plans the analysis and interprets the results. In deterministic mode
 (`--no-llm`), a fixed plan runs and the report gives a factual summary. The statistics are the same in
-both modes, because they always come from the R engine.
+both modes, because they always come from the engine.
 
 ```text
            peaks + genome + known biology
                           │
                 ┌─────────▼─────────┐        Claude plans the analysis, chooses
                 │  Python agent     │◄──────  settings, and interprets results
-                │  (agent/)         │        (or a fixed plan with --no-llm)
+                │                   │        (or a fixed plan with --no-llm)
                 └──┬──────────┬─────┘
-       JSON bridge │          │ HTTPS
+       in-process │          │ HTTPS
      ┌─────────────▼───┐   ┌──▼──────────────────────────────┐
-     │ R engine (R/)   │   │ ChIP-Atlas · Europe PMC · GEO    │
-     │ QC, ChIPpeakAnno│   └─────────────────────────────────┘
+     │ analysis engine │   │ ChIP-Atlas · Europe PMC · GEO    │
+     │ QC, annotation, │   └─────────────────────────────────┘
      │ enrichment,     │
      │ networks, motifs│
      └────────┬────────┘
@@ -42,19 +42,19 @@ differential-expression table:
 
 | File | Content |
 |---|---|
-| `examples/data/example_tex_peaks_mm10.bed` | 351 peaks (BED) |
-| `examples/data/example_tex_biology.json` | assay, cell type, condition, expected genes and TFs |
-| `examples/data/example_tex_signatures.gmt` | progenitor, terminal and effector-like exhaustion signatures |
-| `examples/data/example_tex_rnaseq_de.tsv` | DESeq2-style table (`gene`, `log2FoldChange`, `padj`) |
+| `peakannoagent/examples/example_tex_peaks_mm10.bed` | 351 peaks (BED) |
+| `peakannoagent/examples/example_tex_biology.json` | assay, cell type, condition, expected genes and TFs |
+| `peakannoagent/examples/example_tex_signatures.gmt` | progenitor, terminal and effector-like exhaustion signatures |
+| `peakannoagent/examples/example_tex_rnaseq_de.tsv` | DESeq2-style table (`gene`, `log2FoldChange`, `padj`) |
 
 ### Run PeakAnnoAgent
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_tex_peaks_mm10.bed --genome mm10 \
-  --biology-file examples/data/example_tex_biology.json \
-  --gmt examples/data/example_tex_signatures.gmt \
-  --rnaseq examples/data/example_tex_rnaseq_de.tsv \
+  --peaks peakannoagent/examples/example_tex_peaks_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_tex_biology.json \
+  --gmt peakannoagent/examples/example_tex_signatures.gmt \
+  --rnaseq peakannoagent/examples/example_tex_rnaseq_de.tsv \
   --out results/tex --prefix tex
 ```
 

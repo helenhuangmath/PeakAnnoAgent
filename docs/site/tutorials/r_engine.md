@@ -1,64 +1,84 @@
-# Tutorial 5: The R engine
+# Tutorial 5: Python and R
 
-Every analysis step of the agent is an ordinary R function. You can use the R engine on its own, in a
-script or in R Markdown, without Python or an API key.
+Every analysis step is an ordinary Python function, so you can use the engine in a script or a
+notebook without the agent, and call the same program from R.
 
-## Run the agent tools from R
+## Annotate in Python
 
-`run_agent_tool()` runs the same tools the agent calls. It takes the same arguments and returns the same
-results:
+```python
+from peakannoagent import build_reference, read_peak_file, annotate_peaks, run_annotation
+
+ref = build_reference("mm10", "gencode")          # downloaded and built once, then cached
+print(ref)
+# <Reference mm10, GENCODE vM25 basic: 55,401 genes (21,859 protein-coding), 81,540 transcripts>
+
+peaks = read_peak_file("peakannoagent/examples/example_tex_peaks_mm10.bed")
+table = annotate_peaks(peaks, ref, promoter_upstream=2000, promoter_downstream=500)
+```
+
+`table` is a dictionary of equal-length columns, one entry per peak. It goes straight into pandas:
+
+```python
+import pandas as pd
+df = pd.DataFrame(table)
+df[["PeakID", "feature", "nearest_symbol", "distance_to_tss", "region_class"]].head()
+df["feature"].value_counts(normalize=True)
+```
+
+`run_annotation()` does the same and also writes the tables, the gene sets and the figures:
+
+```python
+res = run_annotation(peaks, "results/py", "tex", genome="mm10", reference=ref)
+res["feature_pct"]        # {'Promoter (<=1kb)': 20.23, ...}
+res["tables"]             # paths of the TSV files
+res["figures"]            # paths of the PDF figures
+```
+
+## Pathway enrichment in Python
+
+The gene sets and the background written by `run_annotation()` feed the enrichment:
+
+```python
+from peakannoagent import run_enrichment
+
+enr = run_enrichment(res["gene_sets"], "results/py", "tex_enrich", genome="mm10",
+                     methods=["go_bp", "hallmark", "kegg"], universe=res["universe"])
+enr["top_terms"][:3]
+enr["pathway_modules"]["go_bp"]     # modules of the enrichment map
+enr["hub_genes"]["go_bp"]           # genes shared by several top pathways
+```
+
+Methods are `go_bp`, `go_mf`, `go_cc`, `hallmark`, `reactome`, `wikipathways`, `kegg`,
+`tf_targets`, `immunesigdb`, `cell_types` and `custom` (your own GMT, passed as `custom_gmt`).
+
+## The same tools the agent calls
+
+`Engine.run()` runs a tool by name with a dictionary of settings and returns a status and a result,
+which is exactly what the agent sees:
+
+```python
+from peakannoagent import Engine
+
+out = Engine().run("peak_qc", {"peaks": "peaks.bed", "out_dir": "results/py", "prefix": "tex"})
+out["status"], out["result"]["n_clean_peaks"]
+```
+
+## Call it from R
+
+The R package in `r/PeakAnnoAgent` runs the Python program and returns its tables as data frames.
 
 ```r
 library(PeakAnnoAgent)
 
-anno <- run_agent_tool("annotate_peaks", list(
-  peaks = "examples/data/example_tex_peaks_mm10.bed", genome = "mm10",
-  out_dir = "results/r", prefix = "tex"))
+res <- annotate_peaks("peaks.bed", genome = "hg38", reference = "gencode")
+head(res$annotation)
+res$feature_distribution
+res$figures                       # paths of the PDF figures
 
-enr <- run_agent_tool("enrich_pathways", list(
-  gene_sets = anno$gene_sets, universe = anno$universe, genome = "mm10",
-  methods = c("go_bp", "msigdb_H"), out_dir = "results/r", prefix = "tex"))
-
-mot <- run_agent_tool("find_motifs", list(
-  peaks = "examples/data/example_tex_peaks_mm10.bed", genome = "mm10",
-  out_dir = "results/r", prefix = "tex"))
-
-enr$pathway_modules$go_bp     # modules of the enrichment map
-enr$hub_genes$go_bp           # genes shared by several top pathways
+full <- run_analysis("peaks.bed", genome = "hg38", out_dir = "results/k562",
+  assay = "TF ChIP-seq", target = "CTCF")
+browseURL(full$report)
 ```
 
-Each call writes its tables and figures to `out_dir` and returns a list with the summary, the file
-paths and any warnings.
-
-## Pathway networks from any enrichment table
-
-`run_pathway_networks()` draws the enrichment map and the gene–pathway network for each method in a
-standard enrichment table (`method`, `group`, `term`, `padj`, `count`, `genes`):
-
-```r
-tab <- data.table::fread("results/r/tex_enrich1_enrichment.tsv")
-net <- run_pathway_networks(tab, out_dir = "results/r", prefix = "tex")
-net$figures     # PNG previews (PDFs are written next to them)
-net$modules     # module tables per method
-```
-
-The table can also come from another tool, such as clusterProfiler, as long as it has these columns.
-See [Tutorial 4](pathway_networks.md) for the settings.
-
-## Run single steps from the command line
-
-`scripts/peak_agent.R` runs each step as a standalone command:
-
-```bash
-Rscript scripts/peak_agent.R --help
-Rscript scripts/peak_agent.R annotate --peaks peaks.bed --species mm10 --methods chipseeker --out results/anno
-Rscript scripts/peak_agent.R enrich --genes clusters.tsv --universe universe.tsv \
-  --methods clusterprofiler --species mm10 --out results/pathways
-```
-
-The [R command-line reference](../reference/r_cli.md) lists every command.
-
-## Vignette
-
-The package vignette (`vignettes/peak-annotation-workflow.Rmd`) walks through the complete R workflow,
-from peaks to figures.
+`peaks` can also be a data frame with `Chr`, `Start` and `End`. See
+[R interface](../api/r_interface.md) for every argument.

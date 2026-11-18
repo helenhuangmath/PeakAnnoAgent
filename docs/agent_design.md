@@ -1,19 +1,19 @@
 # Agent Design
 
-PeakAnnoAgent has two layers. Claude plans and interprets. A deterministic R engine computes.
+PeakAnnoAgent has two layers in one Python package. Claude plans and interprets. A deterministic analysis engine (`peakannoagent.engine`) computes.
 
 ```
 User: peaks + genome + known biology (+ GMT signatures, RNA-seq DE table)
         │
    ┌────▼──────────────────────────────────────────────┐
-   │ Agent loop (agent/peakannoagent/agent.py)         │
+   │ Agent loop (peakannoagent/agent.py)               │
    │ Claude: plan → call tool → read result → adapt    │
    │ deterministic fallback: run_pipeline()            │
    └────┬──────────────────────────────────────────────┘
-        │ tools (agent/peakannoagent/tools.py), each result → evidence id E1, E2, …
-        ├── R engine via scripts/peak_tools.R (JSON in/out)
-        │     peak_qc · annotate_peaks (ChIPpeakAnno) · enrich_pathways (clusterProfiler/MSigDB/custom)
-        │     great_enrichment (rGREAT) · find_motifs (HOMER or monaLisa+JASPAR)
+        │ tools (peakannoagent/tools.py), each result → evidence id E1, E2, …
+        ├── Engine (peakannoagent/engine, in-process; dict in, dict out)
+        │     peak_qc · annotate_peaks · enrich_pathways (MSigDB/KEGG/custom, with networks)
+        │     find_motifs (HOMER, if installed)
         ├── Python: integrate_rnaseq · check_expectations · inspect_table
         ├── Companion programs (subprocess, optional): network_viz (SimpNetworkViz) · pathway_consensus (PathwayAgent)
         └── Network: chipatlas_submit/collect · chipatlas_target_genes · search_literature (Europe PMC)

@@ -4,7 +4,7 @@ These are the tools the agent calls. In agent mode, Claude chooses which ones to
 settings. With `--no-llm`, a fixed plan runs them in order. Tools marked *network* contact a
 public service and are skipped with `--offline`. `peakanno-agent tools` prints the same list.
 
-Every tool runs in the R engine or calls a public API. Its result is stored with an evidence ID
+Every tool runs in the analysis engine or calls a public API. Its result is stored with an evidence ID
 (`E1`, `E2`, …), which the report cites.
 
 ## `peak_qc`
@@ -13,18 +13,18 @@ Peak-set QC: counts, widths, chromosomes, duplicates, non-standard contigs and b
 
 ## `annotate_peaks`
 
-ChIPpeakAnno annotation: nearest gene by TSS for every peak, all genes whose TSS window overlaps the peak (bidirectional promoters), genomic-region distribution, TSS binding profile. Classifies peaks as promoter / distal / distal_far and builds gene sets (promoter, distal, all) plus a genome background for enrichment. Choose the promoter window to fit the assay (tight for promoter-bound TFs, standard 2000/500 otherwise).
+Peak annotation against the run's gene models (GENCODE by default; RefSeq, UCSC or a GTF if the user chose one). For every peak: the nearest TSS and its gene, all genes whose promoter window the peak overlaps (bidirectional and alternative promoters), and one genomic feature by priority (promoter, 5' UTR, 3' UTR, exon, intron, downstream, distal intergenic). Returns the feature-type proportions (feature_pct) and region distribution, classifies peaks as promoter / distal / distal_far and builds gene sets (promoter, distal, all) plus a genome background for enrichment. Draws the feature-type pie chart, feature bar, distance-to-TSS bars, feature-overlap upset plot, region distribution, TSS profile, TSS-distance histogram and peaks over chromosomes. Takes seconds. Choose the promoter window to fit the assay (tight for promoter-bound TFs, standard 2000/500 otherwise).
 
 | Argument | Type | Description |
 |---|---|---|
 | `promoter_upstream` | integer | bp upstream of TSS (default 2000) |
 | `promoter_downstream` | integer | bp downstream of TSS (default 500) |
 | `distal_max_distance` | integer | Distal peaks further than this from any TSS are not linked to a gene (default 100000) |
-| `chipseeker_crosscheck` | boolean | Also run ChIPseeker for comparison |
+| `gene_types` | string: `auto`, `protein_coding`, `all` | Genes to annotate against: protein-coding only (default) or all, including lncRNAs and pseudogenes |
 
 ## `enrich_pathways`
 
-Over-representation analysis (clusterProfiler) of peak-linked gene sets against the genome background. Methods: go_bp, go_mf, go_cc, kegg, reactome, msigdb_H, msigdb_C2:CP:REACTOME, msigdb_C2:CP:WIKIPATHWAYS, msigdb_C3:TFT:GTRD, msigdb_C7:IMMUNESIGDB, msigdb_C8, custom. msigdb_<collection>[:<subcollection>] takes any MSigDB collection; 'custom' uses the user's GMT signatures. Pick collections that fit the biology (e.g. C7:IMMUNESIGDB for immune cells). Also draws pathway networks per method: an enrichment map (terms linked by shared genes, grouped into modules - returned as pathway_modules) and a gene-pathway network (hub genes shared by several top pathways - returned as hub_genes). Interpret modules rather than redundant individual terms.
+Over-representation analysis (hypergeometric test, Benjamini-Hochberg) of peak-linked gene sets against the genome background. Methods: go_bp, go_mf, go_cc, hallmark, reactome, wikipathways, kegg, tf_targets, immunesigdb, cell_types, custom. The public collections come from MSigDB (go_bp, go_mf, go_cc, hallmark, reactome, wikipathways, tf_targets = GTRD TF targets, immunesigdb, cell_types) and KEGG; 'custom' uses the user's GMT signatures. Pick collections that fit the biology (e.g. immunesigdb for immune cells). Also draws pathway networks per method: an enrichment map (terms linked by shared genes, grouped into modules - returned as pathway_modules) and a gene-pathway network (hub genes shared by several top pathways - returned as hub_genes). Interpret modules rather than redundant individual terms.
 
 | Argument | Type | Description |
 |---|---|---|
@@ -39,7 +39,7 @@ Draw EnrichmentMap/AutoAnnotate-style networks from this run's enrichment result
 
 | Argument | Type | Description |
 |---|---|---|
-| `method` | string | A method present in the enrichment table, e.g. go_bp, msigdb_H, msigdb_C7:IMMUNESIGDB, custom |
+| `method` | string | A method present in the enrichment table, e.g. go_bp, hallmark, immunesigdb, custom |
 | `group` | string: `promoter`, `distal`, `all` |  |
 | `max_pathways` | integer | Most significant pathways to draw (default 40) |
 | `cutoff` | number | Similarity needed for an edge (default 0.6 on hit genes; raise it if the network is one dense blob, lower it if nothing connects) |
@@ -55,25 +55,15 @@ Run PathwayAgent on the peak-linked gene lists: several enrichment engines (loca
 | `lists` | array of string: `promoter`, `distal`, `all` |  |
 | `local_only` | boolean | Never send genes to web services |
 
-## `great_enrichment`
-
-Region-based GREAT enrichment (rGREAT, local) - better than gene ORA for distal enhancer peaks because it models each gene's regulatory domain.
-
-| Argument | Type | Description |
-|---|---|---|
-| `gene_sets` | string | e.g. GO:BP, GO:MF, msigdb:H, msigdb:C2:CP:KEGG |
-| `padj` | number |  |
-
 ## `find_motifs`
 
-Known-motif enrichment at peak centres (HOMER if installed, else monaLisa + JASPAR CORE vs GC-matched genomic background). Use regions='distal' to find enhancer-driving TFs without promoter GC bias. Not meaningful for broad histone domains.
+Known-motif enrichment at peak centres with HOMER. Skipped cleanly when HOMER is not installed. Use regions='distal' to find enhancer-driving TFs without promoter GC bias. Not meaningful for broad histone domains.
 
 | Argument | Type | Description |
 |---|---|---|
 | `regions` | string: `all`, `promoter`, `distal` |  |
-| `backend` | string: `auto`, `homer`, `monalisa` |  |
 | `size` | integer | Window around peak centre, bp (default 200) |
-| `max_peaks` | integer | Cap on peaks scanned (strongest kept; default 5000) |
+| `max_peaks` | integer | Cap on peaks scanned (default 5000) |
 | `padj` | number |  |
 
 ## `chipatlas_submit` *(network)*

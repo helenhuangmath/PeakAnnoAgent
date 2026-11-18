@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77,<85"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peakannoagent"
+version = "1.1.0"
+description = "Fast annotation of genomic peaks with a choice of gene models, pathway and motif enrichment, and an optional LLM agent that writes an evidence-linked HTML report"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Hua Huang", email = "helenhuang.math@gmail.com"}]
+maintainers = [{name = "Hua Huang", email = "helenhuang.math@gmail.com"}]
+keywords = ["ChIP-seq", "ATAC-seq", "peak annotation", "GENCODE", "pathway enrichment", "bioinformatics"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Programming Language :: Python :: 3",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = ["numpy>=1.23", "matplotlib>=3.6"]
+
+[project.optional-dependencies]
+agent = ["anthropic>=2.8,<3"]
+mcp = ["mcp>=2.0,<3"]
+web = ["flask>=3.0,<4"]
+
+[project.scripts]
+peakanno-agent = "peakannoagent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["peakannoagent*"]
+
+[tool.setuptools.package-data]
+peakannoagent = ["templates/*.html", "static/*", "examples/*"]
+
+[project.urls]
+Homepage = "https://github.com/helenhuangmath/PeakAnnoAgent"
+Documentation = "https://helenhuangmath.github.io/PeakAnnoAgent/"
+Issues = "https://github.com/helenhuangmath/PeakAnnoAgent/issues"
+Changelog = "https://github.com/helenhuangmath/PeakAnnoAgent/blob/main/CHANGELOG.md"

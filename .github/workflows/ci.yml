@@ -1,0 +1,87 @@
+name: Release checks
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -c constraints-release.txt build ".[web,agent,mcp]"
+      - name: Unit, engine and web regression tests
+        run: python -m unittest discover -s tests
+      - name: Build source distribution and wheel
+        run: python -m build --outdir dist .
+      - name: Validate the installed wheel away from the checkout
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall --no-deps dist/*.whl
+          python scripts/smoke_install.py
+      - uses: actions/upload-artifact@v4
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.12'
+        with:
+          name: python-distributions
+          path: dist/*
+
+  r-wrapper:
+    runs-on: ubuntu-latest
+    env:
+      R_KEEP_PKG_SOURCE: yes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: r/PeakAnnoAgent
+          extra-packages: any::rcmdcheck
+      - name: Check the R wrapper package
+        shell: Rscript {0}
+        run: rcmdcheck::rcmdcheck("r/PeakAnnoAgent", args = "--no-manual", error_on = "warning")
+      - name: Call the Python program from R
+        shell: Rscript {0}
+        run: |
+          install.packages("r/PeakAnnoAgent", repos = NULL, type = "source")
+          library(PeakAnnoAgent)
+          res <- annotate_peaks("tests/data/example_peaks_mm10_chr11.bed", genome = "mm10",
+            gtf = "tests/data/gencode_vM25_chr11_subset.gtf.gz")
+          stopifnot(nrow(res$annotation) == 12, all(file.exists(res$figures)))
+
+  biological-workflows:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -c constraints-release.txt .
+      - name: Validate complete mm10 and hg38 workflows
+        run: python scripts/validate_biology.py --out release-artifacts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: biological-workflows
+          path: release-artifacts

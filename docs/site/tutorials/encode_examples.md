@@ -9,14 +9,14 @@ a good way to check that your installation works and to see how the assay change
 | H3K27ac ChIP-seq, human CD8 T cells | hg38 | 1000 strongest | ENCSR835OJV, file ENCFF283CAQ (replicated) | T-cell identity genes and pathways; RUNX, ETS, TCF/LEF, T-bet/Eomes regulators |
 | H3K4me3 ChIP-seq, mouse BMDM | mm10 | 800 strongest | ENCSR916IRY, file ENCFF813FPW (replicated) | Nearly every peak on a promoter; macrophage identity genes |
 
-Each example has a peak file and a biology file in `examples/data/`.
+Each example has a peak file and a biology file in `peakannoagent/examples/`.
 
 ## CTCF in K562: a transcription factor
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_ctcf_k562_hg38.bed --genome hg38 \
-  --biology-file examples/data/example_ctcf_k562_biology.json \
+  --peaks peakannoagent/examples/example_ctcf_k562_hg38.bed --genome hg38 \
+  --biology-file peakannoagent/examples/example_ctcf_k562_biology.json \
   --out results/ctcf --prefix ctcf
 ```
 
@@ -32,8 +32,8 @@ What to look for:
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_h3k27ac_cd8_hg38.bed --genome hg38 \
-  --biology-file examples/data/example_h3k27ac_cd8_biology.json \
+  --peaks peakannoagent/examples/example_h3k27ac_cd8_hg38.bed --genome hg38 \
+  --biology-file peakannoagent/examples/example_h3k27ac_cd8_biology.json \
   --out results/h3k27ac --prefix h3k27ac
 ```
 
@@ -48,8 +48,8 @@ What to look for:
 
 ```bash
 peakanno-agent run \
-  --peaks examples/data/example_h3k4me3_bmdm_mm10.bed --genome mm10 \
-  --biology-file examples/data/example_h3k4me3_bmdm_biology.json \
+  --peaks peakannoagent/examples/example_h3k4me3_bmdm_mm10.bed --genome mm10 \
+  --biology-file peakannoagent/examples/example_h3k4me3_bmdm_biology.json \
   --out results/h3k4me3 --prefix h3k4me3
 ```
 

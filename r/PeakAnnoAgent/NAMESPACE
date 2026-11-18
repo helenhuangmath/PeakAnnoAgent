@@ -1,0 +1,5 @@
+export(annotate_peaks)
+export(paa_check)
+export(paa_command)
+export(paa_version)
+export(run_analysis)
